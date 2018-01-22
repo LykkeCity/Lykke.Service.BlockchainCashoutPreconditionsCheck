@@ -8,6 +8,7 @@ using Lykke.Common.Api.Contract.Responses;
 using Lykke.Common.ApiLibrary.Middleware;
 using Lykke.Common.ApiLibrary.Swagger;
 using Lykke.Logs;
+using Lykke.Logs.Slack;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Exceptions;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Services;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Settings;
@@ -225,6 +226,10 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck
             azureStorageLogger.Start();
 
             aggregateLogger.AddLog(azureStorageLogger);
+
+            var personalSlackLogger = LykkeLogToSlack.Create(slackService, "BlockChainIntegration");
+
+            aggregateLogger.AddLog(personalSlackLogger);
 
             return aggregateLogger;
         }

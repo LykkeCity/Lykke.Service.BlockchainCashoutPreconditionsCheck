@@ -5,8 +5,4 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\client\Lykke.Service.BlockchainCashoutPreconditionsCheck.Client\Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.csproj" />
-  </ItemGroup>
-
 </Project>
