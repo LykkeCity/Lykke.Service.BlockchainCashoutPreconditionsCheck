@@ -6,6 +6,7 @@ using Lykke.Common.Api.Contract.Responses;
 using Lykke.Common.ApiLibrary.Contract;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Domain.Validation;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Services;
+using Lykke.Service.BlockchainCashoutPreconditionsCheck.Filter;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Models.Requests;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Models.Responses;
 using Microsoft.AspNetCore.Mvc;
@@ -28,6 +29,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
+        [ArgumentValidationExceptionFilter]
         [SwaggerOperation("Check")]
         [ProducesResponseType(typeof(CashoutValidityResult), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.InternalServerError)]
