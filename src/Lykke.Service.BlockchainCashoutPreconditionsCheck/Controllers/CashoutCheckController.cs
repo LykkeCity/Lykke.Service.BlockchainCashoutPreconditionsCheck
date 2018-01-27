@@ -47,7 +47,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Controllers
 
             var response = new CashoutValidityResult()
             {
-                IsAllowed = validationErrors?.Count() == 0,
+                IsAllowed = (validationErrors?.Count() ?? 0) == 0,
                 ValidationErrors = validationErrors.Select(x => ValidationErrorResponse.Create((ValidationErrorType)x.Type, x.Value)),
             };
 

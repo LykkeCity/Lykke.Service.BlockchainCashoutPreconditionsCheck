@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Lykke.SettingsReader.Attributes;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -13,6 +14,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Settings.Servic
          */
     public class AssetSettings
     {
+        [HttpCheck("/api/isalive")]
         public string ServiceUrl { get; set; }
 
         public TimeSpan CacheExpirationPeriod { get; set; }
