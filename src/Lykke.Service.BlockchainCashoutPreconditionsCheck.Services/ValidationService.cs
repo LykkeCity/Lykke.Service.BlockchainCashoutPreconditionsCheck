@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Lykke.Service.Assets.Client;
+using Lykke.Service.Assets.Client.Models;
 using Lykke.Service.BlockchainApi.Client;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Domain.Health;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Domain.Validation;
@@ -38,8 +39,15 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
             if (string.IsNullOrEmpty(cashoutModel.AssetId))
                 return FieldNotValidResult("cashoutModel.AssetId can't be null or empty");
 
-            var asset = await _assetsService.AssetGetAsync(cashoutModel.AssetId);
-            List<ValidationError> errors = new List<ValidationError>(1);
+            Asset asset = null;
+            try
+            {
+                asset = await _assetsService.AssetGetAsync(cashoutModel.AssetId);
+            }
+            catch (Exception e)
+            {
+                throw new ArgumentValidationException($"Asset with Id-{cashoutModel.AssetId} does not exists", "AssetId");
+            }
 
             if (asset == null)
                 throw new ArgumentValidationException($"Asset with Id-{cashoutModel.AssetId} does not exists", "AssetId");
@@ -49,6 +57,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
 
             var blockchainClient = _blockchainApiClientProvider.Get(asset.BlockchainIntegrationLayerId);
 
+            List<ValidationError> errors = new List<ValidationError>(1);
             //Check volume in the future if needed
             if (string.IsNullOrEmpty(cashoutModel.DestinationAddress) || 
                 !await blockchainClient.IsAddressValidAsync(cashoutModel.DestinationAddress))
