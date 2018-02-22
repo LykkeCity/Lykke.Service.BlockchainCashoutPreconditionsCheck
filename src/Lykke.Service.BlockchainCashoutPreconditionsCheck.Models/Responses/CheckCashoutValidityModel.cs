@@ -23,7 +23,8 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Models.Responses
     {
         None,
         AddressIsNotValid,
-        FieldIsNotValid
+        FieldIsNotValid,
+        LessThanMinCashout
     }
 
     [DataContract]
