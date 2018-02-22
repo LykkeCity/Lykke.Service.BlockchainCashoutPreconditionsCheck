@@ -4,6 +4,7 @@
     { 
         None,
         AddressIsNotValid,
-        FieldNotValid
+        FieldNotValid,
+        LessThanMinCashout
     }
 }
