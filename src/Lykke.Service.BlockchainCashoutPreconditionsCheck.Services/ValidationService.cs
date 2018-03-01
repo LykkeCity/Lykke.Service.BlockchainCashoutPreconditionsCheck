@@ -66,7 +66,8 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
                 errors.Add(ValidationError.Create(ValidationErrorType.AddressIsNotValid, "Address is not valid"));
             }
 
-            if (Math.Abs(cashoutModel.Volume) < (decimal)asset.CashoutMinimalAmount)
+            if (cashoutModel.Volume != 0 && 
+                Math.Abs(cashoutModel.Volume) < (decimal)asset.CashoutMinimalAmount)
             {
                 var minimalAmount = asset.CashoutMinimalAmount.GetFixedAsString(asset.Accuracy).TrimEnd('0');
 
