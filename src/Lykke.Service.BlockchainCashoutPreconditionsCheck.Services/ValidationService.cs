@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Common;
 using Lykke.Service.Assets.Client;
 using Lykke.Service.Assets.Client.Models;
 using Lykke.Service.BlockchainApi.Client;
@@ -58,11 +59,19 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
             var blockchainClient = _blockchainApiClientProvider.Get(asset.BlockchainIntegrationLayerId);
 
             List<ValidationError> errors = new List<ValidationError>(1);
-            //Check volume in the future if needed
-            if (string.IsNullOrEmpty(cashoutModel.DestinationAddress) || 
+
+            if (string.IsNullOrEmpty(cashoutModel.DestinationAddress) ||
                 !await blockchainClient.IsAddressValidAsync(cashoutModel.DestinationAddress))
             {
                 errors.Add(ValidationError.Create(ValidationErrorType.AddressIsNotValid, "Address is not valid"));
+            }
+
+            if (cashoutModel.Volume != 0 && 
+                Math.Abs(cashoutModel.Volume) < (decimal)asset.CashoutMinimalAmount)
+            {
+                var minimalAmount = asset.CashoutMinimalAmount.GetFixedAsString(asset.Accuracy).TrimEnd('0');
+
+                errors.Add(ValidationError.Create(ValidationErrorType.LessThanMinCashout, minimalAmount));
             }
 
             return errors;

@@ -7,7 +7,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Test
     {
         static void Main(string[] args)
         {
-            //Task.Delay(10000).Wait();
+           // Task.Delay(10000).Wait();
             //var client = new Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.BlockchainCashoutPreconditionsCheckClient("http://localhost:5000",null);
             //var (isAllowed, listOfErrors) = client.ValidateCashoutAsync(new Client.Models.CashoutValidateModel()
             //{
@@ -16,7 +16,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Test
             //    Amount = 0
             //}).Result;
 
-            Console.ReadLine();
+            //Console.ReadLine();
         }
     }
 }
