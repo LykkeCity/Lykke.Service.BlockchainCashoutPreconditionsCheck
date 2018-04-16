@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
 using Common;
 using Lykke.Service.Assets.Client;
@@ -10,6 +11,8 @@ using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Domain.Validation;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Domain.Validations;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Exceptions;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Services;
+using Lykke.Service.BlockchainSignFacade.Client;
+using Lykke.Service.BlockchainSignFacade.Contract.Models;
 
 namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
 {
@@ -17,11 +20,21 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
     {
         private readonly IBlockchainApiClientProvider _blockchainApiClientProvider;
         private readonly IAssetsService _assetsService;
+        private readonly IAddressParser _addressParser;
+        private readonly IBlockchainSettingsProvider _blockchainSettingsProvider;
+        private readonly IBlockchainSignFacadeClient _blockchainSignFacadeClient;
 
-        public ValidationService(IBlockchainApiClientProvider blockchainApiClientProvider, Lykke.Service.Assets.Client.IAssetsService assetsService)
+        public ValidationService(IBlockchainApiClientProvider blockchainApiClientProvider, 
+            IAssetsService assetsService, 
+            IAddressParser addressParser, 
+            IBlockchainSettingsProvider blockchainSettingsProvider, 
+            IBlockchainSignFacadeClient blockchainSignFacadeClient)
         {
             _blockchainApiClientProvider = blockchainApiClientProvider;
             _assetsService = assetsService;
+            _addressParser = addressParser;
+            _blockchainSettingsProvider = blockchainSettingsProvider;
+            _blockchainSignFacadeClient = blockchainSignFacadeClient;
         }
 
         /// <summary>
@@ -72,6 +85,45 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
                 var minimalAmount = asset.CashoutMinimalAmount.GetFixedAsString(asset.Accuracy).TrimEnd('0');
 
                 errors.Add(ValidationError.Create(ValidationErrorType.LessThanMinCashout, minimalAmount));
+            }
+
+            var blockchainSettings = _blockchainSettingsProvider.Get(asset.BlockchainIntegrationLayerId);
+
+            if (cashoutModel.DestinationAddress == blockchainSettings.HotWalletAddress)
+            {
+                errors.Add(ValidationError.Create(ValidationErrorType.HotwalletTargetProhibited, "Hot wallet as destitnation address prohibited"));
+            }
+
+            if (blockchainSettings.SupportAddressParts)
+            {
+                var hotWalletBaseAddress = _addressParser
+                    .ParseAddress(blockchainSettings.HotWalletAddress, blockchainSettings.AddressPartsExtractingRegex)
+                    .BaseAddress;
+
+                var destinatinationBaseAddress = _addressParser
+                    .ParseAddress(cashoutModel.DestinationAddress, blockchainSettings.AddressPartsExtractingRegex)
+                    .BaseAddress;
+
+                if (hotWalletBaseAddress == destinatinationBaseAddress)
+                {
+                    WalletResponse existedInnerAddress = null;
+                    try
+                    {
+                        
+                        existedInnerAddress = await _blockchainSignFacadeClient.GetWalletByPublicAddressAsync(asset.BlockchainIntegrationLayerId,
+                            cashoutModel.DestinationAddress);
+                    }
+                    catch (Exception e) when((e.InnerException as Refit.ApiException)?.StatusCode == HttpStatusCode.NotFound)
+                    {
+
+                    }
+                  
+
+                    if (existedInnerAddress == null)
+                    {
+                        errors.Add(ValidationError.Create(ValidationErrorType.InnerAddressNotFound, $"Inner address {cashoutModel.DestinationAddress} not found"));
+                    }
+                }
             }
 
             return errors;

@@ -33,6 +33,10 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Modules
                 _log.WriteInfo("Blockchains registration", "",
                     $"Registering blockchain: {blockchain.Type} -> \r\nAPI: {blockchain.ApiUrl}\r\n");
 
+                builder.RegisterInstance(blockchain)
+                    .Named<BlockchainSettings>(blockchain.Type)
+                    .SingleInstance();
+
                 builder.RegisterType<BlockchainApiClient>()
                     .Named<IBlockchainApiClient>(blockchain.Type)
                     .WithParameter(TypedParameter.From(blockchain.ApiUrl))
@@ -41,6 +45,10 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Modules
 
             builder.RegisterType<BlockchainApiClientProvider>()
                 .As<IBlockchainApiClientProvider>()
+                .SingleInstance();
+
+            builder.RegisterType<BlockchainSettingsProvider>()
+                .As<IBlockchainSettingsProvider>()
                 .SingleInstance();
 
             builder.Populate(_services);
