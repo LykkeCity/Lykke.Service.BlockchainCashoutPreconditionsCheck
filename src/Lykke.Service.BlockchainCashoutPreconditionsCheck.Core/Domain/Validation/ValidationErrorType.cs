@@ -5,6 +5,8 @@
         None,
         AddressIsNotValid,
         FieldNotValid,
-        LessThanMinCashout
+        LessThanMinCashout,
+        HotwalletTargetProhibited,
+        DepositAddressNotFound
     }
 }

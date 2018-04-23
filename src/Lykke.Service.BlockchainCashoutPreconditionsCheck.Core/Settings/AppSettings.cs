@@ -9,5 +9,6 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Settings
         public SlackNotificationsSettings SlackNotifications { get; set; }
         public BlockchainsIntegrationSettings BlockchainsIntegration { get; set; }
         public AssetSettings Assets { get; set; }
+        public BlockchainWalletsServiceClientSettings BlockchainWalletsServiceClient { get; set; }
     }
 }

@@ -4,6 +4,7 @@ using Common.Log;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Services;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Settings.ServiceSettings;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Services;
+using Lykke.Service.BlockchainWallets.Client;
 using Lykke.SettingsReader;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -12,13 +13,16 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Modules
     public class ServiceModule : Module
     {
         private readonly IReloadingManager<BlockchainCashoutPreconditionsCheckSettings> _settings;
+
+        private readonly IReloadingManager<BlockchainWalletsServiceClientSettings> _walletClientSettings;
         private readonly ILog _log;
         // NOTE: you can remove it if you don't need to use IServiceCollection extensions to register service specific dependencies
         private readonly IServiceCollection _services;
 
-        public ServiceModule(IReloadingManager<BlockchainCashoutPreconditionsCheckSettings> settings, ILog log)
+        public ServiceModule(IReloadingManager<BlockchainCashoutPreconditionsCheckSettings> settings, IReloadingManager<BlockchainWalletsServiceClientSettings> walletClientSettings, ILog log)
         {
             _settings = settings;
+            _walletClientSettings = walletClientSettings;
             _log = log;
 
             _services = new ServiceCollection();
@@ -46,10 +50,22 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Modules
             builder.RegisterType<ShutdownManager>()
                 .As<IShutdownManager>();
 
+            builder.RegisterInstance(CreateBlockchainWalletsClient())
+                .As<IBlockchainWalletsClient>();
+
             builder.RegisterType<ValidationService>()
                 .As<IValidationService>().SingleInstance();
 
             builder.Populate(_services);
+        }
+
+        private IBlockchainWalletsClient CreateBlockchainWalletsClient()
+        {
+            return new BlockchainWalletsClient
+            (
+                hostUrl: _walletClientSettings.CurrentValue.ServiceUrl,
+                log: _log
+            );
         }
     }
 }
