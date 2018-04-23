@@ -3,7 +3,5 @@
     public class BlockchainCashoutPreconditionsCheckSettings
     {
         public DbSettings Db { get; set; }
-
-        public string SignFacadeApiKey { get; set; }
     }
 }
