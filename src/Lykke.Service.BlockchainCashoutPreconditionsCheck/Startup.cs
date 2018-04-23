@@ -61,7 +61,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck
 
                 Log = CreateLogWithSlack(services, appSettings);
 
-                builder.RegisterModule(new ServiceModule(appSettings.Nested(x => x.BlockchainCashoutPreconditionsCheckService), appSettings.Nested(x => x.BlockchainSignFacadeClient), Log));
+                builder.RegisterModule(new ServiceModule(appSettings.Nested(x => x.BlockchainCashoutPreconditionsCheckService), appSettings.Nested(x => x.BlockchainWalletsServiceClient), Log));
                 builder.RegisterModule(new AssetsModule(appSettings.Nested(x => x.Assets), Log));
                 builder.RegisterModule(new BlockchainsModule(appSettings.Nested(x => x.BlockchainsIntegration), Log));
                 builder.Populate(services);

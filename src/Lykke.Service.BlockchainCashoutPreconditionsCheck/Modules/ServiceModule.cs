@@ -4,7 +4,7 @@ using Common.Log;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Services;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Settings.ServiceSettings;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Services;
-using Lykke.Service.BlockchainSignFacade.Client;
+using Lykke.Service.BlockchainWallets.Client;
 using Lykke.SettingsReader;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -14,15 +14,15 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Modules
     {
         private readonly IReloadingManager<BlockchainCashoutPreconditionsCheckSettings> _settings;
 
-        private readonly IReloadingManager<BlockchainSignFacadeClientSettings> _facadeClientSettings;
+        private readonly IReloadingManager<BlockchainWalletsServiceClientSettings> _walletClientSettings;
         private readonly ILog _log;
         // NOTE: you can remove it if you don't need to use IServiceCollection extensions to register service specific dependencies
         private readonly IServiceCollection _services;
 
-        public ServiceModule(IReloadingManager<BlockchainCashoutPreconditionsCheckSettings> settings, IReloadingManager<BlockchainSignFacadeClientSettings> facadeClientSettings, ILog log)
+        public ServiceModule(IReloadingManager<BlockchainCashoutPreconditionsCheckSettings> settings, IReloadingManager<BlockchainWalletsServiceClientSettings> walletClientSettings, ILog log)
         {
             _settings = settings;
-            _facadeClientSettings = facadeClientSettings;
+            _walletClientSettings = walletClientSettings;
             _log = log;
 
             _services = new ServiceCollection();
@@ -50,11 +50,8 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Modules
             builder.RegisterType<ShutdownManager>()
                 .As<IShutdownManager>();
 
-            builder.RegisterInstance(CreateBlockchainSignFacadeClient())
-                .As<IBlockchainSignFacadeClient>();
-
-            builder.RegisterType<AddressParser>()
-                .As<IAddressParser>();
+            builder.RegisterInstance(CreateBlockchainWalletsClient())
+                .As<IBlockchainWalletsClient>();
 
             builder.RegisterType<ValidationService>()
                 .As<IValidationService>().SingleInstance();
@@ -62,12 +59,11 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Modules
             builder.Populate(_services);
         }
 
-        private IBlockchainSignFacadeClient CreateBlockchainSignFacadeClient()
+        private IBlockchainWalletsClient CreateBlockchainWalletsClient()
         {
-            return new BlockchainSignFacadeClient
+            return new BlockchainWalletsClient
             (
-                hostUrl: _facadeClientSettings.CurrentValue.ServiceUrl,
-                apiKey: _settings.CurrentValue.SignFacadeApiKey,
+                hostUrl: _walletClientSettings.CurrentValue.ServiceUrl,
                 log: _log
             );
         }

@@ -14,16 +14,5 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Settings.Servic
         public string ApiUrl { get; set; }
 
         public string HotWalletAddress { get; set; }
-
-        [Optional]
-        public bool SupportAddressParts { get; set; } = false;
-
-        /// <summary>
-            //extract address parts from address
-            //support group names baseAddress and addressExtension
-            //example (?<baseAddress>\w+):(?<addressExtension>\w+) 
-        /// </summary>
-        [Optional]
-        public string AddressPartsExtractingRegex { get; set; } = null;
     }
 }

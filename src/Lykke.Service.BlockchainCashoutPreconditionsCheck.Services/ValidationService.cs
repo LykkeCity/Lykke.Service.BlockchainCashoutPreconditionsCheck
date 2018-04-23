@@ -1,18 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Threading.Tasks;
 using Common;
 using Lykke.Service.Assets.Client;
 using Lykke.Service.Assets.Client.Models;
-using Lykke.Service.BlockchainApi.Client;
-using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Domain.Health;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Domain.Validation;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Domain.Validations;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Exceptions;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Services;
-using Lykke.Service.BlockchainSignFacade.Client;
-using Lykke.Service.BlockchainSignFacade.Contract.Models;
+using Lykke.Service.BlockchainWallets.Client;
 
 namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
 {
@@ -20,21 +16,18 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
     {
         private readonly IBlockchainApiClientProvider _blockchainApiClientProvider;
         private readonly IAssetsService _assetsService;
-        private readonly IAddressParser _addressParser;
         private readonly IBlockchainSettingsProvider _blockchainSettingsProvider;
-        private readonly IBlockchainSignFacadeClient _blockchainSignFacadeClient;
+        private readonly IBlockchainWalletsClient _blockchainWalletsClient;
 
         public ValidationService(IBlockchainApiClientProvider blockchainApiClientProvider, 
             IAssetsService assetsService, 
-            IAddressParser addressParser, 
-            IBlockchainSettingsProvider blockchainSettingsProvider, 
-            IBlockchainSignFacadeClient blockchainSignFacadeClient)
+            IBlockchainSettingsProvider blockchainSettingsProvider,
+            IBlockchainWalletsClient blockchainWalletsClient)
         {
             _blockchainApiClientProvider = blockchainApiClientProvider;
             _assetsService = assetsService;
-            _addressParser = addressParser;
             _blockchainSettingsProvider = blockchainSettingsProvider;
-            _blockchainSignFacadeClient = blockchainSignFacadeClient;
+            _blockchainWalletsClient = blockchainWalletsClient;
         }
 
         /// <summary>
@@ -93,35 +86,25 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
             {
                 errors.Add(ValidationError.Create(ValidationErrorType.HotwalletTargetProhibited, "Hot wallet as destitnation address prohibited"));
             }
-
-            if (blockchainSettings.SupportAddressParts)
+            
+            var capabilities = await _blockchainWalletsClient.GetCapabilititesAsync(asset.BlockchainIntegrationLayerId);
+            if (capabilities.IsPublicAddressExtensionRequired)
             {
-                var hotWalletBaseAddress = _addressParser
-                    .ParseAddress(blockchainSettings.HotWalletAddress, blockchainSettings.AddressPartsExtractingRegex)
-                    .BaseAddress;
 
-                var destinatinationBaseAddress = _addressParser
-                    .ParseAddress(cashoutModel.DestinationAddress, blockchainSettings.AddressPartsExtractingRegex)
-                    .BaseAddress;
+                var hotWalletParseResult = await _blockchainWalletsClient.ParseAddressAsync(asset.BlockchainIntegrationLayerId,
+                        blockchainSettings.HotWalletAddress);
 
-                if (hotWalletBaseAddress == destinatinationBaseAddress)
+                var destAddressParseResult = await _blockchainWalletsClient.ParseAddressAsync(asset.BlockchainIntegrationLayerId,
+                        cashoutModel.DestinationAddress);
+
+                if (hotWalletParseResult.BaseAddress == destAddressParseResult.BaseAddress)
                 {
-                    WalletResponse existedInnerAddress = null;
-                    try
-                    {
-                        
-                        existedInnerAddress = await _blockchainSignFacadeClient.GetWalletByPublicAddressAsync(asset.BlockchainIntegrationLayerId,
-                            cashoutModel.DestinationAddress);
-                    }
-                    catch (Exception e) when((e.InnerException as Refit.ApiException)?.StatusCode == HttpStatusCode.NotFound)
-                    {
+                    var clientId = await _blockchainWalletsClient.TryGetClientIdAsync(asset.BlockchainIntegrationLayerId,
+                         asset.Id, cashoutModel.DestinationAddress);
 
-                    }
-                  
-
-                    if (existedInnerAddress == null)
+                    if (clientId == null)
                     {
-                        errors.Add(ValidationError.Create(ValidationErrorType.InnerAddressNotFound, $"Inner address {cashoutModel.DestinationAddress} not found"));
+                        errors.Add(ValidationError.Create(ValidationErrorType.DepositAddressNotFound, $"Deposit address {cashoutModel.DestinationAddress} not found"));
                     }
                 }
             }
