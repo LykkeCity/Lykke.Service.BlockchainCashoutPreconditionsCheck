@@ -75,7 +75,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.AzureRepositories.Re
         {
             var entity = BlackListEntity.FromDomain(aggregate);
 
-            await _storage.ReplaceAsync(entity);
+            await _storage.InsertOrReplaceAsync(entity);
         }
 
         public async Task DeleteAsync(string blockchainType, string blockedAddress)

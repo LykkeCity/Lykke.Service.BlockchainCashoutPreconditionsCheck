@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.AzureRepositories.Repositories;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Domain.Validation;
+using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Exceptions;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Repositories;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Services;
 
@@ -9,29 +12,73 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
 {
     public class BlackListService : IBlackListService
     {
-        public Task<BlackListModel> GetOrAddAsync(String blockchainType, String blockedAddress, Func newAggregateFactory)
+        private readonly IBlackListRepository _blackListRepository;
+        private readonly IBlockchainApiClientProvider _blockchainApiClientProvider;
+
+        public BlackListService(IBlackListRepository blackListRepository,
+            IBlockchainApiClientProvider blockchainApiClientProvider)
         {
-            throw new NotImplementedException();
+            _blackListRepository = blackListRepository;
+            _blockchainApiClientProvider = blockchainApiClientProvider;
         }
 
-        public Task<BlackListModel> TryGetAsync(String blockchainType, String blockedAddress)
+        public async Task<bool> IsBlockedAsync(string blockchainType, string blockedAddress)
         {
-            throw new NotImplementedException();
+            ThrowOnNotSupportedBlockchainType(blockchainType);
+
+            var blackList = await _blackListRepository.TryGetAsync(blockchainType, blockedAddress);
+
+            if (blackList == null)
+            {
+                return false;
+            }
+
+            bool isBlocked = false;
+
+            isBlocked = (blackList.IsCaseSensitive && blockedAddress == blackList.BlockedAddress) ||
+                        (!blackList.IsCaseSensitive && blockedAddress.ToLower() == blackList.BlockedAddressLowCase);
+
+            return isBlocked;
         }
 
-        public Task<(IEnumerable, String continuationToken)> TryGetAllAsync(String blockchainType, Int32 take, String continuationToken = default(String))
+        public async Task<BlackListModel> TryGetAsync(string blockchainType, string blockedAddress)
         {
-            throw new NotImplementedException();
+            ThrowOnNotSupportedBlockchainType(blockchainType);
+
+            var model = await _blackListRepository.TryGetAsync(blockchainType, blockedAddress);
+
+            return model;
         }
 
-        public Task SaveAsync(BlackListModel aggregate)
+        public async Task<(IEnumerable<BlackListModel>, string continuationToken)> TryGetAllAsync(string blockchainType, int take, string continuationToken = null)
         {
-            throw new NotImplementedException();
+            ThrowOnNotSupportedBlockchainType(blockchainType);
+
+            if (take == 0)
+                take = Int32.MaxValue;
+
+            var (models, newToken) = await _blackListRepository.TryGetAllAsync(blockchainType, take, continuationToken);
+
+            return (models, newToken);
         }
 
-        public Task DeleteAsync(String blockchainType, String blockedAddress)
+        public async Task SaveAsync(BlackListModel model)
         {
-            throw new NotImplementedException();
+            ThrowOnNotSupportedBlockchainType(model?.BlockchainType ?? "");
+
+            await _blackListRepository.SaveAsync(model);
+        }
+
+        public async Task DeleteAsync(string blockchainType, string blockedAddress)
+        {
+            ThrowOnNotSupportedBlockchainType(blockchainType);
+
+            await _blackListRepository.DeleteAsync(blockchainType, blockedAddress);
+        }
+
+        private void ThrowOnNotSupportedBlockchainType(string blockchainType)
+        {
+            var blockchainClient = _blockchainApiClientProvider.Get(blockchainType);
         }
     }
 }

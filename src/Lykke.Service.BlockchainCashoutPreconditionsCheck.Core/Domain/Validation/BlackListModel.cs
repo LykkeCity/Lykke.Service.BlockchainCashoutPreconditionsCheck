@@ -6,11 +6,9 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Domain.Validati
 {
     public class BlackListModel
     {
-        public string BlockchainIntegrationLayerId { get; set; }
+        public string BlockchainType { get; set; }
         public string BlockedAddressLowCase { get; set; }
         public string BlockedAddress { get; set; }
-        public bool IsCaseSensitiv { get; set; }
-        public string MinAmount { get; set; }
-        public string MaxAmount { get; set; }
+        public bool IsCaseSensitive { get; set; }
     }
 }

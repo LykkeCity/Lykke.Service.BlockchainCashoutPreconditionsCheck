@@ -17,8 +17,6 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.AzureRepositories.En
         public string BlockedAddressLowCase { get; set; }
         public string BlockedAddress { get; set; }
         public bool IsCaseSensitiv { get; set; }
-        public string MinAmount { get; set; }
-        public string MaxAmount { get; set; }
 
         // ReSharper restore MemberCanBePrivate.Global
 
@@ -46,14 +44,12 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.AzureRepositories.En
         {
             return new BlackListEntity
             {
-                PartitionKey = GetPartitionKey(model.BlockchainIntegrationLayerId),
+                PartitionKey = GetPartitionKey(model.BlockchainType),
                 RowKey = GetRowKey(model.BlockedAddress),
-                BlockchainIntegrationLayerId = model.BlockchainIntegrationLayerId,
+                BlockchainIntegrationLayerId = model.BlockchainType,
                 BlockedAddress = model.BlockedAddress,
                 BlockedAddressLowCase = model.BlockedAddress?.ToLower(),
-                IsCaseSensitiv = model.IsCaseSensitiv,
-                MaxAmount = model.MaxAmount,
-                MinAmount = model.MinAmount,
+                IsCaseSensitiv = model.IsCaseSensitive,
             };
         }
 
@@ -61,12 +57,10 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.AzureRepositories.En
         {
             return new BlackListModel()
             {
-                BlockchainIntegrationLayerId = this.BlockchainIntegrationLayerId,
+                BlockchainType = this.BlockchainIntegrationLayerId,
                 BlockedAddress = this.BlockedAddress,
                 BlockedAddressLowCase = this.BlockedAddress?.ToLower(),
-                IsCaseSensitiv = this.IsCaseSensitiv,
-                MaxAmount = this.MaxAmount,
-                MinAmount = this.MinAmount,
+                IsCaseSensitive = this.IsCaseSensitiv,
             };
         }
 
