@@ -17,11 +17,15 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
     {
         private readonly IBlockchainApiClientProvider _blockchainApiClientProvider;
         private readonly IAssetsService _assetsService;
+        private readonly IBlackListService _blackListService;
 
-        public ValidationService(IBlockchainApiClientProvider blockchainApiClientProvider, Lykke.Service.Assets.Client.IAssetsService assetsService)
+        public ValidationService(IBlockchainApiClientProvider blockchainApiClientProvider, 
+            Lykke.Service.Assets.Client.IAssetsService assetsService,
+            IBlackListService blackListService)
         {
             _blockchainApiClientProvider = blockchainApiClientProvider;
             _assetsService = assetsService;
+            _blackListService = blackListService;
         }
 
         /// <summary>
@@ -59,6 +63,14 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
             var blockchainClient = _blockchainApiClientProvider.Get(asset.BlockchainIntegrationLayerId);
 
             List<ValidationError> errors = new List<ValidationError>(1);
+
+            var isBlocked = await _blackListService.IsBlockedAsync(asset.BlockchainIntegrationLayerId,
+                cashoutModel.DestinationAddress);
+
+            if (isBlocked)
+            {
+                errors.Add(ValidationError.Create(ValidationErrorType.BlackListedAddress, "Address is in the black list"));
+            }
 
             if (string.IsNullOrEmpty(cashoutModel.DestinationAddress) ||
                 !await blockchainClient.IsAddressValidAsync(cashoutModel.DestinationAddress))

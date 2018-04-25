@@ -24,9 +24,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
         [EnumMember(Value = "FieldIsNotValid")]
         FieldIsNotValid,
         [EnumMember(Value = "LessThanMinCashout")]
-        LessThanMinCashout,
-        [EnumMember(Value = "BlackListedAddress")]
-        BlackListedAddress
+        LessThanMinCashout
     }
     internal static class ValidationErrorTypeEnumExtension
     {
@@ -47,8 +45,6 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
                     return "FieldIsNotValid";
                 case ValidationErrorType.LessThanMinCashout:
                     return "LessThanMinCashout";
-                case ValidationErrorType.BlackListedAddress:
-                    return "BlackListedAddress";
             }
             return null;
         }
@@ -65,8 +61,6 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
                     return ValidationErrorType.FieldIsNotValid;
                 case "LessThanMinCashout":
                     return ValidationErrorType.LessThanMinCashout;
-                case "BlackListedAddress":
-                    return ValidationErrorType.BlackListedAddress;
             }
             return null;
         }

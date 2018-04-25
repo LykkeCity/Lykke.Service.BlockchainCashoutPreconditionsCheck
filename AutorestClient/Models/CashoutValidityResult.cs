@@ -7,28 +7,27 @@
 namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.Models
 {
     using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
     using System.Linq;
 
-    public partial class ValidationErrorResponse
+    public partial class CashoutValidityResult
     {
         /// <summary>
-        /// Initializes a new instance of the ValidationErrorResponse class.
+        /// Initializes a new instance of the CashoutValidityResult class.
         /// </summary>
-        public ValidationErrorResponse()
+        public CashoutValidityResult()
         {
             CustomInit();
         }
 
         /// <summary>
-        /// Initializes a new instance of the ValidationErrorResponse class.
+        /// Initializes a new instance of the CashoutValidityResult class.
         /// </summary>
-        /// <param name="type">Possible values include: 'None',
-        /// 'AddressIsNotValid', 'FieldIsNotValid', 'LessThanMinCashout',
-        /// 'BlackListedAddress'</param>
-        public ValidationErrorResponse(ValidationErrorType type, string value = default(string))
+        public CashoutValidityResult(bool isAllowed, IList<ValidationErrorResponse> validationErrors = default(IList<ValidationErrorResponse>))
         {
-            Type = type;
-            Value = value;
+            ValidationErrors = validationErrors;
+            IsAllowed = isAllowed;
             CustomInit();
         }
 
@@ -38,16 +37,14 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
         partial void CustomInit();
 
         /// <summary>
-        /// Gets or sets possible values include: 'None', 'AddressIsNotValid',
-        /// 'FieldIsNotValid', 'LessThanMinCashout', 'BlackListedAddress'
         /// </summary>
-        [JsonProperty(PropertyName = "Type")]
-        public ValidationErrorType Type { get; set; }
+        [JsonProperty(PropertyName = "ValidationErrors")]
+        public IList<ValidationErrorResponse> ValidationErrors { get; set; }
 
         /// <summary>
         /// </summary>
-        [JsonProperty(PropertyName = "Value")]
-        public string Value { get; set; }
+        [JsonProperty(PropertyName = "IsAllowed")]
+        public bool IsAllowed { get; set; }
 
         /// <summary>
         /// Validate the object.
@@ -57,6 +54,16 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
         /// </exception>
         public virtual void Validate()
         {
+            if (ValidationErrors != null)
+            {
+                foreach (var element in ValidationErrors)
+                {
+                    if (element != null)
+                    {
+                        element.Validate();
+                    }
+                }
+            }
         }
     }
 }

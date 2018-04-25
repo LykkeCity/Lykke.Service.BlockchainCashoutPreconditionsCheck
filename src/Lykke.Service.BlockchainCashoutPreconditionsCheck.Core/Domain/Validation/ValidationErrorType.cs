@@ -5,6 +5,7 @@
         None,
         AddressIsNotValid,
         FieldNotValid,
-        LessThanMinCashout
+        LessThanMinCashout,
+        BlackListedAddress
     }
 }

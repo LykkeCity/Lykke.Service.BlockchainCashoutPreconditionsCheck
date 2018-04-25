@@ -74,6 +74,172 @@
             Initializes client properties.
             </summary>
         </member>
+        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.BlockchainCashoutPreconditionsCheckAPI.IsBlockedWithHttpMessagesAsync(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.Threading.CancellationToken)">
+            <summary>
+            is address black listed
+            </summary>
+            <param name='blockchanType'>
+            </param>
+            <param name='blockckedAddress'>
+            </param>
+            <param name='customHeaders'>
+            Headers that will be added to request.
+            </param>
+            <param name='cancellationToken'>
+            The cancellation token.
+            </param>
+            <exception cref="T:Microsoft.Rest.HttpOperationException">
+            Thrown when the operation returned an invalid status code
+            </exception>
+            <exception cref="T:Microsoft.Rest.SerializationException">
+            Thrown when unable to deserialize the response
+            </exception>
+            <exception cref="T:Microsoft.Rest.ValidationException">
+            Thrown when a required parameter is null
+            </exception>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown when a required parameter is null
+            </exception>
+            <return>
+            A response object containing the response body and response headers.
+            </return>
+        </member>
+        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.BlockchainCashoutPreconditionsCheckAPI.GetWithHttpMessagesAsync(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.Threading.CancellationToken)">
+            <summary>
+            is address black listed
+            </summary>
+            <param name='blockchanType'>
+            </param>
+            <param name='blockckedAddress'>
+            </param>
+            <param name='customHeaders'>
+            Headers that will be added to request.
+            </param>
+            <param name='cancellationToken'>
+            The cancellation token.
+            </param>
+            <exception cref="T:Microsoft.Rest.HttpOperationException">
+            Thrown when the operation returned an invalid status code
+            </exception>
+            <exception cref="T:Microsoft.Rest.SerializationException">
+            Thrown when unable to deserialize the response
+            </exception>
+            <exception cref="T:Microsoft.Rest.ValidationException">
+            Thrown when a required parameter is null
+            </exception>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown when a required parameter is null
+            </exception>
+            <return>
+            A response object containing the response body and response headers.
+            </return>
+        </member>
+        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.BlockchainCashoutPreconditionsCheckAPI.GetAllWithHttpMessagesAsync(System.String,System.Int32,System.String,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.Threading.CancellationToken)">
+            <summary>
+            Take blocked addresses for specific blockchainType
+            </summary>
+            <param name='blockchanType'>
+            </param>
+            <param name='take'>
+            </param>
+            <param name='continuationToken'>
+            </param>
+            <param name='customHeaders'>
+            Headers that will be added to request.
+            </param>
+            <param name='cancellationToken'>
+            The cancellation token.
+            </param>
+            <exception cref="T:Microsoft.Rest.HttpOperationException">
+            Thrown when the operation returned an invalid status code
+            </exception>
+            <exception cref="T:Microsoft.Rest.SerializationException">
+            Thrown when unable to deserialize the response
+            </exception>
+            <exception cref="T:Microsoft.Rest.ValidationException">
+            Thrown when a required parameter is null
+            </exception>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown when a required parameter is null
+            </exception>
+            <return>
+            A response object containing the response body and response headers.
+            </return>
+        </member>
+        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.BlockchainCashoutPreconditionsCheckAPI.UpdateWithHttpMessagesAsync(Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.Models.AddBlackListModel,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.Threading.CancellationToken)">
+            <summary>
+            Add black listed address
+            </summary>
+            <param name='request'>
+            </param>
+            <param name='customHeaders'>
+            Headers that will be added to request.
+            </param>
+            <param name='cancellationToken'>
+            The cancellation token.
+            </param>
+            <exception cref="T:Microsoft.Rest.HttpOperationException">
+            Thrown when the operation returned an invalid status code
+            </exception>
+            <exception cref="T:Microsoft.Rest.SerializationException">
+            Thrown when unable to deserialize the response
+            </exception>
+            <return>
+            A response object containing the response body and response headers.
+            </return>
+        </member>
+        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.BlockchainCashoutPreconditionsCheckAPI.AddWithHttpMessagesAsync(Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.Models.AddBlackListModel,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.Threading.CancellationToken)">
+            <summary>
+            Add black listed address
+            </summary>
+            <param name='request'>
+            </param>
+            <param name='customHeaders'>
+            Headers that will be added to request.
+            </param>
+            <param name='cancellationToken'>
+            The cancellation token.
+            </param>
+            <exception cref="T:Microsoft.Rest.HttpOperationException">
+            Thrown when the operation returned an invalid status code
+            </exception>
+            <exception cref="T:Microsoft.Rest.SerializationException">
+            Thrown when unable to deserialize the response
+            </exception>
+            <return>
+            A response object containing the response body and response headers.
+            </return>
+        </member>
+        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.BlockchainCashoutPreconditionsCheckAPI.DeleteWithHttpMessagesAsync(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.Threading.CancellationToken)">
+            <summary>
+            Delete black listed address
+            </summary>
+            <param name='blockchanType'>
+            </param>
+            <param name='blockckedAddress'>
+            </param>
+            <param name='customHeaders'>
+            Headers that will be added to request.
+            </param>
+            <param name='cancellationToken'>
+            The cancellation token.
+            </param>
+            <exception cref="T:Microsoft.Rest.HttpOperationException">
+            Thrown when the operation returned an invalid status code
+            </exception>
+            <exception cref="T:Microsoft.Rest.SerializationException">
+            Thrown when unable to deserialize the response
+            </exception>
+            <exception cref="T:Microsoft.Rest.ValidationException">
+            Thrown when a required parameter is null
+            </exception>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown when a required parameter is null
+            </exception>
+            <return>
+            A response object containing the response body and response headers.
+            </return>
+        </member>
         <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.BlockchainCashoutPreconditionsCheckAPI.CheckWithHttpMessagesAsync(System.String,System.Decimal,System.String,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.Threading.CancellationToken)">
             <summary>
             Checks service is alive
@@ -130,6 +296,164 @@
             <summary>
             Extension methods for BlockchainCashoutPreconditionsCheckAPI.
             </summary>
+        </member>
+        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.BlockchainCashoutPreconditionsCheckAPIExtensions.IsBlocked(Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.IBlockchainCashoutPreconditionsCheckAPI,System.String,System.String)">
+            <summary>
+            is address black listed
+            </summary>
+            <param name='operations'>
+            The operations group for this extension method.
+            </param>
+            <param name='blockchanType'>
+            </param>
+            <param name='blockckedAddress'>
+            </param>
+        </member>
+        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.BlockchainCashoutPreconditionsCheckAPIExtensions.IsBlockedAsync(Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.IBlockchainCashoutPreconditionsCheckAPI,System.String,System.String,System.Threading.CancellationToken)">
+            <summary>
+            is address black listed
+            </summary>
+            <param name='operations'>
+            The operations group for this extension method.
+            </param>
+            <param name='blockchanType'>
+            </param>
+            <param name='blockckedAddress'>
+            </param>
+            <param name='cancellationToken'>
+            The cancellation token.
+            </param>
+        </member>
+        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.BlockchainCashoutPreconditionsCheckAPIExtensions.Get(Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.IBlockchainCashoutPreconditionsCheckAPI,System.String,System.String)">
+            <summary>
+            is address black listed
+            </summary>
+            <param name='operations'>
+            The operations group for this extension method.
+            </param>
+            <param name='blockchanType'>
+            </param>
+            <param name='blockckedAddress'>
+            </param>
+        </member>
+        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.BlockchainCashoutPreconditionsCheckAPIExtensions.GetAsync(Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.IBlockchainCashoutPreconditionsCheckAPI,System.String,System.String,System.Threading.CancellationToken)">
+            <summary>
+            is address black listed
+            </summary>
+            <param name='operations'>
+            The operations group for this extension method.
+            </param>
+            <param name='blockchanType'>
+            </param>
+            <param name='blockckedAddress'>
+            </param>
+            <param name='cancellationToken'>
+            The cancellation token.
+            </param>
+        </member>
+        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.BlockchainCashoutPreconditionsCheckAPIExtensions.GetAll(Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.IBlockchainCashoutPreconditionsCheckAPI,System.String,System.Int32,System.String)">
+            <summary>
+            Take blocked addresses for specific blockchainType
+            </summary>
+            <param name='operations'>
+            The operations group for this extension method.
+            </param>
+            <param name='blockchanType'>
+            </param>
+            <param name='take'>
+            </param>
+            <param name='continuationToken'>
+            </param>
+        </member>
+        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.BlockchainCashoutPreconditionsCheckAPIExtensions.GetAllAsync(Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.IBlockchainCashoutPreconditionsCheckAPI,System.String,System.Int32,System.String,System.Threading.CancellationToken)">
+            <summary>
+            Take blocked addresses for specific blockchainType
+            </summary>
+            <param name='operations'>
+            The operations group for this extension method.
+            </param>
+            <param name='blockchanType'>
+            </param>
+            <param name='take'>
+            </param>
+            <param name='continuationToken'>
+            </param>
+            <param name='cancellationToken'>
+            The cancellation token.
+            </param>
+        </member>
+        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.BlockchainCashoutPreconditionsCheckAPIExtensions.Update(Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.IBlockchainCashoutPreconditionsCheckAPI,Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.Models.AddBlackListModel)">
+            <summary>
+            Add black listed address
+            </summary>
+            <param name='operations'>
+            The operations group for this extension method.
+            </param>
+            <param name='request'>
+            </param>
+        </member>
+        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.BlockchainCashoutPreconditionsCheckAPIExtensions.UpdateAsync(Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.IBlockchainCashoutPreconditionsCheckAPI,Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.Models.AddBlackListModel,System.Threading.CancellationToken)">
+            <summary>
+            Add black listed address
+            </summary>
+            <param name='operations'>
+            The operations group for this extension method.
+            </param>
+            <param name='request'>
+            </param>
+            <param name='cancellationToken'>
+            The cancellation token.
+            </param>
+        </member>
+        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.BlockchainCashoutPreconditionsCheckAPIExtensions.Add(Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.IBlockchainCashoutPreconditionsCheckAPI,Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.Models.AddBlackListModel)">
+            <summary>
+            Add black listed address
+            </summary>
+            <param name='operations'>
+            The operations group for this extension method.
+            </param>
+            <param name='request'>
+            </param>
+        </member>
+        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.BlockchainCashoutPreconditionsCheckAPIExtensions.AddAsync(Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.IBlockchainCashoutPreconditionsCheckAPI,Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.Models.AddBlackListModel,System.Threading.CancellationToken)">
+            <summary>
+            Add black listed address
+            </summary>
+            <param name='operations'>
+            The operations group for this extension method.
+            </param>
+            <param name='request'>
+            </param>
+            <param name='cancellationToken'>
+            The cancellation token.
+            </param>
+        </member>
+        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.BlockchainCashoutPreconditionsCheckAPIExtensions.Delete(Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.IBlockchainCashoutPreconditionsCheckAPI,System.String,System.String)">
+            <summary>
+            Delete black listed address
+            </summary>
+            <param name='operations'>
+            The operations group for this extension method.
+            </param>
+            <param name='blockchanType'>
+            </param>
+            <param name='blockckedAddress'>
+            </param>
+        </member>
+        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.BlockchainCashoutPreconditionsCheckAPIExtensions.DeleteAsync(Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.IBlockchainCashoutPreconditionsCheckAPI,System.String,System.String,System.Threading.CancellationToken)">
+            <summary>
+            Delete black listed address
+            </summary>
+            <param name='operations'>
+            The operations group for this extension method.
+            </param>
+            <param name='blockchanType'>
+            </param>
+            <param name='blockckedAddress'>
+            </param>
+            <param name='cancellationToken'>
+            The cancellation token.
+            </param>
         </member>
         <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.BlockchainCashoutPreconditionsCheckAPIExtensions.Check(Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.IBlockchainCashoutPreconditionsCheckAPI,System.String,System.Decimal,System.String)">
             <summary>
@@ -200,6 +524,94 @@
             Gets or sets json deserialization settings.
             </summary>
         </member>
+        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.IBlockchainCashoutPreconditionsCheckAPI.IsBlockedWithHttpMessagesAsync(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.Threading.CancellationToken)">
+            <summary>
+            is address black listed
+            </summary>
+            <param name='blockchanType'>
+            </param>
+            <param name='blockckedAddress'>
+            </param>
+            <param name='customHeaders'>
+            The headers that will be added to request.
+            </param>
+            <param name='cancellationToken'>
+            The cancellation token.
+            </param>
+        </member>
+        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.IBlockchainCashoutPreconditionsCheckAPI.GetWithHttpMessagesAsync(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.Threading.CancellationToken)">
+            <summary>
+            is address black listed
+            </summary>
+            <param name='blockchanType'>
+            </param>
+            <param name='blockckedAddress'>
+            </param>
+            <param name='customHeaders'>
+            The headers that will be added to request.
+            </param>
+            <param name='cancellationToken'>
+            The cancellation token.
+            </param>
+        </member>
+        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.IBlockchainCashoutPreconditionsCheckAPI.GetAllWithHttpMessagesAsync(System.String,System.Int32,System.String,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.Threading.CancellationToken)">
+            <summary>
+            Take blocked addresses for specific blockchainType
+            </summary>
+            <param name='blockchanType'>
+            </param>
+            <param name='take'>
+            </param>
+            <param name='continuationToken'>
+            </param>
+            <param name='customHeaders'>
+            The headers that will be added to request.
+            </param>
+            <param name='cancellationToken'>
+            The cancellation token.
+            </param>
+        </member>
+        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.IBlockchainCashoutPreconditionsCheckAPI.UpdateWithHttpMessagesAsync(Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.Models.AddBlackListModel,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.Threading.CancellationToken)">
+            <summary>
+            Add black listed address
+            </summary>
+            <param name='request'>
+            </param>
+            <param name='customHeaders'>
+            The headers that will be added to request.
+            </param>
+            <param name='cancellationToken'>
+            The cancellation token.
+            </param>
+        </member>
+        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.IBlockchainCashoutPreconditionsCheckAPI.AddWithHttpMessagesAsync(Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.Models.AddBlackListModel,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.Threading.CancellationToken)">
+            <summary>
+            Add black listed address
+            </summary>
+            <param name='request'>
+            </param>
+            <param name='customHeaders'>
+            The headers that will be added to request.
+            </param>
+            <param name='cancellationToken'>
+            The cancellation token.
+            </param>
+        </member>
+        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.IBlockchainCashoutPreconditionsCheckAPI.DeleteWithHttpMessagesAsync(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.Threading.CancellationToken)">
+            <summary>
+            Delete black listed address
+            </summary>
+            <param name='blockchanType'>
+            </param>
+            <param name='blockckedAddress'>
+            </param>
+            <param name='customHeaders'>
+            The headers that will be added to request.
+            </param>
+            <param name='cancellationToken'>
+            The cancellation token.
+            </param>
+        </member>
         <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.IBlockchainCashoutPreconditionsCheckAPI.CheckWithHttpMessagesAsync(System.String,System.Decimal,System.String,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.Threading.CancellationToken)">
             <summary>
             Checks service is alive
@@ -227,6 +639,86 @@
             <param name='cancellationToken'>
             The cancellation token.
             </param>
+        </member>
+        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.Models.AddBlackListModel.#ctor">
+            <summary>
+            Initializes a new instance of the AddBlackListModel class.
+            </summary>
+        </member>
+        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.Models.AddBlackListModel.#ctor(System.Boolean,System.String,System.String)">
+            <summary>
+            Initializes a new instance of the AddBlackListModel class.
+            </summary>
+        </member>
+        <member name="P:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.Models.AddBlackListModel.BlockchainType">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.Models.AddBlackListModel.BlockedAddress">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.Models.AddBlackListModel.IsCaseSensitive">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.Models.AddBlackListModel.Validate">
+            <summary>
+            Validate the object.
+            </summary>
+            <exception cref="T:Microsoft.Rest.ValidationException">
+            Thrown if validation fails
+            </exception>
+        </member>
+        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.Models.BlackListEnumerationResponse.#ctor">
+            <summary>
+            Initializes a new instance of the BlackListEnumerationResponse
+            class.
+            </summary>
+        </member>
+        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.Models.BlackListEnumerationResponse.#ctor(System.Collections.Generic.IList{Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.Models.BlackListResponse},System.String)">
+            <summary>
+            Initializes a new instance of the BlackListEnumerationResponse
+            class.
+            </summary>
+        </member>
+        <member name="P:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.Models.BlackListEnumerationResponse.List">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.Models.BlackListEnumerationResponse.ContinuationToken">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.Models.BlackListResponse.#ctor">
+            <summary>
+            Initializes a new instance of the BlackListResponse class.
+            </summary>
+        </member>
+        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.Models.BlackListResponse.#ctor(System.Boolean,System.String,System.String)">
+            <summary>
+            Initializes a new instance of the BlackListResponse class.
+            </summary>
+        </member>
+        <member name="P:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.Models.BlackListResponse.BlockchainType">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.Models.BlackListResponse.BlockedAddress">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.Models.BlackListResponse.IsCaseSensitive">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.Models.BlackListResponse.Validate">
+            <summary>
+            Validate the object.
+            </summary>
+            <exception cref="T:Microsoft.Rest.ValidationException">
+            Thrown if validation fails
+            </exception>
         </member>
         <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.Models.CashoutValidityResult.#ctor">
             <summary>
@@ -310,6 +802,28 @@
             Thrown if validation fails
             </exception>
         </member>
+        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.Models.IsBlockedResponse.#ctor">
+            <summary>
+            Initializes a new instance of the IsBlockedResponse class.
+            </summary>
+        </member>
+        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.Models.IsBlockedResponse.#ctor(System.Boolean)">
+            <summary>
+            Initializes a new instance of the IsBlockedResponse class.
+            </summary>
+        </member>
+        <member name="P:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.Models.IsBlockedResponse.IsBlocked">
+            <summary>
+            </summary>
+        </member>
+        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.Models.IsBlockedResponse.Validate">
+            <summary>
+            Validate the object.
+            </summary>
+            <exception cref="T:Microsoft.Rest.ValidationException">
+            Thrown if validation fails
+            </exception>
+        </member>
         <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.Models.IssueIndicator.#ctor">
             <summary>
             Initializes a new instance of the IssueIndicator class.
@@ -338,12 +852,13 @@
             Initializes a new instance of the ValidationErrorResponse class.
             </summary>
             <param name="type">Possible values include: 'None',
-            'AddressIsNotValid', 'FieldIsNotValid'</param>
+            'AddressIsNotValid', 'FieldIsNotValid', 'LessThanMinCashout',
+            'BlackListedAddress'</param>
         </member>
         <member name="P:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.Models.ValidationErrorResponse.Type">
             <summary>
             Gets or sets possible values include: 'None', 'AddressIsNotValid',
-            'FieldIsNotValid'
+            'FieldIsNotValid', 'LessThanMinCashout', 'BlackListedAddress'
             </summary>
         </member>
         <member name="P:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.Models.ValidationErrorResponse.Value">
@@ -365,11 +880,59 @@
         </member>
         <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.BlockchainCashoutPreconditionsCheckClient.ValidateCashoutAsync(Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.Models.CashoutValidateModel)">
             <summary>
-            
+            Checks whether or not cashout to the destination address is allowed
             </summary>
             <param name="validateCashoutModel"></param>
             <returns></returns>
             <exception cref="T:System.Exception">Is thrown on wrong usage of service.</exception>
+        </member>
+        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.BlockchainCashoutPreconditionsCheckClient.CreateBlackListAsync(Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.Models.BlackListModel)">
+            <summary>
+            Add new address to specific blockchain type black list
+            </summary>
+            <param name="blackListModel"></param>
+            <returns></returns>
+            <exception cref="T:System.Exception">Is thrown on wrong usage of service.</exception>
+        </member>
+        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.BlockchainCashoutPreconditionsCheckClient.GetBlackListAsync(System.String,System.String)">
+            <summary>
+            Get address from specific blockchain type black list
+            </summary>
+            <param name="blockchainType">Blockchain Type from Integration Layer</param>
+            /// <param name="address">Address</param>
+            <returns></returns>
+            <exception cref="T:System.Exception">Is thrown on wrong usage of service.</exception>
+        </member>
+        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.BlockchainCashoutPreconditionsCheckClient.GetAllBlackListsAsync(System.String,System.Int32,System.String)">
+            <summary>
+            Get address from specific blockchain type black list
+            </summary>
+            <param name="blockchainType">Blockchain Type from Integration Layer</param>
+            /// <param name="address">Address</param>
+            <returns></returns>
+            <exception cref="T:System.Exception">Is thrown on wrong usage of service.</exception>
+        </member>
+        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.BlockchainCashoutPreconditionsCheckClient.DeleteBlackListAsync(System.String,System.String)">
+            <summary>
+            Delete address from specific blockchain type black list
+            </summary>
+            <param name="blockchainType">Blockchain Type from Integration Layer</param>
+            /// <param name="address">Address to delete from black list</param>
+            <returns></returns>
+            <exception cref="T:System.Exception">Is thrown on wrong usage of service.</exception>
+        </member>
+        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.Models.BlackListModel.#ctor(System.String,System.String,System.Boolean)">
+            <summary>
+            Initializes a new instance of the AddBlackListModel class.
+            </summary>
+        </member>
+        <member name="P:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.Models.BlackListModel.BlockedAddress">
+            <summary>
+            </summary>
+        </member>
+        <member name="P:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.Models.BlackListModel.IsCaseSensitive">
+            <summary>
+            </summary>
         </member>
     </members>
 </doc>
