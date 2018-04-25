@@ -1,6 +1,8 @@
 ﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Common.Log;
+using Lykke.Service.BlockchainCashoutPreconditionsCheck.AzureRepositories.Repositories;
+using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Repositories;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Services;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Settings.ServiceSettings;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Services;
@@ -35,9 +37,20 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Modules
             //  builder.RegisterType<QuotesPublisher>()
             //      .As<IQuotesPublisher>()
             //      .WithParameter(TypedParameter.From(_settings.CurrentValue.QuotesPublication))
+            #region Repo
+
+            builder.RegisterInstance(BlackListRepository.Create(_settings.ConnectionString(x =>x.Db.DataConnString), _log))
+                .As<IBlackListRepository>()
+                .SingleInstance();
+
+            #endregion 
 
             builder.RegisterInstance(_log)
                 .As<ILog>()
+                .SingleInstance();
+
+            builder.RegisterType<BlackListService>()
+                .As<IBlackListService>()
                 .SingleInstance();
 
             builder.RegisterType<HealthService>()
