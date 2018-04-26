@@ -9,27 +9,24 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
     using Newtonsoft.Json;
     using System.Linq;
 
-    public partial class ValidationErrorResponse
+    public partial class AddBlackListModel
     {
         /// <summary>
-        /// Initializes a new instance of the ValidationErrorResponse class.
+        /// Initializes a new instance of the AddBlackListModel class.
         /// </summary>
-        public ValidationErrorResponse()
+        public AddBlackListModel()
         {
             CustomInit();
         }
 
         /// <summary>
-        /// Initializes a new instance of the ValidationErrorResponse class.
+        /// Initializes a new instance of the AddBlackListModel class.
         /// </summary>
-        /// <param name="type">Possible values include: 'None',
-        /// 'AddressIsNotValid', 'FieldNotValid', 'LessThanMinCashout',
-        /// 'HotwalletTargetProhibited', 'DepositAddressNotFound',
-        /// 'BlackListedAddress'</param>
-        public ValidationErrorResponse(ValidationErrorType type, string value = default(string))
+        public AddBlackListModel(bool isCaseSensitive, string blockchainType = default(string), string blockedAddress = default(string))
         {
-            Type = type;
-            Value = value;
+            BlockchainType = blockchainType;
+            BlockedAddress = blockedAddress;
+            IsCaseSensitive = isCaseSensitive;
             CustomInit();
         }
 
@@ -39,17 +36,19 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
         partial void CustomInit();
 
         /// <summary>
-        /// Gets or sets possible values include: 'None', 'AddressIsNotValid',
-        /// 'FieldNotValid', 'LessThanMinCashout', 'HotwalletTargetProhibited',
-        /// 'DepositAddressNotFound', 'BlackListedAddress'
         /// </summary>
-        [JsonProperty(PropertyName = "Type")]
-        public ValidationErrorType Type { get; set; }
+        [JsonProperty(PropertyName = "BlockchainType")]
+        public string BlockchainType { get; set; }
 
         /// <summary>
         /// </summary>
-        [JsonProperty(PropertyName = "Value")]
-        public string Value { get; set; }
+        [JsonProperty(PropertyName = "BlockedAddress")]
+        public string BlockedAddress { get; set; }
+
+        /// <summary>
+        /// </summary>
+        [JsonProperty(PropertyName = "IsCaseSensitive")]
+        public bool IsCaseSensitive { get; set; }
 
         /// <summary>
         /// Validate the object.
@@ -59,6 +58,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
         /// </exception>
         public virtual void Validate()
         {
+            //Nothing to validate
         }
     }
 }

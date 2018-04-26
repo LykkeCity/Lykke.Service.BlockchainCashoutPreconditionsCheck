@@ -7,6 +7,7 @@
         FieldNotValid,
         LessThanMinCashout,
         HotwalletTargetProhibited,
-        DepositAddressNotFound
+        DepositAddressNotFound,
+        BlackListedAddress
     }
 }

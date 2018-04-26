@@ -41,27 +41,27 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
 
         /// <summary>
         /// </summary>
-        [JsonProperty(PropertyName = "name")]
+        [JsonProperty(PropertyName = "Name")]
         public string Name { get; set; }
 
         /// <summary>
         /// </summary>
-        [JsonProperty(PropertyName = "version")]
+        [JsonProperty(PropertyName = "Version")]
         public string Version { get; set; }
 
         /// <summary>
         /// </summary>
-        [JsonProperty(PropertyName = "env")]
+        [JsonProperty(PropertyName = "Env")]
         public string Env { get; set; }
 
         /// <summary>
         /// </summary>
-        [JsonProperty(PropertyName = "isDebug")]
+        [JsonProperty(PropertyName = "IsDebug")]
         public bool IsDebug { get; set; }
 
         /// <summary>
         /// </summary>
-        [JsonProperty(PropertyName = "issueIndicators")]
+        [JsonProperty(PropertyName = "IssueIndicators")]
         public IList<IssueIndicator> IssueIndicators { get; set; }
 
         /// <summary>

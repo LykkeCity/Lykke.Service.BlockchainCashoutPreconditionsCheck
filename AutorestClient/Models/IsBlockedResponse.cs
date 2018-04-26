@@ -9,23 +9,22 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
     using Newtonsoft.Json;
     using System.Linq;
 
-    public partial class IssueIndicator
+    public partial class IsBlockedResponse
     {
         /// <summary>
-        /// Initializes a new instance of the IssueIndicator class.
+        /// Initializes a new instance of the IsBlockedResponse class.
         /// </summary>
-        public IssueIndicator()
+        public IsBlockedResponse()
         {
             CustomInit();
         }
 
         /// <summary>
-        /// Initializes a new instance of the IssueIndicator class.
+        /// Initializes a new instance of the IsBlockedResponse class.
         /// </summary>
-        public IssueIndicator(string type = default(string), string value = default(string))
+        public IsBlockedResponse(bool isBlocked)
         {
-            Type = type;
-            Value = value;
+            IsBlocked = isBlocked;
             CustomInit();
         }
 
@@ -36,13 +35,18 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
 
         /// <summary>
         /// </summary>
-        [JsonProperty(PropertyName = "type")]
-        public string Type { get; set; }
+        [JsonProperty(PropertyName = "IsBlocked")]
+        public bool IsBlocked { get; set; }
 
         /// <summary>
+        /// Validate the object.
         /// </summary>
-        [JsonProperty(PropertyName = "value")]
-        public string Value { get; set; }
-
+        /// <exception cref="Microsoft.Rest.ValidationException">
+        /// Thrown if validation fails
+        /// </exception>
+        public virtual void Validate()
+        {
+            //Nothing to validate
+        }
     }
 }

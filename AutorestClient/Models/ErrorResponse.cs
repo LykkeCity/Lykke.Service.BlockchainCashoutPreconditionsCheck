@@ -7,25 +7,27 @@
 namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.Models
 {
     using Newtonsoft.Json;
+    using System.Collections;
+    using System.Collections.Generic;
     using System.Linq;
 
-    public partial class IssueIndicator
+    public partial class ErrorResponse
     {
         /// <summary>
-        /// Initializes a new instance of the IssueIndicator class.
+        /// Initializes a new instance of the ErrorResponse class.
         /// </summary>
-        public IssueIndicator()
+        public ErrorResponse()
         {
             CustomInit();
         }
 
         /// <summary>
-        /// Initializes a new instance of the IssueIndicator class.
+        /// Initializes a new instance of the ErrorResponse class.
         /// </summary>
-        public IssueIndicator(string type = default(string), string value = default(string))
+        public ErrorResponse(string errorMessage = default(string), IDictionary<string, IList<string>> modelErrors = default(IDictionary<string, IList<string>>))
         {
-            Type = type;
-            Value = value;
+            ErrorMessage = errorMessage;
+            ModelErrors = modelErrors;
             CustomInit();
         }
 
@@ -36,13 +38,13 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
 
         /// <summary>
         /// </summary>
-        [JsonProperty(PropertyName = "type")]
-        public string Type { get; set; }
+        [JsonProperty(PropertyName = "ErrorMessage")]
+        public string ErrorMessage { get; set; }
 
         /// <summary>
         /// </summary>
-        [JsonProperty(PropertyName = "value")]
-        public string Value { get; set; }
+        [JsonProperty(PropertyName = "ModelErrors")]
+        public IDictionary<string, IList<string>> ModelErrors { get; set; }
 
     }
 }

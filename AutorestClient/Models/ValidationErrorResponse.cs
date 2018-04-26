@@ -23,9 +23,8 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
         /// Initializes a new instance of the ValidationErrorResponse class.
         /// </summary>
         /// <param name="type">Possible values include: 'None',
-        /// 'AddressIsNotValid', 'FieldNotValid', 'LessThanMinCashout',
-        /// 'HotwalletTargetProhibited', 'DepositAddressNotFound',
-        /// 'BlackListedAddress'</param>
+        /// 'AddressIsNotValid', 'FieldIsNotValid',
+        /// 'LessThanMinCashout'</param>
         public ValidationErrorResponse(ValidationErrorType type, string value = default(string))
         {
             Type = type;
@@ -40,8 +39,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
 
         /// <summary>
         /// Gets or sets possible values include: 'None', 'AddressIsNotValid',
-        /// 'FieldNotValid', 'LessThanMinCashout', 'HotwalletTargetProhibited',
-        /// 'DepositAddressNotFound', 'BlackListedAddress'
+        /// 'FieldIsNotValid', 'LessThanMinCashout'
         /// </summary>
         [JsonProperty(PropertyName = "Type")]
         public ValidationErrorType Type { get; set; }

@@ -2,7 +2,6 @@
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Exceptions;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Text;
 

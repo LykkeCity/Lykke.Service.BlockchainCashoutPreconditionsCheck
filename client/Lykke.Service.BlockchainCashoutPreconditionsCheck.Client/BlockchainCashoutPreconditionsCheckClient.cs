@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using Common;
 using Common.Log;
@@ -15,14 +18,14 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client
         private readonly ILog _log;
         private IBlockchainCashoutPreconditionsCheckAPI _service;
 
-        public BlockchainCashoutPreconditionsCheckClient(string serviceUrl, ILog log)
+        public BlockchainCashoutPreconditionsCheckClient(string serviceUrl, ILog log, params DelegatingHandler[] handlers)
         {
             _log = log;
-            _service = new BlockchainCashoutPreconditionsCheckAPI(new Uri(serviceUrl));
+            _service = new BlockchainCashoutPreconditionsCheckAPI(new Uri(serviceUrl), handlers);
         }
 
         /// <summary>
-        /// 
+        /// Checks whether or not cashout to the destination address is allowed
         /// </summary>
         /// <param name="validateCashoutModel"></param>
         /// <returns></returns>
@@ -31,7 +34,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client
         {
             bool isAllowed = false;
             IEnumerable<ValidationErrorResponse> validationErrors;
-            var response =  await _service.CheckWithHttpMessagesAsync(validateCashoutModel.AssetId, validateCashoutModel.Amount, validateCashoutModel.DestinationAddress);
+            var response = await _service.CheckWithHttpMessagesAsync(validateCashoutModel.AssetId, validateCashoutModel.DestinationAddress, validateCashoutModel.Amount);
             var responseObject = response.Body;
             switch (responseObject)
             {
@@ -49,12 +52,145 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client
             return (isAllowed, validationErrors);
         }
 
+        /// <summary>
+        /// Add new address to specific blockchain type black list
+        /// </summary>
+        /// <param name="blackListModel"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception">Is thrown on wrong usage of service.</exception>
+        public async Task CreateBlackListAsync(BlackListModel blackListModel)
+        {
+            var response = await _service.AddAsync(new AddBlackListModel()
+            {
+                BlockedAddress = blackListModel.BlockedAddress,
+                IsCaseSensitive = blackListModel.IsCaseSensitive,
+                BlockchainType = blackListModel.BlockchainType,
+            });
+
+            if (response == null)
+                return;
+
+            switch (response)
+            {
+                case ErrorResponse errorResponse:
+                    if (string.IsNullOrEmpty(errorResponse.ErrorMessage))
+                        throw new Exception(FormatErrorResponse(errorResponse));
+                    break;
+                default:
+                    throw new Exception($"Unknown response: {response.ToJson()}");
+            }
+        }
+
+        /// <summary>
+        /// Get address from specific blockchain type black list
+        /// </summary>
+        /// <param name="blockchainType">Blockchain Type from Integration Layer</param>
+        /// /// <param name="address">Address</param>
+        /// <returns></returns>
+        /// <exception cref="Exception">Is thrown on wrong usage of service.</exception>
+        public async Task<BlackListModel> GetBlackListAsync(string blockchainType, string address)
+        {
+            var response = await _service.GetAsync(blockchainType, address);
+
+            if (response == null)
+                return null;
+
+            switch (response)
+            {
+                case BlackListResponse blackListResponse:
+                    return Map(blackListResponse);
+                case ErrorResponse errorResponse:
+                    throw new Exception(FormatErrorResponse(errorResponse));
+                default:
+                    throw new Exception($"Unknown response: {response.ToJson()}");
+            }
+        }
+
+        /// <summary>
+        /// Get address from specific blockchain type black list
+        /// </summary>
+        /// <param name="blockchainType">Blockchain Type from Integration Layer</param>
+        /// /// <param name="address">Address</param>
+        /// <returns></returns>
+        /// <exception cref="Exception">Is thrown on wrong usage of service.</exception>
+        public async Task<BlackListEnumerationModel> GetAllBlackListsAsync(string blockchainType, int take, string continuationToken = null)
+        {
+            var response = await _service.GetAllAsync(blockchainType, take, continuationToken);
+
+            switch (response)
+            {
+                case BlackListEnumerationResponse blackListResponse:
+                    var model = new BlackListEnumerationModel()
+                    {
+                        List = blackListResponse.List?.Select(x => Map(x)),
+                        ContinuationToken = blackListResponse.ContinuationToken
+                    };
+
+                    return model;
+                case ErrorResponse errorResponse:
+                    throw new Exception(FormatErrorResponse(errorResponse));
+                default:
+                    throw new Exception($"Unknown response: {response.ToJson()}");
+            }
+        }
+
+        /// <summary>
+        /// Delete address from specific blockchain type black list
+        /// </summary>
+        /// <param name="blockchainType">Blockchain Type from Integration Layer</param>
+        /// /// <param name="address">Address to delete from black list</param>
+        /// <returns></returns>
+        /// <exception cref="Exception">Is thrown on wrong usage of service.</exception>
+        public async Task DeleteBlackListAsync(string blockchainType, string address)
+        {
+            var response = await _service.DeleteAsync(blockchainType, address);
+
+            if (response == null)
+                return;
+
+            switch (response)
+            {
+                case ErrorResponse errorResponse:
+                    if (string.IsNullOrEmpty(errorResponse.ErrorMessage))
+                        throw new Exception(FormatErrorResponse(errorResponse));
+                    break;
+                default:
+                    throw new Exception($"Unknown response: {response.ToJson()}");
+            }
+        }
+
         public void Dispose()
         {
             if (_service == null)
                 return;
             _service.Dispose();
             _service = null;
+        }
+
+        private BlackListModel Map(BlackListResponse response)
+        {
+            return new BlackListModel(response.BlockchainType, response.BlockedAddress, response.IsCaseSensitive);
+        }
+
+        private string FormatErrorResponse(ErrorResponse errorResponse)
+        {
+            StringBuilder sb = new StringBuilder(errorResponse.ErrorMessage);
+            sb.AppendLine();
+
+            errorResponse.ModelErrors.ForEach(x =>
+            {
+                sb.Append($"{x.Key}: {{");
+
+                x.Value?.ForEach(y =>
+                {
+                    sb.AppendLine(y);
+                    sb.Append(",");
+                });
+
+                sb.AppendLine("}");
+            });
+
+            return sb.ToString();
         }
     }
 }

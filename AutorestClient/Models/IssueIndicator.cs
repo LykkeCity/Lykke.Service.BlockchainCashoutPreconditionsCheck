@@ -36,12 +36,12 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
 
         /// <summary>
         /// </summary>
-        [JsonProperty(PropertyName = "type")]
+        [JsonProperty(PropertyName = "Type")]
         public string Type { get; set; }
 
         /// <summary>
         /// </summary>
-        [JsonProperty(PropertyName = "value")]
+        [JsonProperty(PropertyName = "Value")]
         public string Value { get; set; }
 
     }

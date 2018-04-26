@@ -21,16 +21,10 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
         None,
         [EnumMember(Value = "AddressIsNotValid")]
         AddressIsNotValid,
-        [EnumMember(Value = "FieldNotValid")]
-        FieldNotValid,
+        [EnumMember(Value = "FieldIsNotValid")]
+        FieldIsNotValid,
         [EnumMember(Value = "LessThanMinCashout")]
-        LessThanMinCashout,
-        [EnumMember(Value = "HotwalletTargetProhibited")]
-        HotwalletTargetProhibited,
-        [EnumMember(Value = "DepositAddressNotFound")]
-        DepositAddressNotFound,
-        [EnumMember(Value = "BlackListedAddress")]
-        BlackListedAddress
+        LessThanMinCashout
     }
     internal static class ValidationErrorTypeEnumExtension
     {
@@ -47,16 +41,10 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
                     return "None";
                 case ValidationErrorType.AddressIsNotValid:
                     return "AddressIsNotValid";
-                case ValidationErrorType.FieldNotValid:
-                    return "FieldNotValid";
+                case ValidationErrorType.FieldIsNotValid:
+                    return "FieldIsNotValid";
                 case ValidationErrorType.LessThanMinCashout:
                     return "LessThanMinCashout";
-                case ValidationErrorType.HotwalletTargetProhibited:
-                    return "HotwalletTargetProhibited";
-                case ValidationErrorType.DepositAddressNotFound:
-                    return "DepositAddressNotFound";
-                case ValidationErrorType.BlackListedAddress:
-                    return "BlackListedAddress";
             }
             return null;
         }
@@ -69,16 +57,10 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
                     return ValidationErrorType.None;
                 case "AddressIsNotValid":
                     return ValidationErrorType.AddressIsNotValid;
-                case "FieldNotValid":
-                    return ValidationErrorType.FieldNotValid;
+                case "FieldIsNotValid":
+                    return ValidationErrorType.FieldIsNotValid;
                 case "LessThanMinCashout":
                     return ValidationErrorType.LessThanMinCashout;
-                case "HotwalletTargetProhibited":
-                    return ValidationErrorType.HotwalletTargetProhibited;
-                case "DepositAddressNotFound":
-                    return ValidationErrorType.DepositAddressNotFound;
-                case "BlackListedAddress":
-                    return ValidationErrorType.BlackListedAddress;
             }
             return null;
         }
