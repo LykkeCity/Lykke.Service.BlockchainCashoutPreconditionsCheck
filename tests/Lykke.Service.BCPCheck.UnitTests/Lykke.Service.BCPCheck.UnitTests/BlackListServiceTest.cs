@@ -7,7 +7,7 @@ using Lykke.Service.BlockchainCashoutPreconditionsCheck.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
-namespace Lykke.Service.BCPCheck.UnitTests
+namespace Lykke.Service.BCPCheck.Tests
 {
     //Naming: MethodName__TestCase__ExpectedResult
     [TestClass]

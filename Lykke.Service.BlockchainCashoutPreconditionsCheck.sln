@@ -31,7 +31,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lykke.Service.BlockchainCas
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lykke.Service.BlockchainCashoutPreconditionsCheck.Console", "tests\Lykke.Service.BlockchainCashoutPreconditionsCheck.Test\Lykke.Service.BlockchainCashoutPreconditionsCheck.Console.csproj", "{7A65ECE7-C988-4E78-9BCB-9A9B7B13F316}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lykke.Service.BCPCheck.UnitTests", "tests\Lykke.Service.BCPCheck.UnitTests\Lykke.Service.BCPCheck.UnitTests\Lykke.Service.BCPCheck.UnitTests.csproj", "{A2763EE7-0B24-4AE3-B0D0-6CAAA95FD67F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lykke.Service.BCPCheck.Tests", "tests\Lykke.Service.BCPCheck.UnitTests\Lykke.Service.BCPCheck.UnitTests\Lykke.Service.BCPCheck.Tests.csproj", "{A2763EE7-0B24-4AE3-B0D0-6CAAA95FD67F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
