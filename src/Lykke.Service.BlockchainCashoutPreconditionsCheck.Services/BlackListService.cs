@@ -78,7 +78,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
 
         private void ThrowOnNotSupportedBlockchainType(string blockchainType)
         {
-            var blockchainClient = _blockchainApiClientProvider.Get(blockchainType);
+            var blockchainClient = _blockchainApiClientProvider.Get(blockchainType);//throws
         }
     }
 }
