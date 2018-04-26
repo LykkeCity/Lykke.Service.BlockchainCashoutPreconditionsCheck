@@ -410,7 +410,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
             HttpStatusCode _statusCode = _httpResponse.StatusCode;
             cancellationToken.ThrowIfCancellationRequested();
             string _responseContent = null;
-            if ((int)_statusCode != 200 && (int)_statusCode != 500 && (int)_statusCode != 400)
+            if ((int)_statusCode != 200 && (int)_statusCode != 204 && (int)_statusCode != 500 && (int)_statusCode != 400)
             {
                 var ex = new HttpOperationException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
                 if (_httpResponse.Content != null) {
@@ -454,6 +454,25 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
                     throw new SerializationException("Unable to deserialize the response.", _responseContent, ex);
                 }
             }
+
+            // Deserialize Response
+            if ((int)_statusCode == 204)
+            {
+                try
+                {
+                    _result.Body = null;
+                }
+                catch (JsonException ex)
+                {
+                    _httpRequest.Dispose();
+                    if (_httpResponse != null)
+                    {
+                        _httpResponse.Dispose();
+                    }
+                    throw new SerializationException("Unable to deserialize the response.", _responseContent, ex);
+                }
+            }
+
             // Deserialize Response
             if ((int)_statusCode == 500)
             {

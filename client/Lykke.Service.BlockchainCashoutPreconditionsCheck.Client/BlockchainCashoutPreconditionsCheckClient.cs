@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Common;
@@ -17,10 +18,10 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client
         private readonly ILog _log;
         private IBlockchainCashoutPreconditionsCheckAPI _service;
 
-        public BlockchainCashoutPreconditionsCheckClient(string serviceUrl, ILog log)
+        public BlockchainCashoutPreconditionsCheckClient(string serviceUrl, ILog log, params DelegatingHandler[] handlers)
         {
             _log = log;
-            _service = new BlockchainCashoutPreconditionsCheckAPI(new Uri(serviceUrl));
+            _service = new BlockchainCashoutPreconditionsCheckAPI(new Uri(serviceUrl), handlers);
         }
 
         /// <summary>
@@ -66,6 +67,9 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client
                 BlockchainType = blackListModel.BlockchainType,
             });
 
+            if (response == null)
+                return;
+
             switch (response)
             {
                 case ErrorResponse errorResponse:
@@ -87,6 +91,9 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client
         public async Task<BlackListModel> GetBlackListAsync(string blockchainType, string address)
         {
             var response = await _service.GetAsync(blockchainType, address);
+
+            if (response == null)
+                return null;
 
             switch (response)
             {
@@ -137,6 +144,9 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client
         public async Task DeleteBlackListAsync(string blockchainType, string address)
         {
             var response = await _service.DeleteAsync(blockchainType, address);
+
+            if (response == null)
+                return;
 
             switch (response)
             {

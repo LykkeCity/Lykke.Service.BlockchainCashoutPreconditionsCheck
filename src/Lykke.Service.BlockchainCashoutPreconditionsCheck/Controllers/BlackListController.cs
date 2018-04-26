@@ -52,11 +52,15 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Controllers
         [ArgumentValidationExceptionFilter]
         [SwaggerOperation("Get")]
         [ProducesResponseType(typeof(BlackListResponse), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(void), (int)HttpStatusCode.NoContent)]
         [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.InternalServerError)]
         [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> GetBlackListAsync([FromRoute] string blockchanType, [FromRoute] string blockckedAddress)
         {
             var model = await _blackListService.TryGetAsync(blockchanType, blockckedAddress);
+
+            if (model == null)
+                return NoContent();
 
             return Ok(Map(model));
         }
