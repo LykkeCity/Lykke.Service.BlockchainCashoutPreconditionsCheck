@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Domain.Validation;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Repositories;
 
-namespace Lykke.Service.BCPCheck.UnitTests
+namespace Lykke.Service.BCPCheck.Tests
 {
     public class BlackListRepositoryFake : IBlackListRepository
     {
