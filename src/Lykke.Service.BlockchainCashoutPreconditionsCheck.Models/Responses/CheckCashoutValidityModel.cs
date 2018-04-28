@@ -24,7 +24,9 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Models.Responses
         None,
         AddressIsNotValid,
         FieldIsNotValid,
-        LessThanMinCashout
+        LessThanMinCashout,
+        HotwalletTargetProhibited,
+        DepositAddressNotFound
     }
 
     [DataContract]
