@@ -4,12 +4,11 @@ using System.Threading.Tasks;
 using Common;
 using Lykke.Service.Assets.Client;
 using Lykke.Service.Assets.Client.Models;
-using Lykke.Service.BlockchainApi.Client;
-using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Domain.Health;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Domain.Validation;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Domain.Validations;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Exceptions;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Services;
+using Lykke.Service.BlockchainWallets.Client;
 
 namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
 {
@@ -17,11 +16,18 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
     {
         private readonly IBlockchainApiClientProvider _blockchainApiClientProvider;
         private readonly IAssetsService _assetsService;
+        private readonly IBlockchainSettingsProvider _blockchainSettingsProvider;
+        private readonly IBlockchainWalletsClient _blockchainWalletsClient;
 
-        public ValidationService(IBlockchainApiClientProvider blockchainApiClientProvider, Lykke.Service.Assets.Client.IAssetsService assetsService)
+        public ValidationService(IBlockchainApiClientProvider blockchainApiClientProvider, 
+            IAssetsService assetsService, 
+            IBlockchainSettingsProvider blockchainSettingsProvider,
+            IBlockchainWalletsClient blockchainWalletsClient)
         {
             _blockchainApiClientProvider = blockchainApiClientProvider;
             _assetsService = assetsService;
+            _blockchainSettingsProvider = blockchainSettingsProvider;
+            _blockchainWalletsClient = blockchainWalletsClient;
         }
 
         /// <summary>
@@ -72,6 +78,36 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
                 var minimalAmount = asset.CashoutMinimalAmount.GetFixedAsString(asset.Accuracy).TrimEnd('0');
 
                 errors.Add(ValidationError.Create(ValidationErrorType.LessThanMinCashout, minimalAmount));
+            }
+
+            var blockchainSettings = _blockchainSettingsProvider.Get(asset.BlockchainIntegrationLayerId);
+
+            if (cashoutModel.DestinationAddress == blockchainSettings.HotWalletAddress)
+            {
+                errors.Add(ValidationError.Create(ValidationErrorType.HotwalletTargetProhibited, "Hot wallet as destitnation address prohibited"));
+            }
+            
+            var capabilities = await _blockchainWalletsClient.GetCapabilititesAsync(asset.BlockchainIntegrationLayerId);
+            if (capabilities.IsPublicAddressExtensionRequired)
+            {
+
+                var hotWalletParseResult = await _blockchainWalletsClient.ParseAddressAsync(asset.BlockchainIntegrationLayerId,
+                        blockchainSettings.HotWalletAddress);
+
+                var destAddressParseResult = await _blockchainWalletsClient.ParseAddressAsync(asset.BlockchainIntegrationLayerId,
+                        cashoutModel.DestinationAddress);
+
+                if (hotWalletParseResult.BaseAddress == destAddressParseResult.BaseAddress)
+                {
+                    var clientId = await _blockchainWalletsClient.TryGetClientIdAsync(asset.BlockchainIntegrationLayerId,
+                         asset.BlockchainIntegrationLayerAssetId, 
+                         cashoutModel.DestinationAddress);
+
+                    if (clientId == null)
+                    {
+                        errors.Add(ValidationError.Create(ValidationErrorType.DepositAddressNotFound, $"Deposit address {cashoutModel.DestinationAddress} not found"));
+                    }
+                }
             }
 
             return errors;
