@@ -53,7 +53,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client
         }
 
         /// <summary>
-        /// Add new address to specific blockchain type black list
+        /// Add new address to the specific blockchain type black list
         /// </summary>
         /// <param name="blackListModel"></param>
         /// <returns></returns>
