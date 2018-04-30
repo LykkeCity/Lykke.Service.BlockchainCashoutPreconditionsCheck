@@ -888,7 +888,7 @@
         </member>
         <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.BlockchainCashoutPreconditionsCheckClient.CreateBlackListAsync(Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.Models.BlackListModel)">
             <summary>
-            Add new address to specific blockchain type black list
+            Add new address to the specific blockchain type black list
             </summary>
             <param name="blackListModel"></param>
             <returns></returns>
@@ -913,6 +913,49 @@
             <exception cref="T:System.Exception">Is thrown on wrong usage of service.</exception>
         </member>
         <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.BlockchainCashoutPreconditionsCheckClient.DeleteBlackListAsync(System.String,System.String)">
+            <summary>
+            Delete address from specific blockchain type black list
+            </summary>
+            <param name="blockchainType">Blockchain Type from Integration Layer</param>
+            /// <param name="address">Address to delete from black list</param>
+            <returns></returns>
+            <exception cref="T:System.Exception">Is thrown on wrong usage of service.</exception>
+        </member>
+        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.IBlockchainCashoutPreconditionsCheckClient.ValidateCashoutAsync(Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.Models.CashoutValidateModel)">
+            <summary>
+            Checks whether or not cashout to the destination address is allowed
+            </summary>
+            <param name="validateCashoutModel"></param>
+            <returns></returns>
+            <exception cref="T:System.Exception">Is thrown on wrong usage of service.</exception>
+        </member>
+        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.IBlockchainCashoutPreconditionsCheckClient.CreateBlackListAsync(Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.Models.BlackListModel)">
+            <summary>
+            Add new address to the specific blockchain type black list
+            </summary>
+            <param name="blackListModel"></param>
+            <returns></returns>
+            <exception cref="T:System.Exception">Is thrown on wrong usage of service.</exception>
+        </member>
+        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.IBlockchainCashoutPreconditionsCheckClient.GetBlackListAsync(System.String,System.String)">
+            <summary>
+            Get address from specific blockchain type black list
+            </summary>
+            <param name="blockchainType">Blockchain Type from Integration Layer</param>
+            /// <param name="address">Address</param>
+            <returns></returns>
+            <exception cref="T:System.Exception">Is thrown on wrong usage of service.</exception>
+        </member>
+        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.IBlockchainCashoutPreconditionsCheckClient.GetAllBlackListsAsync(System.String,System.Int32,System.String)">
+            <summary>
+            Get address from specific blockchain type black list
+            </summary>
+            <param name="blockchainType">Blockchain Type from Integration Layer</param>
+            /// <param name="address">Address</param>
+            <returns></returns>
+            <exception cref="T:System.Exception">Is thrown on wrong usage of service.</exception>
+        </member>
+        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.IBlockchainCashoutPreconditionsCheckClient.DeleteBlackListAsync(System.String,System.String)">
             <summary>
             Delete address from specific blockchain type black list
             </summary>
