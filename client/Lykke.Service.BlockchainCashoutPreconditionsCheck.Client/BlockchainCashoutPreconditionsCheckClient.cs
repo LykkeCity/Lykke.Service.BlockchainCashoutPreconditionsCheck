@@ -8,6 +8,7 @@ using Common;
 using Common.Log;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.Models;
+using Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.Exceptions;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.Models;
 using MoreLinq;
 
@@ -74,7 +75,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client
             {
                 case ErrorResponse errorResponse:
                     if (!string.IsNullOrEmpty(errorResponse.ErrorMessage))
-                        throw new Exception(FormatErrorResponse(errorResponse));
+                        throw CreateErrorResponseException(errorResponse);
                     break;
                 default:
                     throw new Exception($"Unknown response: {response.ToJson()}");
@@ -100,7 +101,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client
                 case BlackListResponse blackListResponse:
                     return Map(blackListResponse);
                 case ErrorResponse errorResponse:
-                    throw new Exception(FormatErrorResponse(errorResponse));
+                    throw CreateErrorResponseException(errorResponse);
                 default:
                     throw new Exception($"Unknown response: {response.ToJson()}");
             }
@@ -128,7 +129,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client
 
                     return model;
                 case ErrorResponse errorResponse:
-                    throw new Exception(FormatErrorResponse(errorResponse));
+                    throw CreateErrorResponseException(errorResponse);
                 default:
                     throw new Exception($"Unknown response: {response.ToJson()}");
             }
@@ -152,7 +153,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client
             {
                 case ErrorResponse errorResponse:
                     if (string.IsNullOrEmpty(errorResponse.ErrorMessage))
-                        throw new Exception(FormatErrorResponse(errorResponse));
+                        throw CreateErrorResponseException(errorResponse);
                     break;
                 default:
                     throw new Exception($"Unknown response: {response.ToJson()}");
@@ -172,25 +173,11 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client
             return new BlackListModel(response.BlockchainType, response.BlockedAddress, response.IsCaseSensitive);
         }
 
-        private string FormatErrorResponse(ErrorResponse errorResponse)
+        private ErrorResponseException CreateErrorResponseException(ErrorResponse errorResponse)
         {
-            StringBuilder sb = new StringBuilder(errorResponse.ErrorMessage);
-            sb.AppendLine();
+            var exception = new ErrorResponseException(errorResponse.ModelErrors);
 
-            errorResponse.ModelErrors.ForEach(x =>
-            {
-                sb.Append($"{x.Key}: {{");
-
-                x.Value?.ForEach(y =>
-                {
-                    sb.AppendLine(y);
-                    sb.Append(",");
-                });
-
-                sb.AppendLine("}");
-            });
-
-            return sb.ToString();
+            return exception;
         }
     }
 }
