@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Lykke.Service.BlockchainApi.Client;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.AzureRepositories.Repositories;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Domain.Validation;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Exceptions;
@@ -24,7 +25,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
 
         public async Task<bool> IsBlockedAsync(string blockchainType, string blockedAddress)
         {
-            ThrowOnNotSupportedBlockchainType(blockchainType);
+            await ThrowOnNotSupportedBlockchainType(blockchainType, blockedAddress);
 
             var blackList = await _blackListRepository.TryGetAsync(blockchainType, blockedAddress);
 
@@ -43,7 +44,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
 
         public async Task<BlackListModel> TryGetAsync(string blockchainType, string blockedAddress)
         {
-            ThrowOnNotSupportedBlockchainType(blockchainType);
+            await ThrowOnNotSupportedBlockchainType(blockchainType, blockedAddress);
 
             var model = await _blackListRepository.TryGetAsync(blockchainType, blockedAddress);
 
@@ -52,7 +53,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
 
         public async Task<(IEnumerable<BlackListModel>, string continuationToken)> TryGetAllAsync(string blockchainType, int take, string continuationToken = null)
         {
-            ThrowOnNotSupportedBlockchainType(blockchainType);
+            await ThrowOnNotSupportedBlockchainType(blockchainType);
 
             if (take == 0)
                 take = Int32.MaxValue;
@@ -64,21 +65,43 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
 
         public async Task SaveAsync(BlackListModel model)
         {
-            ThrowOnNotSupportedBlockchainType(model?.BlockchainType ?? "");
+            await ThrowOnNotSupportedBlockchainType(model?.BlockchainType ?? "", model?.BlockedAddress);
 
             await _blackListRepository.SaveAsync(model);
         }
 
         public async Task DeleteAsync(string blockchainType, string blockedAddress)
         {
-            ThrowOnNotSupportedBlockchainType(blockchainType);
+            await ThrowOnNotSupportedBlockchainType(blockchainType, blockedAddress);
 
             await _blackListRepository.DeleteAsync(blockchainType, blockedAddress);
         }
 
-        private void ThrowOnNotSupportedBlockchainType(string blockchainType)
+        private async Task<IBlockchainApiClient> ThrowOnNotSupportedBlockchainType(string blockchainType)
         {
-            var blockchainClient = _blockchainApiClientProvider.Get(blockchainType);//throws
+            IBlockchainApiClient blockchainClient;
+
+            try
+            {
+                blockchainClient = _blockchainApiClientProvider.Get(blockchainType); //throws
+            }
+            catch (Exception e)
+            {
+                throw new ArgumentValidationException($"{blockchainType} is not a valid type", "blockchainType");
+            }
+            
+
+            return blockchainClient;
+        }
+
+        private async Task ThrowOnNotSupportedBlockchainType(string blockchainType, string blockedAddress)
+        {
+            var blockchainClient = await ThrowOnNotSupportedBlockchainType(blockchainType);//throws
+            if (string.IsNullOrEmpty(blockedAddress) ||
+                !await blockchainClient.IsAddressValidAsync(blockedAddress))
+            {
+                throw new ArgumentValidationException($"{blockedAddress} is not a valid address for {blockchainType}", "blockedAddress");
+            }
         }
     }
 }

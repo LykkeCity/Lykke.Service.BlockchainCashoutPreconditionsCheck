@@ -21,13 +21,13 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            /// <param name='blockchanType'>
+            /// <param name='blockchainType'>
             /// </param>
-            /// <param name='blockckedAddress'>
+            /// <param name='blockedAddress'>
             /// </param>
-            public static object IsBlocked(this IBlockchainCashoutPreconditionsCheckAPI operations, string blockchanType, string blockckedAddress)
+            public static object IsBlocked(this IBlockchainCashoutPreconditionsCheckAPI operations, string blockchainType, string blockedAddress)
             {
-                return operations.IsBlockedAsync(blockchanType, blockckedAddress).GetAwaiter().GetResult();
+                return operations.IsBlockedAsync(blockchainType, blockedAddress).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -36,16 +36,16 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            /// <param name='blockchanType'>
+            /// <param name='blockchainType'>
             /// </param>
-            /// <param name='blockckedAddress'>
+            /// <param name='blockedAddress'>
             /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<object> IsBlockedAsync(this IBlockchainCashoutPreconditionsCheckAPI operations, string blockchanType, string blockckedAddress, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<object> IsBlockedAsync(this IBlockchainCashoutPreconditionsCheckAPI operations, string blockchainType, string blockedAddress, CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.IsBlockedWithHttpMessagesAsync(blockchanType, blockckedAddress, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.IsBlockedWithHttpMessagesAsync(blockchainType, blockedAddress, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
@@ -57,13 +57,13 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            /// <param name='blockchanType'>
+            /// <param name='blockchainType'>
             /// </param>
-            /// <param name='blockckedAddress'>
+            /// <param name='blockedAddress'>
             /// </param>
-            public static object Get(this IBlockchainCashoutPreconditionsCheckAPI operations, string blockchanType, string blockckedAddress)
+            public static object Get(this IBlockchainCashoutPreconditionsCheckAPI operations, string blockchainType, string blockedAddress)
             {
-                return operations.GetAsync(blockchanType, blockckedAddress).GetAwaiter().GetResult();
+                return operations.GetAsync(blockchainType, blockedAddress).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -72,16 +72,16 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            /// <param name='blockchanType'>
+            /// <param name='blockchainType'>
             /// </param>
-            /// <param name='blockckedAddress'>
+            /// <param name='blockedAddress'>
             /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<object> GetAsync(this IBlockchainCashoutPreconditionsCheckAPI operations, string blockchanType, string blockckedAddress, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<object> GetAsync(this IBlockchainCashoutPreconditionsCheckAPI operations, string blockchainType, string blockedAddress, CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.GetWithHttpMessagesAsync(blockchanType, blockckedAddress, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.GetWithHttpMessagesAsync(blockchainType, blockedAddress, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
@@ -93,15 +93,15 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            /// <param name='blockchanType'>
+            /// <param name='blockchainType'>
             /// </param>
             /// <param name='take'>
             /// </param>
             /// <param name='continuationToken'>
             /// </param>
-            public static object GetAll(this IBlockchainCashoutPreconditionsCheckAPI operations, string blockchanType, int take, string continuationToken = default(string))
+            public static object GetAll(this IBlockchainCashoutPreconditionsCheckAPI operations, string blockchainType, int take, string continuationToken = default(string))
             {
-                return operations.GetAllAsync(blockchanType, take, continuationToken).GetAwaiter().GetResult();
+                return operations.GetAllAsync(blockchainType, take, continuationToken).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -110,7 +110,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            /// <param name='blockchanType'>
+            /// <param name='blockchainType'>
             /// </param>
             /// <param name='take'>
             /// </param>
@@ -119,9 +119,9 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<object> GetAllAsync(this IBlockchainCashoutPreconditionsCheckAPI operations, string blockchanType, int take, string continuationToken = default(string), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<object> GetAllAsync(this IBlockchainCashoutPreconditionsCheckAPI operations, string blockchainType, int take, string continuationToken = default(string), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.GetAllWithHttpMessagesAsync(blockchanType, take, continuationToken, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.GetAllWithHttpMessagesAsync(blockchainType, take, continuationToken, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }
@@ -197,13 +197,13 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            /// <param name='blockchanType'>
+            /// <param name='blockchainType'>
             /// </param>
-            /// <param name='blockckedAddress'>
+            /// <param name='blockedAddress'>
             /// </param>
-            public static ErrorResponse Delete(this IBlockchainCashoutPreconditionsCheckAPI operations, string blockchanType, string blockckedAddress)
+            public static ErrorResponse Delete(this IBlockchainCashoutPreconditionsCheckAPI operations, string blockchainType, string blockedAddress)
             {
-                return operations.DeleteAsync(blockchanType, blockckedAddress).GetAwaiter().GetResult();
+                return operations.DeleteAsync(blockchainType, blockedAddress).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -212,16 +212,16 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            /// <param name='blockchanType'>
+            /// <param name='blockchainType'>
             /// </param>
-            /// <param name='blockckedAddress'>
+            /// <param name='blockedAddress'>
             /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<ErrorResponse> DeleteAsync(this IBlockchainCashoutPreconditionsCheckAPI operations, string blockchanType, string blockckedAddress, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<ErrorResponse> DeleteAsync(this IBlockchainCashoutPreconditionsCheckAPI operations, string blockchainType, string blockedAddress, CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.DeleteWithHttpMessagesAsync(blockchanType, blockckedAddress, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.DeleteWithHttpMessagesAsync(blockchainType, blockedAddress, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }

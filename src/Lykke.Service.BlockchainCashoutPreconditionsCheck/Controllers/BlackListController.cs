@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Lykke.Common.Api.Contract.Responses;
 using Lykke.Common.ApiLibrary.Contract;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Domain.Validation;
+using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Exceptions;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Services;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Filter;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Models.Requests;
@@ -28,15 +29,15 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Controllers
         /// is address black listed
         /// </summary>
         /// <returns></returns>
-        [HttpGet("is-blocked/{blockchanType}/{blockckedAddress}")]
+        [HttpGet("is-blocked/{blockchainType}/{blockedAddress}")]
         [ArgumentValidationExceptionFilter]
         [SwaggerOperation("IsBlocked")]
         [ProducesResponseType(typeof(IsBlockedResponse), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.InternalServerError)]
         [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> IsBlockedAsync([FromRoute] string blockchanType, [FromRoute] string blockckedAddress)
+        public async Task<IActionResult> IsBlockedAsync([FromRoute] string blockchainType, [FromRoute] string blockedAddress)
         {
-            var isBlocked = await _blackListService.IsBlockedAsync(blockchanType, blockckedAddress);
+            var isBlocked = await _blackListService.IsBlockedAsync(blockchainType, blockedAddress);
 
             return Ok(new IsBlockedResponse()
             {
@@ -48,16 +49,16 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Controllers
         /// is address black listed
         /// </summary>
         /// <returns></returns>
-        [HttpGet("{blockchanType}/{blockckedAddress}")]
+        [HttpGet("{blockchainType}/{blockedAddress}")]
         [ArgumentValidationExceptionFilter]
         [SwaggerOperation("Get")]
         [ProducesResponseType(typeof(BlackListResponse), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(void), (int)HttpStatusCode.NoContent)]
         [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.InternalServerError)]
         [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> GetBlackListAsync([FromRoute] string blockchanType, [FromRoute] string blockckedAddress)
+        public async Task<IActionResult> GetBlackListAsync([FromRoute] string blockchainType, [FromRoute] string blockedAddress)
         {
-            var model = await _blackListService.TryGetAsync(blockchanType, blockckedAddress);
+            var model = await _blackListService.TryGetAsync(blockchainType, blockedAddress);
 
             if (model == null)
                 return NoContent();
@@ -69,15 +70,18 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Controllers
         /// Take blocked addresses for specific blockchainType
         /// </summary>
         /// <returns></returns>
-        [HttpGet("{blockchanType}")]
+        [HttpGet("{blockchainType}")]
         [ArgumentValidationExceptionFilter]
         [SwaggerOperation("GetAll")]
         [ProducesResponseType(typeof(BlackListEnumerationResponse), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.InternalServerError)]
         [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> GetAllAsync([FromRoute] string blockchanType, [FromQuery] int take, [FromQuery] string continuationToken)
+        public async Task<IActionResult> GetAllAsync([FromRoute] string blockchainType, [FromQuery] int take, [FromQuery] string continuationToken)
         {
-            var (models, newToken) = await _blackListService.TryGetAllAsync(blockchanType, take, continuationToken);
+            if (take < 0)
+                throw new ArgumentValidationException("Field must be equal or greater than 0", $"{nameof(take)}");
+
+            var (models, newToken) = await _blackListService.TryGetAllAsync(blockchainType, take, continuationToken);
 
             return Ok(new BlackListEnumerationResponse()
             {
@@ -140,15 +144,15 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Controllers
         /// Delete black listed address
         /// </summary>
         /// <returns></returns>
-        [HttpDelete("/{blockchanType}/{blockckedAddress}")]
+        [HttpDelete("{blockchainType}/{blockedAddress}")]
         [ArgumentValidationExceptionFilter]
         [SwaggerOperation("Delete")]
         [ProducesResponseType(typeof(void), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.InternalServerError)]
         [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> DeleteBlockedAddressAsync([FromRoute] string blockchanType, [FromRoute] string blockckedAddress)
+        public async Task<IActionResult> DeleteBlockedAddressAsync([FromRoute] string blockchainType, [FromRoute] string blockedAddress)
         {
-            await _blackListService.DeleteAsync(blockchanType, blockckedAddress);
+            await _blackListService.DeleteAsync(blockchainType, blockedAddress);
 
             return Ok();
         }
