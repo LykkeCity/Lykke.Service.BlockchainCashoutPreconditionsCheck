@@ -26,6 +26,14 @@ namespace Lykke.Service.BCPCheck.Tests
             var blockchainApiClientProviderMock = new Mock<IBlockchainApiClientProvider>();
             var blockchainApiClient = new Mock<IBlockchainApiClient>();
             blockchainApiClient.Setup(x => x.IsAddressValidAsync(BlockedAddressValid)).Returns(Task.FromResult(true));
+            blockchainApiClient.Setup(x => x.IsAddressValidAsync(BlockedAddressValid.ToLower())).Returns(Task.FromResult(true));
+
+            for (int i = 0; i < 9; i++)
+            {
+                var z = i;
+                blockchainApiClient.Setup(x => x.IsAddressValidAsync($"0x{z}...")).Returns(Task.FromResult(true));
+            }
+
             blockchainApiClientProviderMock.Setup(x => x.Get(It.IsAny<string>())).Returns(blockchainApiClient.Object);
 
             _logic = new BlackListService(repo, blockchainApiClientProviderMock.Object);
@@ -92,7 +100,7 @@ namespace Lykke.Service.BCPCheck.Tests
         [TestMethod]
         public void DeleteAsync__AddedBefore__Removed()
         {
-            SaveBlackListModel(BlockchainType, false);
+            SaveBlackListModel(BlockedAddressValid, false);
             _logic.DeleteAsync(BlockchainType, BlockedAddressValid).Wait();
 
             var deleted = _logic.TryGetAsync(BlockchainType, BlockedAddressValid).Result;
