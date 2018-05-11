@@ -5,12 +5,16 @@ using System.Text;
 using System.Threading.Tasks;
 using AzureStorage;
 using AzureStorage.Tables;
+using Common;
 using Common.Log;
 using JetBrains.Annotations;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.AzureRepositories.Entities;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Domain.Validation;
+using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Exceptions;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Repositories;
 using Lykke.SettingsReader;
+using Microsoft.WindowsAzure.Storage.Table;
+using Newtonsoft.Json;
 
 namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.AzureRepositories.Repositories
 {
@@ -64,6 +68,18 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.AzureRepositories.Re
 
         public async Task<(IEnumerable<BlackListModel>, string continuationToken)> TryGetAllAsync(string blockchainType, int take, string continuationToken = null)
         {
+            if (!string.IsNullOrEmpty(continuationToken))
+            {
+                try
+                {
+                    JsonConvert.DeserializeObject<TableContinuationToken>(Utils.HexToString(continuationToken));
+                }
+                catch
+                {
+                    throw new ArgumentValidationException($"{continuationToken} continuationToken is not valid", $"{nameof(continuationToken)}");
+                }
+            }
+
             var partitionKey = BlackListEntity.GetPartitionKey(blockchainType);
 
             var (entities, newToken) = await _storage.GetDataWithContinuationTokenAsync(partitionKey, take, continuationToken);
@@ -82,6 +98,13 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.AzureRepositories.Re
         {
             var partitionKey = BlackListEntity.GetPartitionKey(blockchainType);
             var rowKey = BlackListEntity.GetRowKey(blockedAddress);
+
+            var existingEntity = await _storage.GetDataAsync(partitionKey, rowKey);
+
+            if (existingEntity == null)
+            {
+                throw new ArgumentValidationException($"Entity with address {blockedAddress} does not exist", "blockedAddress");
+            }
 
             await _storage.DeleteIfExistAsync(partitionKey, rowKey);
         }

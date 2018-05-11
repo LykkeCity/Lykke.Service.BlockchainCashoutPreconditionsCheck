@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Lykke.Service.BlockchainApi.Client;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Domain.Validation;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Services;
@@ -14,7 +15,8 @@ namespace Lykke.Service.BCPCheck.Tests
     public class BlackListServiceTest
     {
         private const string BlockchainType = "EthereumClassic";
-        private const string BlockedAddress = "0xeb574cD5A407Fefa5610fCde6Aec13D983BA527c";
+        private const string BlockedAddressValid = "0xeb574cD5A407Fefa5610fCde6Aec13D983BA527c";
+        private const string BlockedAddressNotValid = "12323545tsrdfe54rydfgryg65uhjdfesd";
         private BlackListService _logic;
 
         [TestInitialize]
@@ -23,6 +25,7 @@ namespace Lykke.Service.BCPCheck.Tests
             var repo = new BlackListRepositoryFake();
             var blockchainApiClientProviderMock = new Mock<IBlockchainApiClientProvider>();
             var blockchainApiClient = new Mock<IBlockchainApiClient>();
+            blockchainApiClient.Setup(x => x.IsAddressValidAsync(BlockedAddressValid)).Returns(Task.FromResult(true));
             blockchainApiClientProviderMock.Setup(x => x.Get(It.IsAny<string>())).Returns(blockchainApiClient.Object);
 
             _logic = new BlackListService(repo, blockchainApiClientProviderMock.Object);
@@ -31,8 +34,8 @@ namespace Lykke.Service.BCPCheck.Tests
         [TestMethod]
         public void IsBlockedAsync__AddedLowerCaseSensitiveCheck__False()
         {
-            var model = SaveBlackListModel(BlockedAddress.ToLower(), true);
-            var result = _logic.IsBlockedAsync(model.BlockchainType, BlockedAddress).Result;
+            var model = SaveBlackListModel(BlockedAddressValid.ToLower(), true);
+            var result = _logic.IsBlockedAsync(model.BlockchainType, BlockedAddressValid).Result;
 
             Assert.IsFalse(result);
         }
@@ -40,8 +43,8 @@ namespace Lykke.Service.BCPCheck.Tests
         [TestMethod]
         public void IsBlockedAsync__AddedLowerCaseNotSensitiveCheck__True()
         {
-            var model = SaveBlackListModel(BlockedAddress.ToLower(), false);
-            var result = _logic.IsBlockedAsync(model.BlockchainType, BlockedAddress).Result;
+            var model = SaveBlackListModel(BlockedAddressValid.ToLower(), false);
+            var result = _logic.IsBlockedAsync(model.BlockchainType, BlockedAddressValid).Result;
 
             Assert.IsTrue(result);
         }
@@ -49,8 +52,8 @@ namespace Lykke.Service.BCPCheck.Tests
         [TestMethod]
         public void IsBlockedAsync__AddedNormalCaseSensitiveCheck__True()
         {
-            var model = SaveBlackListModel(BlockedAddress, true);
-            var result = _logic.IsBlockedAsync(model.BlockchainType, BlockedAddress).Result;
+            var model = SaveBlackListModel(BlockedAddressValid, true);
+            var result = _logic.IsBlockedAsync(model.BlockchainType, BlockedAddressValid).Result;
 
             Assert.IsTrue(result);
         }
@@ -58,8 +61,8 @@ namespace Lykke.Service.BCPCheck.Tests
         [TestMethod]
         public void IsBlockedAsync__AddedNormalCaseNotSensitiveCheck__True()
         {
-            var model = SaveBlackListModel(BlockedAddress, false);
-            var result = _logic.IsBlockedAsync(model.BlockchainType, BlockedAddress).Result;
+            var model = SaveBlackListModel(BlockedAddressValid, false);
+            var result = _logic.IsBlockedAsync(model.BlockchainType, BlockedAddressValid).Result;
 
             Assert.IsTrue(result);
         }
@@ -67,7 +70,7 @@ namespace Lykke.Service.BCPCheck.Tests
         [TestMethod]
         public void IsBlockedAsync__NotBlocked__False()
         {
-            var result = _logic.IsBlockedAsync(BlockchainType, BlockedAddress).Result;
+            var result = _logic.IsBlockedAsync(BlockchainType, BlockedAddressValid).Result;
 
             Assert.IsFalse(result);
         }
@@ -75,7 +78,7 @@ namespace Lykke.Service.BCPCheck.Tests
         [TestMethod]
         public void TryGetAsync__NotYetAdded__IsNull()
         {
-            var blocked = _logic.TryGetAsync(BlockchainType, BlockedAddress).Result;
+            var blocked = _logic.TryGetAsync(BlockchainType, BlockedAddressValid).Result;
 
             Assert.IsNull(blocked);
         }
@@ -83,16 +86,16 @@ namespace Lykke.Service.BCPCheck.Tests
         [TestMethod]
         public void DeleteAsync__NotYetAdded__NoException()
         {
-            _logic.DeleteAsync(BlockchainType, BlockedAddress).Wait();
+            _logic.DeleteAsync(BlockchainType, BlockedAddressValid).Wait();
         }
 
         [TestMethod]
         public void DeleteAsync__AddedBefore__Removed()
         {
             SaveBlackListModel(BlockchainType, false);
-            _logic.DeleteAsync(BlockchainType, BlockedAddress).Wait();
+            _logic.DeleteAsync(BlockchainType, BlockedAddressValid).Wait();
 
-            var deleted = _logic.TryGetAsync(BlockchainType, BlockedAddress).Result;
+            var deleted = _logic.TryGetAsync(BlockchainType, BlockedAddressValid).Result;
 
             Assert.IsNull(deleted);
         }
@@ -138,9 +141,9 @@ namespace Lykke.Service.BCPCheck.Tests
 
         private void AddBlackListAndCheck()
         {
-            var model = SaveBlackListModel(BlockedAddress, true);
+            var model = SaveBlackListModel(BlockedAddressValid, true);
 
-            var added = _logic.TryGetAsync(BlockchainType, BlockedAddress).Result;
+            var added = _logic.TryGetAsync(BlockchainType, BlockedAddressValid).Result;
 
             Assert.AreEqual(model.BlockedAddress, added.BlockedAddress);
              Assert.AreEqual(model.BlockchainType, added.BlockchainType);
@@ -155,7 +158,7 @@ namespace Lykke.Service.BCPCheck.Tests
                 BlockedAddress = blockedAddress,
                 IsCaseSensitive = isCaseSensitiv,
                 BlockchainType = BlockchainType,
-                BlockedAddressLowCase = BlockedAddress.ToLower(),
+                BlockedAddressLowCase = BlockedAddressValid.ToLower(),
             };
 
             _logic.SaveAsync(model).Wait();

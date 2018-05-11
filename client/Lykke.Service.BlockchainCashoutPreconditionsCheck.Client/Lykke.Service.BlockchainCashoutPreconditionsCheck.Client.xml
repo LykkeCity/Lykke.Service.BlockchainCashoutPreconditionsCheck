@@ -78,9 +78,9 @@
             <summary>
             is address black listed
             </summary>
-            <param name='blockchanType'>
+            <param name='blockchainType'>
             </param>
-            <param name='blockckedAddress'>
+            <param name='blockedAddress'>
             </param>
             <param name='customHeaders'>
             Headers that will be added to request.
@@ -108,9 +108,9 @@
             <summary>
             is address black listed
             </summary>
-            <param name='blockchanType'>
+            <param name='blockchainType'>
             </param>
-            <param name='blockckedAddress'>
+            <param name='blockedAddress'>
             </param>
             <param name='customHeaders'>
             Headers that will be added to request.
@@ -138,7 +138,7 @@
             <summary>
             Take blocked addresses for specific blockchainType
             </summary>
-            <param name='blockchanType'>
+            <param name='blockchainType'>
             </param>
             <param name='take'>
             </param>
@@ -214,9 +214,9 @@
             <summary>
             Delete black listed address
             </summary>
-            <param name='blockchanType'>
+            <param name='blockchainType'>
             </param>
-            <param name='blockckedAddress'>
+            <param name='blockedAddress'>
             </param>
             <param name='customHeaders'>
             Headers that will be added to request.
@@ -304,9 +304,9 @@
             <param name='operations'>
             The operations group for this extension method.
             </param>
-            <param name='blockchanType'>
+            <param name='blockchainType'>
             </param>
-            <param name='blockckedAddress'>
+            <param name='blockedAddress'>
             </param>
         </member>
         <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.BlockchainCashoutPreconditionsCheckAPIExtensions.IsBlockedAsync(Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.IBlockchainCashoutPreconditionsCheckAPI,System.String,System.String,System.Threading.CancellationToken)">
@@ -316,9 +316,9 @@
             <param name='operations'>
             The operations group for this extension method.
             </param>
-            <param name='blockchanType'>
+            <param name='blockchainType'>
             </param>
-            <param name='blockckedAddress'>
+            <param name='blockedAddress'>
             </param>
             <param name='cancellationToken'>
             The cancellation token.
@@ -331,9 +331,9 @@
             <param name='operations'>
             The operations group for this extension method.
             </param>
-            <param name='blockchanType'>
+            <param name='blockchainType'>
             </param>
-            <param name='blockckedAddress'>
+            <param name='blockedAddress'>
             </param>
         </member>
         <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.BlockchainCashoutPreconditionsCheckAPIExtensions.GetAsync(Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.IBlockchainCashoutPreconditionsCheckAPI,System.String,System.String,System.Threading.CancellationToken)">
@@ -343,9 +343,9 @@
             <param name='operations'>
             The operations group for this extension method.
             </param>
-            <param name='blockchanType'>
+            <param name='blockchainType'>
             </param>
-            <param name='blockckedAddress'>
+            <param name='blockedAddress'>
             </param>
             <param name='cancellationToken'>
             The cancellation token.
@@ -358,7 +358,7 @@
             <param name='operations'>
             The operations group for this extension method.
             </param>
-            <param name='blockchanType'>
+            <param name='blockchainType'>
             </param>
             <param name='take'>
             </param>
@@ -372,7 +372,7 @@
             <param name='operations'>
             The operations group for this extension method.
             </param>
-            <param name='blockchanType'>
+            <param name='blockchainType'>
             </param>
             <param name='take'>
             </param>
@@ -435,9 +435,9 @@
             <param name='operations'>
             The operations group for this extension method.
             </param>
-            <param name='blockchanType'>
+            <param name='blockchainType'>
             </param>
-            <param name='blockckedAddress'>
+            <param name='blockedAddress'>
             </param>
         </member>
         <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.BlockchainCashoutPreconditionsCheckAPIExtensions.DeleteAsync(Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.IBlockchainCashoutPreconditionsCheckAPI,System.String,System.String,System.Threading.CancellationToken)">
@@ -447,9 +447,9 @@
             <param name='operations'>
             The operations group for this extension method.
             </param>
-            <param name='blockchanType'>
+            <param name='blockchainType'>
             </param>
-            <param name='blockckedAddress'>
+            <param name='blockedAddress'>
             </param>
             <param name='cancellationToken'>
             The cancellation token.
@@ -528,9 +528,9 @@
             <summary>
             is address black listed
             </summary>
-            <param name='blockchanType'>
+            <param name='blockchainType'>
             </param>
-            <param name='blockckedAddress'>
+            <param name='blockedAddress'>
             </param>
             <param name='customHeaders'>
             The headers that will be added to request.
@@ -543,9 +543,9 @@
             <summary>
             is address black listed
             </summary>
-            <param name='blockchanType'>
+            <param name='blockchainType'>
             </param>
-            <param name='blockckedAddress'>
+            <param name='blockedAddress'>
             </param>
             <param name='customHeaders'>
             The headers that will be added to request.
@@ -558,7 +558,7 @@
             <summary>
             Take blocked addresses for specific blockchainType
             </summary>
-            <param name='blockchanType'>
+            <param name='blockchainType'>
             </param>
             <param name='take'>
             </param>
@@ -601,9 +601,9 @@
             <summary>
             Delete black listed address
             </summary>
-            <param name='blockchanType'>
+            <param name='blockchainType'>
             </param>
-            <param name='blockckedAddress'>
+            <param name='blockedAddress'>
             </param>
             <param name='customHeaders'>
             The headers that will be added to request.
