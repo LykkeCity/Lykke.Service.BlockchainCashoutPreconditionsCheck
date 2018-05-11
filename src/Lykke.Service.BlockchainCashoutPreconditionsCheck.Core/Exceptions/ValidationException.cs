@@ -6,7 +6,11 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Exceptions
 {
     public class ArgumentValidationException : ArgumentException
     {
-        public ArgumentValidationException(string message, string paramName) : base(message, paramName)
-        {}
+        public override string ParamName { get; }
+
+        public ArgumentValidationException(string message, string paramName) : base(message)
+        {
+            ParamName = paramName;
+        }
     }
 }

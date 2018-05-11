@@ -56,14 +56,14 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
             }
             catch (Exception e)
             {
-                throw new ArgumentValidationException($"Asset with Id-{cashoutModel.AssetId} does not exists", "AssetId");
+                throw new ArgumentValidationException($"Asset with Id-{cashoutModel.AssetId} does not exists", "assetId");
             }
 
             if (asset == null)
-                throw new ArgumentValidationException($"Asset with Id-{cashoutModel.AssetId} does not exists", "AssetId");
+                throw new ArgumentValidationException($"Asset with Id-{cashoutModel.AssetId} does not exists", "assetId");
 
             if (string.IsNullOrEmpty(asset.BlockchainIntegrationLayerId))
-                throw new ArgumentValidationException($"Given asset Id-{cashoutModel.AssetId} is not a part of Blockchain Integration Layer", "AssetId");
+                throw new ArgumentValidationException($"Given asset Id-{cashoutModel.AssetId} is not a part of Blockchain Integration Layer", "assetId");
 
             var blockchainClient = _blockchainApiClientProvider.Get(asset.BlockchainIntegrationLayerId);
 
