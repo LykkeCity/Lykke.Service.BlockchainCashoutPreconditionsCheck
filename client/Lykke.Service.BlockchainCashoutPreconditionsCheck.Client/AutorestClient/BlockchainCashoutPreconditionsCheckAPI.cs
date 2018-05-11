@@ -144,9 +144,9 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
         /// <summary>
         /// is address black listed
         /// </summary>
-        /// <param name='blockchanType'>
+        /// <param name='blockchainType'>
         /// </param>
-        /// <param name='blockckedAddress'>
+        /// <param name='blockedAddress'>
         /// </param>
         /// <param name='customHeaders'>
         /// Headers that will be added to request.
@@ -169,15 +169,15 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<object>> IsBlockedWithHttpMessagesAsync(string blockchanType, string blockckedAddress, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<object>> IsBlockedWithHttpMessagesAsync(string blockchainType, string blockedAddress, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (blockchanType == null)
+            if (blockchainType == null)
             {
-                throw new ValidationException(ValidationRules.CannotBeNull, "blockchanType");
+                throw new ValidationException(ValidationRules.CannotBeNull, "blockchainType");
             }
-            if (blockckedAddress == null)
+            if (blockedAddress == null)
             {
-                throw new ValidationException(ValidationRules.CannotBeNull, "blockckedAddress");
+                throw new ValidationException(ValidationRules.CannotBeNull, "blockedAddress");
             }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -186,16 +186,16 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
             {
                 _invocationId = ServiceClientTracing.NextInvocationId.ToString();
                 Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
-                tracingParameters.Add("blockchanType", blockchanType);
-                tracingParameters.Add("blockckedAddress", blockckedAddress);
+                tracingParameters.Add("blockchainType", blockchainType);
+                tracingParameters.Add("blockedAddress", blockedAddress);
                 tracingParameters.Add("cancellationToken", cancellationToken);
                 ServiceClientTracing.Enter(_invocationId, this, "IsBlocked", tracingParameters);
             }
             // Construct URL
             var _baseUrl = BaseUri.AbsoluteUri;
-            var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "api/BlackList/is-blocked/{blockchanType}/{blockckedAddress}").ToString();
-            _url = _url.Replace("{blockchanType}", System.Uri.EscapeDataString(blockchanType));
-            _url = _url.Replace("{blockckedAddress}", System.Uri.EscapeDataString(blockckedAddress));
+            var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "api/BlackList/is-blocked/{blockchainType}/{blockedAddress}").ToString();
+            _url = _url.Replace("{blockchainType}", System.Uri.EscapeDataString(blockchainType));
+            _url = _url.Replace("{blockedAddress}", System.Uri.EscapeDataString(blockedAddress));
             // Create HTTP transport objects
             var _httpRequest = new HttpRequestMessage();
             HttpResponseMessage _httpResponse = null;
@@ -322,9 +322,9 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
         /// <summary>
         /// is address black listed
         /// </summary>
-        /// <param name='blockchanType'>
+        /// <param name='blockchainType'>
         /// </param>
-        /// <param name='blockckedAddress'>
+        /// <param name='blockedAddress'>
         /// </param>
         /// <param name='customHeaders'>
         /// Headers that will be added to request.
@@ -347,15 +347,15 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<object>> GetWithHttpMessagesAsync(string blockchanType, string blockckedAddress, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<object>> GetWithHttpMessagesAsync(string blockchainType, string blockedAddress, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (blockchanType == null)
+            if (blockchainType == null)
             {
-                throw new ValidationException(ValidationRules.CannotBeNull, "blockchanType");
+                throw new ValidationException(ValidationRules.CannotBeNull, "blockchainType");
             }
-            if (blockckedAddress == null)
+            if (blockedAddress == null)
             {
-                throw new ValidationException(ValidationRules.CannotBeNull, "blockckedAddress");
+                throw new ValidationException(ValidationRules.CannotBeNull, "blockedAddress");
             }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -364,16 +364,16 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
             {
                 _invocationId = ServiceClientTracing.NextInvocationId.ToString();
                 Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
-                tracingParameters.Add("blockchanType", blockchanType);
-                tracingParameters.Add("blockckedAddress", blockckedAddress);
+                tracingParameters.Add("blockchainType", blockchainType);
+                tracingParameters.Add("blockedAddress", blockedAddress);
                 tracingParameters.Add("cancellationToken", cancellationToken);
                 ServiceClientTracing.Enter(_invocationId, this, "Get", tracingParameters);
             }
             // Construct URL
             var _baseUrl = BaseUri.AbsoluteUri;
-            var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "api/BlackList/{blockchanType}/{blockckedAddress}").ToString();
-            _url = _url.Replace("{blockchanType}", System.Uri.EscapeDataString(blockchanType));
-            _url = _url.Replace("{blockckedAddress}", System.Uri.EscapeDataString(blockckedAddress));
+            var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "api/BlackList/{blockchainType}/{blockedAddress}").ToString();
+            _url = _url.Replace("{blockchainType}", System.Uri.EscapeDataString(blockchainType));
+            _url = _url.Replace("{blockedAddress}", System.Uri.EscapeDataString(blockedAddress));
             // Create HTTP transport objects
             var _httpRequest = new HttpRequestMessage();
             HttpResponseMessage _httpResponse = null;
@@ -500,7 +500,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
         /// <summary>
         /// Take blocked addresses for specific blockchainType
         /// </summary>
-        /// <param name='blockchanType'>
+        /// <param name='blockchainType'>
         /// </param>
         /// <param name='take'>
         /// </param>
@@ -527,11 +527,11 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<object>> GetAllWithHttpMessagesAsync(string blockchanType, int? take = default(int?), string continuationToken = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<object>> GetAllWithHttpMessagesAsync(string blockchainType, int take, string continuationToken = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (blockchanType == null)
+            if (blockchainType == null)
             {
-                throw new ValidationException(ValidationRules.CannotBeNull, "blockchanType");
+                throw new ValidationException(ValidationRules.CannotBeNull, "blockchainType");
             }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -540,7 +540,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
             {
                 _invocationId = ServiceClientTracing.NextInvocationId.ToString();
                 Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
-                tracingParameters.Add("blockchanType", blockchanType);
+                tracingParameters.Add("blockchainType", blockchainType);
                 tracingParameters.Add("take", take);
                 tracingParameters.Add("continuationToken", continuationToken);
                 tracingParameters.Add("cancellationToken", cancellationToken);
@@ -548,8 +548,8 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
             }
             // Construct URL
             var _baseUrl = BaseUri.AbsoluteUri;
-            var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "api/BlackList/{blockchanType}").ToString();
-            _url = _url.Replace("{blockchanType}", System.Uri.EscapeDataString(blockchanType));
+            var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "api/BlackList/{blockchainType}").ToString();
+            _url = _url.Replace("{blockchainType}", System.Uri.EscapeDataString(blockchainType));
             List<string> _queryParameters = new List<string>();
             if (take != null)
             {
@@ -991,9 +991,9 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
         /// <summary>
         /// Delete black listed address
         /// </summary>
-        /// <param name='blockchanType'>
+        /// <param name='blockchainType'>
         /// </param>
-        /// <param name='blockckedAddress'>
+        /// <param name='blockedAddress'>
         /// </param>
         /// <param name='customHeaders'>
         /// Headers that will be added to request.
@@ -1016,15 +1016,15 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<ErrorResponse>> DeleteWithHttpMessagesAsync(string blockchanType, string blockckedAddress, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<ErrorResponse>> DeleteWithHttpMessagesAsync(string blockchainType, string blockedAddress, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (blockchanType == null)
+            if (blockchainType == null)
             {
-                throw new ValidationException(ValidationRules.CannotBeNull, "blockchanType");
+                throw new ValidationException(ValidationRules.CannotBeNull, "blockchainType");
             }
-            if (blockckedAddress == null)
+            if (blockedAddress == null)
             {
-                throw new ValidationException(ValidationRules.CannotBeNull, "blockckedAddress");
+                throw new ValidationException(ValidationRules.CannotBeNull, "blockedAddress");
             }
             // Tracing
             bool _shouldTrace = ServiceClientTracing.IsEnabled;
@@ -1033,16 +1033,16 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
             {
                 _invocationId = ServiceClientTracing.NextInvocationId.ToString();
                 Dictionary<string, object> tracingParameters = new Dictionary<string, object>();
-                tracingParameters.Add("blockchanType", blockchanType);
-                tracingParameters.Add("blockckedAddress", blockckedAddress);
+                tracingParameters.Add("blockchainType", blockchainType);
+                tracingParameters.Add("blockedAddress", blockedAddress);
                 tracingParameters.Add("cancellationToken", cancellationToken);
                 ServiceClientTracing.Enter(_invocationId, this, "Delete", tracingParameters);
             }
             // Construct URL
             var _baseUrl = BaseUri.AbsoluteUri;
-            var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "{blockchanType}/{blockckedAddress}").ToString();
-            _url = _url.Replace("{blockchanType}", System.Uri.EscapeDataString(blockchanType));
-            _url = _url.Replace("{blockckedAddress}", System.Uri.EscapeDataString(blockckedAddress));
+            var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "{blockchainType}/{blockedAddress}").ToString();
+            _url = _url.Replace("{blockchainType}", System.Uri.EscapeDataString(blockchainType));
+            _url = _url.Replace("{blockedAddress}", System.Uri.EscapeDataString(blockedAddress));
             // Create HTTP transport objects
             var _httpRequest = new HttpRequestMessage();
             HttpResponseMessage _httpResponse = null;
