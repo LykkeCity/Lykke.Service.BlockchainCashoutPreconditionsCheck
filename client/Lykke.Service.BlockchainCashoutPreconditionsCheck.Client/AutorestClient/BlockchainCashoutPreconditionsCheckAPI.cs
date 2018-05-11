@@ -1056,7 +1056,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
             }
             // Construct URL
             var _baseUrl = BaseUri.AbsoluteUri;
-            var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "{blockchainType}/{blockedAddress}").ToString();
+            var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "api/BlackList/{blockchainType}/{blockedAddress}").ToString();
             _url = _url.Replace("{blockchainType}", System.Uri.EscapeDataString(blockchainType));
             _url = _url.Replace("{blockedAddress}", System.Uri.EscapeDataString(blockedAddress));
             // Create HTTP transport objects
