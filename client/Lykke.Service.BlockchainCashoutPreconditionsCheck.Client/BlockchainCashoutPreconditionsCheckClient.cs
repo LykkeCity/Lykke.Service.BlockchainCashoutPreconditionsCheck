@@ -73,7 +73,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client
             switch (response)
             {
                 case ErrorResponse errorResponse:
-                    if (string.IsNullOrEmpty(errorResponse.ErrorMessage))
+                    if (!string.IsNullOrEmpty(errorResponse.ErrorMessage))
                         throw new Exception(FormatErrorResponse(errorResponse));
                     break;
                 default:
