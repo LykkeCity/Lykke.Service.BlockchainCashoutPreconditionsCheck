@@ -18,6 +18,15 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Test
             }).Result;
 
             client.CreateBlackListAsync(new BlackListModel("EthereumClassic", "0x81b7E08F65Bdf5648606c89998A9CC8164397647", false)).Wait();
+            client.CreateBlackListAsync(new BlackListModel("EthereumClassic", "0x81b7E08F65Bdf5648606c89998A", false)).Wait();
+
+            var (isAllowed1, listOfErrors1) = client.ValidateCashoutAsync(new Client.Models.CashoutValidateModel()
+            {
+                AssetId = "62c04960-4015-4945-bb7e-8e4a193b3653",
+                DestinationAddress = "0x81b7E08F65Bdf5648606c89998A9CC8164397647",
+                Amount = 0
+            }).Result;
+
             var list = client.GetAllBlackListsAsync("EthereumClassic", 20).Result;
             var x = client.GetBlackListAsync("EthereumClassic", "0x81b7E08F65Bdf5648606c89998A9CC8164397647").Result;
             client.DeleteBlackListAsync("EthereumClassic", "0x81b7E08F65Bdf5648606c89998A9CC8164397647").Wait();
