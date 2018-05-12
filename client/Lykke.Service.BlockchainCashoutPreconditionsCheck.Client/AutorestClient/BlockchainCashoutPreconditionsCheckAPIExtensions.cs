@@ -88,6 +88,42 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
             }
 
             /// <summary>
+            /// Delete black listed address
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='blockchainType'>
+            /// </param>
+            /// <param name='blockedAddress'>
+            /// </param>
+            public static ErrorResponse Delete(this IBlockchainCashoutPreconditionsCheckAPI operations, string blockchainType, string blockedAddress)
+            {
+                return operations.DeleteAsync(blockchainType, blockedAddress).GetAwaiter().GetResult();
+            }
+
+            /// <summary>
+            /// Delete black listed address
+            /// </summary>
+            /// <param name='operations'>
+            /// The operations group for this extension method.
+            /// </param>
+            /// <param name='blockchainType'>
+            /// </param>
+            /// <param name='blockedAddress'>
+            /// </param>
+            /// <param name='cancellationToken'>
+            /// The cancellation token.
+            /// </param>
+            public static async Task<ErrorResponse> DeleteAsync(this IBlockchainCashoutPreconditionsCheckAPI operations, string blockchainType, string blockedAddress, CancellationToken cancellationToken = default(CancellationToken))
+            {
+                using (var _result = await operations.DeleteWithHttpMessagesAsync(blockchainType, blockedAddress, null, cancellationToken).ConfigureAwait(false))
+                {
+                    return _result.Body;
+                }
+            }
+
+            /// <summary>
             /// Take blocked addresses for specific blockchainType
             /// </summary>
             /// <param name='operations'>
@@ -192,39 +228,24 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
             }
 
             /// <summary>
-            /// Delete black listed address
+            /// Checks service is alive
             /// </summary>
             /// <param name='operations'>
             /// The operations group for this extension method.
             /// </param>
-            /// <param name='blockchainType'>
+            /// <param name='assetId'>
             /// </param>
-            /// <param name='blockedAddress'>
+            /// <param name='destinationAddress'>
             /// </param>
-            public static ErrorResponse Delete(this IBlockchainCashoutPreconditionsCheckAPI operations, string blockchainType, string blockedAddress)
+            /// <param name='amount'>
+            /// </param>
+            /// <param name='destinationAddress'>
+            /// </param>
+            /// <param name='destinationAddressBase'>
+            /// </param>
+            public static object Check(this IBlockchainCashoutPreconditionsCheckAPI operations, string assetId, decimal amount, string destinationAddress, string destinationAddressBase)
             {
-                return operations.DeleteAsync(blockchainType, blockedAddress).GetAwaiter().GetResult();
-            }
-
-            /// <summary>
-            /// Delete black listed address
-            /// </summary>
-            /// <param name='operations'>
-            /// The operations group for this extension method.
-            /// </param>
-            /// <param name='blockchainType'>
-            /// </param>
-            /// <param name='blockedAddress'>
-            /// </param>
-            /// <param name='cancellationToken'>
-            /// The cancellation token.
-            /// </param>
-            public static async Task<ErrorResponse> DeleteAsync(this IBlockchainCashoutPreconditionsCheckAPI operations, string blockchainType, string blockedAddress, CancellationToken cancellationToken = default(CancellationToken))
-            {
-                using (var _result = await operations.DeleteWithHttpMessagesAsync(blockchainType, blockedAddress, null, cancellationToken).ConfigureAwait(false))
-                {
-                    return _result.Body;
-                }
+                return operations.CheckAsync(assetId, amount, destinationAddress, destinationAddressBase).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -239,29 +260,14 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
             /// </param>
             /// <param name='amount'>
             /// </param>
-            public static object Check(this IBlockchainCashoutPreconditionsCheckAPI operations, string assetId, string destinationAddress, decimal? amount = default(decimal?))
-            {
-                return operations.CheckAsync(assetId, destinationAddress, amount).GetAwaiter().GetResult();
-            }
-
-            /// <summary>
-            /// Checks service is alive
-            /// </summary>
-            /// <param name='operations'>
-            /// The operations group for this extension method.
-            /// </param>
-            /// <param name='assetId'>
-            /// </param>
-            /// <param name='destinationAddress'>
-            /// </param>
-            /// <param name='amount'>
+            /// <param name='destinationAddressBase'>
             /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<object> CheckAsync(this IBlockchainCashoutPreconditionsCheckAPI operations, string assetId, string destinationAddress, decimal? amount = default(decimal?), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<object> CheckAsync(this IBlockchainCashoutPreconditionsCheckAPI operations, string assetId, decimal amount, string destinationAddress, string destinationAddressBase, CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.CheckWithHttpMessagesAsync(assetId, destinationAddress, amount, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.CheckWithHttpMessagesAsync(assetId, amount, destinationAddress, destinationAddressBase, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }

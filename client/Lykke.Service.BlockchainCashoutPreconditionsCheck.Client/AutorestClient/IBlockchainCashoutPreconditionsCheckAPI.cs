@@ -65,6 +65,21 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
         Task<HttpOperationResponse<object>> GetWithHttpMessagesAsync(string blockchainType, string blockedAddress, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
+        /// Delete black listed address
+        /// </summary>
+        /// <param name='blockchainType'>
+        /// </param>
+        /// <param name='blockedAddress'>
+        /// </param>
+        /// <param name='customHeaders'>
+        /// The headers that will be added to request.
+        /// </param>
+        /// <param name='cancellationToken'>
+        /// The cancellation token.
+        /// </param>
+        Task<HttpOperationResponse<ErrorResponse>> DeleteWithHttpMessagesAsync(string blockchainType, string blockedAddress, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <summary>
         /// Take blocked addresses for specific blockchainType
         /// </summary>
         /// <param name='blockchainType'>
@@ -108,21 +123,6 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
         Task<HttpOperationResponse<ErrorResponse>> AddWithHttpMessagesAsync(AddBlackListModel request = default(AddBlackListModel), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
-        /// Delete black listed address
-        /// </summary>
-        /// <param name='blockchainType'>
-        /// </param>
-        /// <param name='blockedAddress'>
-        /// </param>
-        /// <param name='customHeaders'>
-        /// The headers that will be added to request.
-        /// </param>
-        /// <param name='cancellationToken'>
-        /// The cancellation token.
-        /// </param>
-        Task<HttpOperationResponse<ErrorResponse>> DeleteWithHttpMessagesAsync(string blockchainType, string blockedAddress, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
-
-        /// <summary>
         /// Checks service is alive
         /// </summary>
         /// <param name='assetId'>
@@ -131,13 +131,15 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
         /// </param>
         /// <param name='amount'>
         /// </param>
+        /// <param name='destinationAddressBase'>
+        /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
         /// </param>
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<object>> CheckWithHttpMessagesAsync(string assetId, string destinationAddress, decimal? amount = default(decimal?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<object>> CheckWithHttpMessagesAsync(string assetId, decimal amount, string destinationAddress, string destinationAddressBase, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Checks service is alive
