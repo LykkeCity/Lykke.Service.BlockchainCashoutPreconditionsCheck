@@ -20,7 +20,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
         private readonly IBlackListService _blackListService;
         private readonly IBlockchainWalletsClient _blockchainWalletsClient;
 
-        public ValidationService(IBlockchainApiClientProvider blockchainApiClientProvider, 
+        public ValidationService(IBlockchainApiClientProvider blockchainApiClientProvider,
             IAssetsService assetsService, 
             IBlockchainSettingsProvider blockchainSettingsProvider,
             IBlockchainWalletsClient blockchainWalletsClient,
@@ -69,6 +69,20 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
 
             List<ValidationError> errors = new List<ValidationError>(1);
 
+            if (!string.IsNullOrEmpty(cashoutModel.DestinationAddressBase))
+            {
+                if (!(cashoutModel?.DestinationAddress.Contains(cashoutModel.DestinationAddressBase) ?? false))
+                {
+                    errors.Add(ValidationError.Create(ValidationErrorType.FieldNotValid, "Base Address should be part of destination address"));
+                }
+
+                var isBlockedBase = await _blackListService.IsBlockedAsync(asset.BlockchainIntegrationLayerId,
+                    cashoutModel.DestinationAddressBase);
+
+                if (isBlockedBase)
+                    errors.Add(ValidationError.Create(ValidationErrorType.BlackListedAddress, "Base Address is in the black list"));
+            }
+
             var isBlocked = await _blackListService.IsBlockedAsync(asset.BlockchainIntegrationLayerId,
                 cashoutModel.DestinationAddress);
 
@@ -83,7 +97,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
                 errors.Add(ValidationError.Create(ValidationErrorType.AddressIsNotValid, "Address is not valid"));
             }
 
-            if (cashoutModel.Volume != 0 && 
+            if (cashoutModel.Volume != 0 &&
                 Math.Abs(cashoutModel.Volume) < (decimal)asset.CashoutMinimalAmount)
             {
                 var minimalAmount = asset.CashoutMinimalAmount.GetFixedAsString(asset.Accuracy).TrimEnd('0');

@@ -35,8 +35,12 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client
         {
             bool isAllowed = false;
             IEnumerable<ValidationErrorResponse> validationErrors;
-            var response = await _service.CheckWithHttpMessagesAsync(validateCashoutModel.AssetId, validateCashoutModel.Amount, validateCashoutModel.DestinationAddress);
+            var response = await _service.CheckWithHttpMessagesAsync(validateCashoutModel.AssetId, 
+                validateCashoutModel.Amount, 
+                validateCashoutModel.DestinationAddress, 
+                validateCashoutModel.DestinationAddressBase);
             var responseObject = response.Body;
+
             switch (responseObject)
             {
                 case CashoutValidityResult validationErrorResponse:
