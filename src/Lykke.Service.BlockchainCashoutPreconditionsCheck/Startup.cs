@@ -12,6 +12,7 @@ using Lykke.Logs.Slack;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Exceptions;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Services;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Settings;
+using Lykke.Service.BlockchainCashoutPreconditionsCheck.Filter;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Modules;
 using Lykke.SettingsReader;
 using Lykke.SlackNotification.AzureQueue;
@@ -44,7 +45,10 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck
         {
             try
             {
-                services.AddMvc()
+                services.AddMvc(options =>
+                    {
+                        options.Filters.Add(typeof(CheckModelStateAttribute), 0);
+                    })
                     .AddJsonOptions(options =>
                     {
                         options.SerializerSettings.ContractResolver =
