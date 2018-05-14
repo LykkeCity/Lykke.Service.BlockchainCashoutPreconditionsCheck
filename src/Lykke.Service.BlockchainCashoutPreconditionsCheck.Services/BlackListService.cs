@@ -55,9 +55,6 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
         {
             await ThrowOnNotSupportedBlockchainType(blockchainType);
 
-            if (take == 0)
-                take = Int32.MaxValue;
-
             var (models, newToken) = await _blackListRepository.TryGetAllAsync(blockchainType, take, continuationToken);
 
             return (models, newToken);

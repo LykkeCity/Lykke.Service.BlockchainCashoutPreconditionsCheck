@@ -79,7 +79,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Controllers
         [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> GetAllAsync([FromRoute][Required] string blockchainType, [FromQuery] int take, [FromQuery] string continuationToken)
         {
-            if (take < 0)
+            if (take <= 0)
                 throw new ArgumentValidationException("Field must be equal or greater than 0", $"{nameof(take)}");
 
             var (models, newToken) = await _blackListService.TryGetAllAsync(blockchainType, take, continuationToken);
