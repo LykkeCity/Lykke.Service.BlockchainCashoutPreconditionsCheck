@@ -19,7 +19,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Controllers
     [Route("api/[controller]")]
     public class BlackListController : Controller
     {
-        private readonly char[] _charactersToTrim = new char[] {' ', 't'};
+        private readonly char[] _charactersToTrim = new char[] {' ', '\t'};
         private readonly IBlackListService _blackListService;
 
         public BlackListController(IBlackListService blackListService)
