@@ -19,6 +19,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Controllers
     [Route("api/[controller]")]
     public class BlackListController : Controller
     {
+        private readonly char[] _charactersToTrim = new char[] {' ', 't'};
         private readonly IBlackListService _blackListService;
 
         public BlackListController(IBlackListService blackListService)
@@ -38,7 +39,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Controllers
         [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> IsBlockedAsync([FromRoute][Required] string blockchainType, [FromRoute][Required] string blockedAddress)
         {
-            var isBlocked = await _blackListService.IsBlockedAsync(blockchainType, blockedAddress);
+            var isBlocked = await _blackListService.IsBlockedAsync(blockchainType, Trim(blockedAddress));
 
             return Ok(new IsBlockedResponse()
             {
@@ -59,7 +60,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Controllers
         [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> GetBlackListAsync([FromRoute][Required] string blockchainType, [FromRoute][Required] string blockedAddress)
         {
-            var model = await _blackListService.TryGetAsync(blockchainType, blockedAddress);
+            var model = await _blackListService.TryGetAsync(blockchainType, Trim(blockedAddress));
 
             if (model == null)
                 return NoContent();
@@ -103,13 +104,15 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Controllers
         [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> AddBlockedAddressAsync([FromBody] AddBlackListModel request)
         {
-            BlackListModel model = request != null ? new BlackListModel()
+            string blockedAddress = Trim(request.BlockedAddress);
+
+            BlackListModel model = new BlackListModel()
             {
-                BlockedAddress = request.BlockedAddress,
-                BlockedAddressLowCase = request.BlockedAddress.ToLower(),
+                BlockedAddress = blockedAddress,
+                BlockedAddressLowCase = blockedAddress.ToLower(),
                 BlockchainType = request.BlockchainType,
                 IsCaseSensitive = request.IsCaseSensitive
-            } : null;
+            };
 
              await _blackListService.SaveAsync(model);
 
@@ -128,13 +131,15 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Controllers
         [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> UpdateBlockedAddressAsync([FromBody] AddBlackListModel request)
         {
-            BlackListModel model = request != null ? new BlackListModel()
+            string blockedAddress = Trim(request.BlockedAddress);
+
+            BlackListModel model = new BlackListModel()
             {
-                BlockedAddress = request.BlockedAddress,
-                BlockedAddressLowCase = request.BlockedAddress.ToLower(),
+                BlockedAddress = blockedAddress,
+                BlockedAddressLowCase = blockedAddress.ToLower(),
                 BlockchainType = request.BlockchainType,
                 IsCaseSensitive = request.IsCaseSensitive
-            } : null;
+            };
 
             await _blackListService.SaveAsync(model);
 
@@ -153,9 +158,14 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Controllers
         [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> DeleteBlockedAddressAsync([FromRoute][Required] string blockchainType, [FromRoute][Required] string blockedAddress)
         {
-            await _blackListService.DeleteAsync(blockchainType, blockedAddress);
+            await _blackListService.DeleteAsync(blockchainType, Trim(blockedAddress));
 
             return Ok();
+        }
+
+        private string Trim(string address)
+        {
+            return address?.Trim(_charactersToTrim);
         }
 
         private BlackListResponse Map(BlackListModel blackListModel)
