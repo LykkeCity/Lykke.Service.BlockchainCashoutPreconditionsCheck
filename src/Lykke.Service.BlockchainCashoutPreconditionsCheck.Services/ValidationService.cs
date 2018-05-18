@@ -73,7 +73,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
             {
                 if (!(cashoutModel?.DestinationAddress.Contains(cashoutModel.DestinationAddressBase) ?? false))
                 {
-                    errors.Add(ValidationError.Create(ValidationErrorType.FieldNotValid, "Base Address should be part of destination address"));
+                    errors.Add(ValidationError.Create(ValidationErrorType.FieldIsNotValid, "Base Address should be part of destination address"));
                 }
 
                 var isBlockedBase = await _blackListService.IsBlockedAsync(asset.BlockchainIntegrationLayerId,
@@ -140,7 +140,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
 
         private IEnumerable<ValidationError> FieldNotValidResult(string message)
         {
-            return new[] { ValidationError.Create(ValidationErrorType.FieldNotValid, message) };
+            return new[] { ValidationError.Create(ValidationErrorType.FieldIsNotValid, message) };
         }
     }
 }

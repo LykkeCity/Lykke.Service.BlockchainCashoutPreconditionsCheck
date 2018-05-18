@@ -252,6 +252,8 @@
             </param>
             <param name='destinationAddressBase'>
             </param>
+            <param name='destinationAddressBase'>
+            </param>
             <param name='customHeaders'>
             Headers that will be added to request.
             </param>
@@ -490,6 +492,8 @@
             </param>
             <param name='destinationAddressBase'>
             </param>
+            <param name='destinationAddressBase'>
+            </param>
             <param name='cancellationToken'>
             The cancellation token.
             </param>
@@ -629,6 +633,8 @@
             <param name='destinationAddress'>
             </param>
             <param name='amount'>
+            </param>
+            <param name='destinationAddressBase'>
             </param>
             <param name='destinationAddressBase'>
             </param>

@@ -1156,6 +1156,8 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
         /// </param>
         /// <param name='destinationAddressBase'>
         /// </param>
+        /// <param name='destinationAddressBase'>
+        /// </param>
         /// <param name='customHeaders'>
         /// Headers that will be added to request.
         /// </param>

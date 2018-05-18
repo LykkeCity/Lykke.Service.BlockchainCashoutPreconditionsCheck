@@ -23,11 +23,11 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Models.Responses
     {
         None,
         AddressIsNotValid,
-        FieldNotValid,
+        FieldIsNotValid,
         LessThanMinCashout,
         HotwalletTargetProhibited,
-        DepositAddressNotFound,
-        BlackListedAddress
+        BlackListedAddress,
+        DepositAddressNotFound
     }
 
     [DataContract]
