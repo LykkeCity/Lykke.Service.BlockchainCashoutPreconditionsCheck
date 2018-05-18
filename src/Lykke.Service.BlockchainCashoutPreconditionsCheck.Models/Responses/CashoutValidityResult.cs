@@ -26,7 +26,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Models.Responses
         FieldIsNotValid,
         LessThanMinCashout,
         HotwalletTargetProhibited,
-        BlackListedAddress
+        BlackListedAddress,
         DepositAddressNotFound
     }
 
