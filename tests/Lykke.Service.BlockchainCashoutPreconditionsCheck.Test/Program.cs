@@ -24,7 +24,13 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Test
             {
                 AssetId = "62c04960-4015-4945-bb7e-8e4a193b3653",
                 DestinationAddress = "0x81b7E08F65Bdf5648606c89998A9CC8164397647",
-                DestinationAddressBase = "0x81b7E08F65Bdf5648606c89998A9CC8164397647",
+                Amount = 0
+            }).Result;
+
+            var (isAllowed2, listOfErrors2) = client.ValidateCashoutAsync(new Client.Models.CashoutValidateModel()
+            {
+                AssetId = "aa8e5f54-f6a6-4b82-b493-6b098db79c5f",
+                DestinationAddress = "GDF4MNKB57VPSF2ZAM36YEXH6TFEXQGQT4IJVR3IOMZQIFC2B44Z4HBL$bieihws7pwfr3q486azrantqyr",
                 Amount = 0
             }).Result;
 

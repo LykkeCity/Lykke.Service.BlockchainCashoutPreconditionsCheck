@@ -241,9 +241,9 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
             /// </param>
             /// <param name='destinationAddressBase'>
             /// </param>
-            public static object Check(this IBlockchainCashoutPreconditionsCheckAPI operations, string assetId, decimal amount, string destinationAddress, string destinationAddressBase)
+            public static object Check(this IBlockchainCashoutPreconditionsCheckAPI operations, string assetId, decimal amount, string destinationAddress)
             {
-                return operations.CheckAsync(assetId, amount, destinationAddress, destinationAddressBase).GetAwaiter().GetResult();
+                return operations.CheckAsync(assetId, amount, destinationAddress).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -263,9 +263,9 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<object> CheckAsync(this IBlockchainCashoutPreconditionsCheckAPI operations, string assetId, decimal amount, string destinationAddress, string destinationAddressBase, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<object> CheckAsync(this IBlockchainCashoutPreconditionsCheckAPI operations, string assetId, decimal amount, string destinationAddress, CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.CheckWithHttpMessagesAsync(assetId, amount, destinationAddress, destinationAddressBase, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.CheckWithHttpMessagesAsync(assetId, amount, destinationAddress, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }

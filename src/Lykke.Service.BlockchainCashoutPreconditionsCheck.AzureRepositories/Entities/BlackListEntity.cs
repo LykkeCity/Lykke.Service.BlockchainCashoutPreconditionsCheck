@@ -59,13 +59,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.AzureRepositories.En
 
         public BlackListModel ToDomain()
         {
-            return new BlackListModel()
-            {
-                BlockchainType = this.BlockchainIntegrationLayerId,
-                BlockedAddress = this.BlockedAddress,
-                BlockedAddressLowCase = this.BlockedAddress?.ToLower(),
-                IsCaseSensitive = this.IsCaseSensitive,
-            };
+            return new BlackListModel(this.BlockchainIntegrationLayerId, this.BlockedAddress, this.IsCaseSensitive);
         }
 
         #endregion

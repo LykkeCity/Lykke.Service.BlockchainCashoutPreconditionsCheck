@@ -106,13 +106,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Controllers
         {
             string blockedAddress = Trim(request.BlockedAddress);
 
-            BlackListModel model = new BlackListModel()
-            {
-                BlockedAddress = blockedAddress,
-                BlockedAddressLowCase = blockedAddress.ToLower(),
-                BlockchainType = request.BlockchainType,
-                IsCaseSensitive = request.IsCaseSensitive
-            };
+            BlackListModel model = new BlackListModel(request.BlockchainType, blockedAddress, request.IsCaseSensitive);
 
              await _blackListService.SaveAsync(model);
 
@@ -133,13 +127,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Controllers
         {
             string blockedAddress = Trim(request.BlockedAddress);
 
-            BlackListModel model = new BlackListModel()
-            {
-                BlockedAddress = blockedAddress,
-                BlockedAddressLowCase = blockedAddress.ToLower(),
-                BlockchainType = request.BlockchainType,
-                IsCaseSensitive = request.IsCaseSensitive
-            };
+            BlackListModel model = new BlackListModel(request.BlockchainType, blockedAddress, request.IsCaseSensitive);
 
             await _blackListService.SaveAsync(model);
 

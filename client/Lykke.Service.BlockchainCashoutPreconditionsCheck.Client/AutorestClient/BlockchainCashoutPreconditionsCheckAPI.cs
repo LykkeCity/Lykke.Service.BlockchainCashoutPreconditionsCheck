@@ -1154,8 +1154,6 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
         /// </param>
         /// <param name='destinationAddress'>
         /// </param>
-        /// <param name='destinationAddressBase'>
-        /// </param>
         /// <param name='customHeaders'>
         /// Headers that will be added to request.
         /// </param>
@@ -1177,7 +1175,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<object>> CheckWithHttpMessagesAsync(string assetId, decimal amount, string destinationAddress, string destinationAddressBase, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<object>> CheckWithHttpMessagesAsync(string assetId, decimal amount, string destinationAddress, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (assetId == null)
             {
@@ -1197,7 +1195,6 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
                 tracingParameters.Add("assetId", assetId);
                 tracingParameters.Add("amount", amount);
                 tracingParameters.Add("destinationAddress", destinationAddress);
-                tracingParameters.Add("destinationAddressBase", destinationAddressBase);
                 tracingParameters.Add("cancellationToken", cancellationToken);
                 ServiceClientTracing.Enter(_invocationId, this, "Check", tracingParameters);
             }
@@ -1213,10 +1210,6 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
             if (destinationAddress != null)
             {
                 _queryParameters.Add(string.Format("DestinationAddress={0}", System.Uri.EscapeDataString(destinationAddress)));
-            }
-            if (destinationAddressBase != null)
-            {
-                _queryParameters.Add(string.Format("DestinationAddressBase={0}", System.Uri.EscapeDataString(destinationAddressBase)));
             }
             if (_queryParameters.Count > 0)
             {
