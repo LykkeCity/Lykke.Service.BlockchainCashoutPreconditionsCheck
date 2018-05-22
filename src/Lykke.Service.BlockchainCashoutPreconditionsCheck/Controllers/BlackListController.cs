@@ -19,7 +19,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Controllers
     [Route("api/[controller]")]
     public class BlackListController : Controller
     {
-        private readonly char[] _charactersToTrim = new char[] {' ', '\t'};
+        private static readonly char[] _charactersToTrim = new char[] {' ', '\t'};
         private readonly IBlackListService _blackListService;
 
         public BlackListController(IBlackListService blackListService)
@@ -31,7 +31,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Controllers
         /// is address black listed
         /// </summary>
         /// <returns></returns>
-        [HttpGet("is-blocked/{blockchainType}/{blockedAddress}")]
+        [HttpGet("{blockchainType}/{blockedAddress}/is-blocked")]
         [ArgumentValidationExceptionFilter]
         [SwaggerOperation("IsBlocked")]
         [ProducesResponseType(typeof(IsBlockedResponse), (int)HttpStatusCode.OK)]

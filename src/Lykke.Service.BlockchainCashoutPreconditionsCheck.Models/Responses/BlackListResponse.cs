@@ -17,13 +17,4 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Models.Responses
         [DataMember]
         public bool IsCaseSensitive { get; set; }
     }
-
-    public class BlackListEnumerationResponse
-    {
-        [DataMember]
-        public IEnumerable<BlackListResponse> List { get; set; }
-
-        [DataMember]
-        public string ContinuationToken { get; set; }
-    }
 }

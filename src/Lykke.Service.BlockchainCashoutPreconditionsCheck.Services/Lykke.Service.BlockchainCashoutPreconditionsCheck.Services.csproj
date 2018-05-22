@@ -16,7 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Lykke.Service.BlockchainCashoutPreconditionsCheck.AzureRepositories\Lykke.Service.BlockchainCashoutPreconditionsCheck.AzureRepositories.csproj" />
     <ProjectReference Include="..\Lykke.Service.BlockchainCashoutPreconditionsCheck.Core\Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.csproj" />
   </ItemGroup>
 

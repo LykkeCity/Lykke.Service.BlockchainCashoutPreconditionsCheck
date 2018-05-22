@@ -17,8 +17,8 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Test
                 Amount = 0
             }).Result;
 
-            client.CreateBlackListAsync(new BlackListModel("EthereumClassic", "0x81b7E08F65Bdf5648606c89998A9CC8164397647", false)).Wait();
-            ExecuteSafely(() => client.CreateBlackListAsync(new BlackListModel("EthereumClassic", "0x81b7E08F65Bdf5648606c89998A", false)));
+            client.AddToBlackListAsync(new BlackListModel("EthereumClassic", "0x81b7E08F65Bdf5648606c89998A9CC8164397647", false)).Wait();
+            ExecuteSafely(() => client.AddToBlackListAsync(new BlackListModel("EthereumClassic", "0x81b7E08F65Bdf5648606c89998A", false)));
 
             var (isAllowed1, listOfErrors1) = client.ValidateCashoutAsync(new Client.Models.CashoutValidateModel()
             {

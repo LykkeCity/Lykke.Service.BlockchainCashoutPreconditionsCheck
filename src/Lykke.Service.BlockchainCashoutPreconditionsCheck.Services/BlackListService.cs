@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Lykke.Service.BlockchainApi.Client;
-using Lykke.Service.BlockchainCashoutPreconditionsCheck.AzureRepositories.Repositories;
+﻿using Lykke.Service.BlockchainApi.Client;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Domain.Validation;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Exceptions;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Repositories;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Services;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
 {
@@ -74,6 +71,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
             await _blackListRepository.DeleteAsync(blockchainType, blockedAddress);
         }
 
+        /// <exception cref="ArgumentValidationException"></exception>
         private async Task<IBlockchainApiClient> ThrowOnNotSupportedBlockchainType(string blockchainType)
         {
             IBlockchainApiClient blockchainClient;
@@ -82,7 +80,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
             {
                 blockchainClient = _blockchainApiClientProvider.Get(blockchainType); //throws
             }
-            catch (Exception e)
+            catch (ArgumentValidationException e)
             {
                 throw new ArgumentValidationException($"{blockchainType} is not a valid type", "blockchainType");
             }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Common;
+using JetBrains.Annotations;
 using Lykke.AzureStorage.Tables;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Domain.Validation;
 
@@ -11,14 +12,17 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.AzureRepositories.En
     {
         #region Fields
 
-        // ReSharper disable MemberCanBePrivate.Global
-
+        [UsedImplicitly(ImplicitUseKindFlags.Assign)]
         public string BlockchainIntegrationLayerId { get; set; }
-        public string BlockedAddressLowCase { get; set; }
-        public string BlockedAddress { get; set; }
-        public bool IsCaseSensitiv { get; set; }
 
-        // ReSharper restore MemberCanBePrivate.Global
+        [UsedImplicitly(ImplicitUseKindFlags.Assign)]
+        public string BlockedAddressLowCase { get; set; }
+
+        [UsedImplicitly(ImplicitUseKindFlags.Assign)]
+        public string BlockedAddress { get; set; }
+
+        [UsedImplicitly(ImplicitUseKindFlags.Assign)]
+        public bool IsCaseSensitive { get; set; }
 
         #endregion
 
@@ -49,7 +53,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.AzureRepositories.En
                 BlockchainIntegrationLayerId = model.BlockchainType,
                 BlockedAddress = model.BlockedAddress,
                 BlockedAddressLowCase = model.BlockedAddress?.ToLower(),
-                IsCaseSensitiv = model.IsCaseSensitive,
+                IsCaseSensitive = model.IsCaseSensitive,
             };
         }
 
@@ -60,7 +64,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.AzureRepositories.En
                 BlockchainType = this.BlockchainIntegrationLayerId,
                 BlockedAddress = this.BlockedAddress,
                 BlockedAddressLowCase = this.BlockedAddress?.ToLower(),
-                IsCaseSensitive = this.IsCaseSensitiv,
+                IsCaseSensitive = this.IsCaseSensitive,
             };
         }
 

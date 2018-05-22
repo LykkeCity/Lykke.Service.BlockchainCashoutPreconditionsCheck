@@ -22,7 +22,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client
         /// <param name="blackListModel"></param>
         /// <returns></returns>
         /// <exception cref="Exception">Is thrown on wrong usage of service.</exception>
-        Task CreateBlackListAsync(BlackListModel blackListModel);
+        Task AddToBlackListAsync(BlackListModel blackListModel);
 
         /// <summary>
         /// Get address from specific blockchain type black list

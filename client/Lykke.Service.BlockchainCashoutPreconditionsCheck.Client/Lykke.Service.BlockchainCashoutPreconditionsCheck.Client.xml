@@ -894,7 +894,7 @@
             <returns></returns>
             <exception cref="T:System.Exception">Is thrown on wrong usage of service.</exception>
         </member>
-        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.BlockchainCashoutPreconditionsCheckClient.CreateBlackListAsync(Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.Models.BlackListModel)">
+        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.BlockchainCashoutPreconditionsCheckClient.AddToBlackListAsync(Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.Models.BlackListModel)">
             <summary>
             Add new address to the specific blockchain type black list
             </summary>
@@ -937,7 +937,7 @@
             <returns></returns>
             <exception cref="T:System.Exception">Is thrown on wrong usage of service.</exception>
         </member>
-        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.IBlockchainCashoutPreconditionsCheckClient.CreateBlackListAsync(Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.Models.BlackListModel)">
+        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.IBlockchainCashoutPreconditionsCheckClient.AddToBlackListAsync(Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.Models.BlackListModel)">
             <summary>
             Add new address to the specific blockchain type black list
             </summary>
