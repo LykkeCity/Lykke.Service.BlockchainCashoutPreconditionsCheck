@@ -11,7 +11,5 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Domain.Validati
         public decimal Volume { get; set; }
 
         public string DestinationAddress { get; set; }
-
-        public string DestinationAddressBase { get; set; }
     }
 }

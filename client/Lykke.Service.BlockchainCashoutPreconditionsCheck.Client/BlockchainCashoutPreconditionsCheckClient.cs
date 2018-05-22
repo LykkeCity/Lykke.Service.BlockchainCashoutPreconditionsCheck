@@ -37,8 +37,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client
             IEnumerable<ValidationErrorResponse> validationErrors;
             var response = await _service.CheckWithHttpMessagesAsync(validateCashoutModel.AssetId, 
                 validateCashoutModel.Amount, 
-                validateCashoutModel.DestinationAddress, 
-                validateCashoutModel.DestinationAddressBase);
+                validateCashoutModel.DestinationAddress);
             var responseObject = response.Body;
 
             switch (responseObject)
@@ -63,7 +62,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client
         /// <param name="blackListModel"></param>
         /// <returns></returns>
         /// <exception cref="Exception">Is thrown on wrong usage of service.</exception>
-        public async Task CreateBlackListAsync(BlackListModel blackListModel)
+        public async Task AddToBlackListAsync(BlackListModel blackListModel)
         {
             var response = await _service.AddAsync(new AddBlackListModel()
             {

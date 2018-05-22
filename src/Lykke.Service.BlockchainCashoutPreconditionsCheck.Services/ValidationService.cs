@@ -69,20 +69,6 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
 
             List<ValidationError> errors = new List<ValidationError>(1);
 
-            if (!string.IsNullOrEmpty(cashoutModel.DestinationAddressBase))
-            {
-                if (!(cashoutModel?.DestinationAddress.Contains(cashoutModel.DestinationAddressBase) ?? false))
-                {
-                    errors.Add(ValidationError.Create(ValidationErrorType.FieldIsNotValid, "Base Address should be part of destination address"));
-                }
-
-                var isBlockedBase = await _blackListService.IsBlockedAsync(asset.BlockchainIntegrationLayerId,
-                    cashoutModel.DestinationAddressBase);
-
-                if (isBlockedBase)
-                    errors.Add(ValidationError.Create(ValidationErrorType.BlackListedAddress, "Base Address is in the black list"));
-            }
-
             var isBlocked = await _blackListService.IsBlockedAsync(asset.BlockchainIntegrationLayerId,
                 cashoutModel.DestinationAddress);
 
@@ -132,6 +118,20 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
                     {
                         errors.Add(ValidationError.Create(ValidationErrorType.DepositAddressNotFound, $"Deposit address {cashoutModel.DestinationAddress} not found"));
                     }
+                }
+
+                if (!string.IsNullOrEmpty(destAddressParseResult.BaseAddress))
+                {
+                    if (!(cashoutModel?.DestinationAddress.Contains(destAddressParseResult.BaseAddress) ?? false))
+                    {
+                        errors.Add(ValidationError.Create(ValidationErrorType.FieldIsNotValid, "Base Address should be part of destination address"));
+                    }
+
+                    var isBlockedBase = await _blackListService.IsBlockedAsync(asset.BlockchainIntegrationLayerId,
+                        destAddressParseResult.BaseAddress);
+
+                    if (isBlockedBase)
+                        errors.Add(ValidationError.Create(ValidationErrorType.BlackListedAddress, "Base Address is in the black list"));
                 }
             }
 

@@ -161,13 +161,7 @@ namespace Lykke.Service.BCPCheck.Tests
 
         private BlackListModel SaveBlackListModel(string blockedAddress, bool isCaseSensitiv)
         {
-            var model = new BlackListModel()
-            {
-                BlockedAddress = blockedAddress,
-                IsCaseSensitive = isCaseSensitiv,
-                BlockchainType = BlockchainType,
-                BlockedAddressLowCase = BlockedAddressValid.ToLower(),
-            };
+            var model = new BlackListModel(BlockchainType, blockedAddress, isCaseSensitiv);
 
             _logic.SaveAsync(model).Wait();
             return model;
