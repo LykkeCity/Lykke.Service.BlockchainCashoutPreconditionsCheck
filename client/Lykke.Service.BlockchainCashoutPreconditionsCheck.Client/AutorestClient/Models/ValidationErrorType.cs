@@ -28,7 +28,9 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
         [EnumMember(Value = "HotwalletTargetProhibited")]
         HotwalletTargetProhibited,
         [EnumMember(Value = "DepositAddressNotFound")]
-        DepositAddressNotFound
+        DepositAddressNotFound,
+        [EnumMember(Value = "BlackListedAddress")]
+        BlackListedAddress
     }
     internal static class ValidationErrorTypeEnumExtension
     {
@@ -51,6 +53,8 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
                     return "LessThanMinCashout";
                 case ValidationErrorType.HotwalletTargetProhibited:
                     return "HotwalletTargetProhibited";
+                case ValidationErrorType.BlackListedAddress:
+                    return "BlackListedAddress";
                 case ValidationErrorType.DepositAddressNotFound:
                     return "DepositAddressNotFound";
             }
@@ -71,6 +75,8 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
                     return ValidationErrorType.LessThanMinCashout;
                 case "HotwalletTargetProhibited":
                     return ValidationErrorType.HotwalletTargetProhibited;
+                case "BlackListedAddress":
+                    return ValidationErrorType.BlackListedAddress;
                 case "DepositAddressNotFound":
                     return ValidationErrorType.DepositAddressNotFound;
             }

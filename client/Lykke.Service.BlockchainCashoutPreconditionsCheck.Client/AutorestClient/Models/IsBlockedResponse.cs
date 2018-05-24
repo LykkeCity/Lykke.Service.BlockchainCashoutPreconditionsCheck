@@ -9,26 +9,22 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
     using Newtonsoft.Json;
     using System.Linq;
 
-    public partial class ValidationErrorResponse
+    public partial class IsBlockedResponse
     {
         /// <summary>
-        /// Initializes a new instance of the ValidationErrorResponse class.
+        /// Initializes a new instance of the IsBlockedResponse class.
         /// </summary>
-        public ValidationErrorResponse()
+        public IsBlockedResponse()
         {
             CustomInit();
         }
 
         /// <summary>
-        /// Initializes a new instance of the ValidationErrorResponse class.
+        /// Initializes a new instance of the IsBlockedResponse class.
         /// </summary>
-        /// <param name="type">Possible values include: 'None',
-        /// 'AddressIsNotValid', 'FieldIsNotValid', 'LessThanMinCashout',
-        /// 'BlackListedAddress'</param>
-        public ValidationErrorResponse(ValidationErrorType type, string value = default(string))
+        public IsBlockedResponse(bool isBlocked)
         {
-            Type = type;
-            Value = value;
+            IsBlocked = isBlocked;
             CustomInit();
         }
 
@@ -38,16 +34,9 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
         partial void CustomInit();
 
         /// <summary>
-        /// Gets or sets possible values include: 'None', 'AddressIsNotValid',
-        /// 'FieldIsNotValid', 'LessThanMinCashout', 'BlackListedAddress'
         /// </summary>
-        [JsonProperty(PropertyName = "Type")]
-        public ValidationErrorType Type { get; set; }
-
-        /// <summary>
-        /// </summary>
-        [JsonProperty(PropertyName = "Value")]
-        public string Value { get; set; }
+        [JsonProperty(PropertyName = "IsBlocked")]
+        public bool IsBlocked { get; set; }
 
         /// <summary>
         /// Validate the object.
@@ -57,6 +46,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
         /// </exception>
         public virtual void Validate()
         {
+            //Nothing to validate
         }
     }
 }

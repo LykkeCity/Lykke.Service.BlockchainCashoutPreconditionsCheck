@@ -13,10 +13,10 @@
     <PackageReference Include="Lykke.Common" Version="6.5.0" />
     <PackageReference Include="Lykke.Service.BlockchainWallets.Client" Version="4.1.1" />
     <PackageReference Include="MessagePack" Version="1.7.3.4" />
+    <PackageReference Include="System.Threading.Tasks" Version="4.3.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Lykke.Service.BlockchainCashoutPreconditionsCheck.Core\Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.csproj" />
   </ItemGroup>
-
 </Project>

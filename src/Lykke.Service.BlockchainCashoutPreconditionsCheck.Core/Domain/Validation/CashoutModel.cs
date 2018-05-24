@@ -7,7 +7,9 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Domain.Validati
     public class CashoutModel
     {
         public string AssetId { get; set; }
+
         public decimal Volume { get; set; }
+
         public string DestinationAddress { get; set; }
     }
 }

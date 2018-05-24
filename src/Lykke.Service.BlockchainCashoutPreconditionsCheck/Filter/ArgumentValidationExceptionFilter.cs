@@ -2,7 +2,6 @@
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Exceptions;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Text;
 
@@ -22,7 +21,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Filter
             {
                 ErrorResponse error= ErrorResponse.Create("Validation Error");
 
-                error.AddModelError("exception", argException);
+                error.AddModelError(argException.ParamName, argException.Message);
                 context.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                 var jsonString = Newtonsoft.Json.JsonConvert.SerializeObject(error);
                 byte[] data = Encoding.UTF8.GetBytes(jsonString);

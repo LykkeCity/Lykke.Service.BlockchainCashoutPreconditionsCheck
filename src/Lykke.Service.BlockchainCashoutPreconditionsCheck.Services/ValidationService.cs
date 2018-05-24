@@ -17,16 +17,19 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
         private readonly IBlockchainApiClientProvider _blockchainApiClientProvider;
         private readonly IAssetsService _assetsService;
         private readonly IBlockchainSettingsProvider _blockchainSettingsProvider;
+        private readonly IBlackListService _blackListService;
         private readonly IBlockchainWalletsClient _blockchainWalletsClient;
 
-        public ValidationService(IBlockchainApiClientProvider blockchainApiClientProvider, 
+        public ValidationService(IBlockchainApiClientProvider blockchainApiClientProvider,
             IAssetsService assetsService, 
             IBlockchainSettingsProvider blockchainSettingsProvider,
-            IBlockchainWalletsClient blockchainWalletsClient)
+            IBlockchainWalletsClient blockchainWalletsClient,
+            IBlackListService blackListService)
         {
             _blockchainApiClientProvider = blockchainApiClientProvider;
             _assetsService = assetsService;
             _blockchainSettingsProvider = blockchainSettingsProvider;
+            _blackListService = blackListService;
             _blockchainWalletsClient = blockchainWalletsClient;
         }
 
@@ -53,18 +56,26 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
             }
             catch (Exception e)
             {
-                throw new ArgumentValidationException($"Asset with Id-{cashoutModel.AssetId} does not exists", "AssetId");
+                throw new ArgumentValidationException($"Asset with Id-{cashoutModel.AssetId} does not exists", "assetId");
             }
 
             if (asset == null)
-                throw new ArgumentValidationException($"Asset with Id-{cashoutModel.AssetId} does not exists", "AssetId");
+                throw new ArgumentValidationException($"Asset with Id-{cashoutModel.AssetId} does not exists", "assetId");
 
             if (string.IsNullOrEmpty(asset.BlockchainIntegrationLayerId))
-                throw new ArgumentValidationException($"Given asset Id-{cashoutModel.AssetId} is not a part of Blockchain Integration Layer", "AssetId");
+                throw new ArgumentValidationException($"Given asset Id-{cashoutModel.AssetId} is not a part of Blockchain Integration Layer", "assetId");
 
             var blockchainClient = _blockchainApiClientProvider.Get(asset.BlockchainIntegrationLayerId);
 
             List<ValidationError> errors = new List<ValidationError>(1);
+
+            var isBlocked = await _blackListService.IsBlockedAsync(asset.BlockchainIntegrationLayerId,
+                cashoutModel.DestinationAddress);
+
+            if (isBlocked)
+            {
+                errors.Add(ValidationError.Create(ValidationErrorType.BlackListedAddress, "Address is in the black list"));
+            }
 
             if (string.IsNullOrEmpty(cashoutModel.DestinationAddress) ||
                 !await blockchainClient.IsAddressValidAsync(cashoutModel.DestinationAddress))
@@ -72,7 +83,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
                 errors.Add(ValidationError.Create(ValidationErrorType.AddressIsNotValid, "Address is not valid"));
             }
 
-            if (cashoutModel.Volume != 0 && 
+            if (cashoutModel.Volume != 0 &&
                 Math.Abs(cashoutModel.Volume) < (decimal)asset.CashoutMinimalAmount)
             {
                 var minimalAmount = asset.CashoutMinimalAmount.GetFixedAsString(asset.Accuracy).TrimEnd('0');
@@ -108,6 +119,20 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
                         errors.Add(ValidationError.Create(ValidationErrorType.DepositAddressNotFound, $"Deposit address {cashoutModel.DestinationAddress} not found"));
                     }
                 }
+
+                if (!string.IsNullOrEmpty(destAddressParseResult.BaseAddress))
+                {
+                    if (!(cashoutModel?.DestinationAddress.Contains(destAddressParseResult.BaseAddress) ?? false))
+                    {
+                        errors.Add(ValidationError.Create(ValidationErrorType.FieldIsNotValid, "Base Address should be part of destination address"));
+                    }
+
+                    var isBlockedBase = await _blackListService.IsBlockedAsync(asset.BlockchainIntegrationLayerId,
+                        destAddressParseResult.BaseAddress);
+
+                    if (isBlockedBase)
+                        errors.Add(ValidationError.Create(ValidationErrorType.BlackListedAddress, "Base Address is in the black list"));
+                }
             }
 
             return errors;
@@ -115,7 +140,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
 
         private IEnumerable<ValidationError> FieldNotValidResult(string message)
         {
-            return new[] { ValidationError.Create(ValidationErrorType.FieldNotValid, message) };
+            return new[] { ValidationError.Create(ValidationErrorType.FieldIsNotValid, message) };
         }
     }
 }
