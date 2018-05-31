@@ -19,10 +19,10 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client
         private readonly ILog _log;
         private IBlockchainCashoutPreconditionsCheckAPI _service;
 
-        public BlockchainCashoutPreconditionsCheckClient(string serviceUrl, ILog log, params DelegatingHandler[] handlers)
+        public BlockchainCashoutPreconditionsCheckClient(string serviceUrl, ILog log)
         {
             _log = log;
-            _service = new BlockchainCashoutPreconditionsCheckAPI(new Uri(serviceUrl), handlers);
+            _service = new BlockchainCashoutPreconditionsCheckAPI(new Uri(serviceUrl), new HttpClient());
         }
 
         /// <summary>
@@ -35,8 +35,8 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client
         {
             bool isAllowed = false;
             IEnumerable<ValidationErrorResponse> validationErrors;
-            var response = await _service.CheckWithHttpMessagesAsync(validateCashoutModel.AssetId, 
-                validateCashoutModel.Amount, 
+            var response = await _service.CheckWithHttpMessagesAsync(validateCashoutModel.AssetId,
+                validateCashoutModel.Amount,
                 validateCashoutModel.DestinationAddress);
             var responseObject = response.Body;
 
