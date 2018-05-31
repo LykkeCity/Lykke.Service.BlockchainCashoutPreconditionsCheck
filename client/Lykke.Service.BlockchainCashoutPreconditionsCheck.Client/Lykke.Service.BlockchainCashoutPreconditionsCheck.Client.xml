@@ -4,6 +4,11 @@
         <name>Lykke.Service.BlockchainCashoutPreconditionsCheck.Client</name>
     </assembly>
     <members>
+        <member name="T:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.BlockchainCashoutPreconditionsCheckAPI">
+            <summary>
+            Used to prevent memory leak in RetryPolicy
+            </summary>
+        </member>
         <member name="P:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.BlockchainCashoutPreconditionsCheckAPI.BaseUri">
             <summary>
             The base URI of the service.
