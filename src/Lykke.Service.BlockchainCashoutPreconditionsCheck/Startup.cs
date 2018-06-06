@@ -231,9 +231,24 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck
 
             aggregateLogger.AddLog(azureStorageLogger);
 
-            var personalSlackLogger = LykkeLogToSlack.Create(slackService, "BlockChainIntegration");
+            var allMessagesSlackLogger = LykkeLogToSlack.Create
+            (
+                slackService,
+                "BlockChainIntegration",
+                // ReSharper disable once RedundantArgumentDefaultValue
+                LogLevel.All
+            );
 
-            aggregateLogger.AddLog(personalSlackLogger);
+            aggregateLogger.AddLog(allMessagesSlackLogger);
+
+            var importantMessagesSlackLogger = LykkeLogToSlack.Create
+            (
+                slackService,
+                "BlockChainIntegrationImportantMessages",
+                LogLevel.All ^ LogLevel.Info
+            );
+
+            aggregateLogger.AddLog(importantMessagesSlackLogger);
 
             return aggregateLogger;
         }
