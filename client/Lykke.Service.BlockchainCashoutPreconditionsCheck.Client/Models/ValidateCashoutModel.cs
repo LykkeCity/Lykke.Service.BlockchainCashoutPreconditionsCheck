@@ -11,5 +11,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.Models
         public decimal Amount { get; set; }
 
         public string DestinationAddress { get; set; }
+
+        public Guid ClientId { get; set; }
     }
 }
