@@ -135,13 +135,17 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
                 }
             }
 
-            var clientAddress = await _blockchainWalletsClient.GetAddressAsync(asset.BlockchainIntegrationLayerId,
-                asset.BlockchainIntegrationLayerAssetId, 
-                cashoutModel.ClientId);
-
-            if (string.Equals(clientAddress.Address, cashoutModel.DestinationAddress, StringComparison.InvariantCultureIgnoreCase))
+            if (cashoutModel.ClientId != null)
             {
-                errors.Add(ValidationError.Create(ValidationErrorType.CashoutToSelfAddress, "Withdrawals to the deposit wallet owned by the customer himself prohibited"));
+                var clientAddress = await _blockchainWalletsClient.GetAddressAsync(asset.BlockchainIntegrationLayerId,
+                    asset.BlockchainIntegrationLayerAssetId,
+                    cashoutModel.ClientId.Value);
+
+                if (string.Equals(clientAddress.Address, cashoutModel.DestinationAddress, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    errors.Add(ValidationError.Create(ValidationErrorType.CashoutToSelfAddress, "Withdrawals to the deposit wallet owned by the customer himself prohibited"));
+                }
+
             }
 
             return errors;

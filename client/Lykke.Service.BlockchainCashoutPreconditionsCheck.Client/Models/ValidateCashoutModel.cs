@@ -12,6 +12,6 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.Models
 
         public string DestinationAddress { get; set; }
 
-        public Guid ClientId { get; set; }
+        public Guid? ClientId { get; set; }
     }
 }
