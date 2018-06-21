@@ -20,5 +20,9 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Models.Requests
         [Required]
         [DataMember]
         public string DestinationAddress { get; set; }
+
+        [Required]
+        [DataMember]
+        public Guid ClientId { get; set; }
     }
 }

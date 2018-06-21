@@ -40,7 +40,8 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Controllers
             {
                 AssetId = model.AssetId,
                 DestinationAddress = model.DestinationAddress,
-                Volume = model.Amount
+                Volume = model.Amount,
+                ClientId = model.ClientId
             } : null;
 
             var validationErrors = await _validationService.ValidateAsync(cashoutModel);

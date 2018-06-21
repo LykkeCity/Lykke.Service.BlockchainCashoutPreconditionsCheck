@@ -110,11 +110,11 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
 
                 if (hotWalletParseResult.BaseAddress == destAddressParseResult.BaseAddress)
                 {
-                    var clientId = await _blockchainWalletsClient.TryGetClientIdAsync(asset.BlockchainIntegrationLayerId,
+                    var existedClientIdAsDestination = await _blockchainWalletsClient.TryGetClientIdAsync(asset.BlockchainIntegrationLayerId,
                          asset.BlockchainIntegrationLayerAssetId, 
                          cashoutModel.DestinationAddress);
 
-                    if (clientId == null)
+                    if (existedClientIdAsDestination == null)
                     {
                         errors.Add(ValidationError.Create(ValidationErrorType.DepositAddressNotFound, $"Deposit address {cashoutModel.DestinationAddress} not found"));
                     }
@@ -133,6 +133,15 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
                     if (isBlockedBase)
                         errors.Add(ValidationError.Create(ValidationErrorType.BlackListedAddress, "Base Address is in the black list"));
                 }
+            }
+
+            var clientAddress = await _blockchainWalletsClient.GetAddressAsync(asset.BlockchainIntegrationLayerId,
+                asset.BlockchainIntegrationLayerAssetId, 
+                cashoutModel.ClientId);
+
+            if (string.Equals(clientAddress.Address, cashoutModel.DestinationAddress, StringComparison.InvariantCultureIgnoreCase))
+            {
+                errors.Add(ValidationError.Create(ValidationErrorType.CashoutToSelfAddress, "Withdrawals to the deposit wallet owned by the customer himself prohibited"));
             }
 
             return errors;
