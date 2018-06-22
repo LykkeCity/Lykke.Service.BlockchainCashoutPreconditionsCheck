@@ -135,7 +135,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
             /// </param>
             /// <param name='continuationToken'>
             /// </param>
-            public static object GetAll(this IBlockchainCashoutPreconditionsCheckAPI operations, string blockchainType, int take, string continuationToken = default(string))
+            public static object GetAll(this IBlockchainCashoutPreconditionsCheckAPI operations, string blockchainType, int? take = default(int?), string continuationToken = default(string))
             {
                 return operations.GetAllAsync(blockchainType, take, continuationToken).GetAwaiter().GetResult();
             }
@@ -155,7 +155,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<object> GetAllAsync(this IBlockchainCashoutPreconditionsCheckAPI operations, string blockchainType, int take, string continuationToken = default(string), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<object> GetAllAsync(this IBlockchainCashoutPreconditionsCheckAPI operations, string blockchainType, int? take = default(int?), string continuationToken = default(string), CancellationToken cancellationToken = default(CancellationToken))
             {
                 using (var _result = await operations.GetAllWithHttpMessagesAsync(blockchainType, take, continuationToken, null, cancellationToken).ConfigureAwait(false))
                 {
@@ -239,13 +239,11 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
             /// </param>
             /// <param name='amount'>
             /// </param>
-            /// <param name='destinationAddress'>
+            /// <param name='clientId'>
             /// </param>
-            /// <param name='destinationAddressBase'>
-            /// </param>
-            public static object Check(this IBlockchainCashoutPreconditionsCheckAPI operations, string assetId, decimal amount, string destinationAddress)
+            public static object Check(this IBlockchainCashoutPreconditionsCheckAPI operations, string assetId, string destinationAddress, decimal? amount = default(decimal?), System.Guid? clientId = default(System.Guid?))
             {
-                return operations.CheckAsync(assetId, amount, destinationAddress).GetAwaiter().GetResult();
+                return operations.CheckAsync(assetId, destinationAddress, amount, clientId).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -260,16 +258,14 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
             /// </param>
             /// <param name='amount'>
             /// </param>
-            /// <param name='destinationAddressBase'>
-            /// </param>
-            /// <param name='destinationAddressBase'>
+            /// <param name='clientId'>
             /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<object> CheckAsync(this IBlockchainCashoutPreconditionsCheckAPI operations, string assetId, decimal amount, string destinationAddress, CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<object> CheckAsync(this IBlockchainCashoutPreconditionsCheckAPI operations, string assetId, string destinationAddress, decimal? amount = default(decimal?), System.Guid? clientId = default(System.Guid?), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.CheckWithHttpMessagesAsync(assetId, amount, destinationAddress, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.CheckWithHttpMessagesAsync(assetId, destinationAddress, amount, clientId, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }

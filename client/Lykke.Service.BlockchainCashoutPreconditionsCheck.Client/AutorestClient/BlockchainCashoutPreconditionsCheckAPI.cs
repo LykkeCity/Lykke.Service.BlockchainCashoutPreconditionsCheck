@@ -232,7 +232,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
             HttpStatusCode _statusCode = _httpResponse.StatusCode;
             cancellationToken.ThrowIfCancellationRequested();
             string _responseContent = null;
-            if ((int)_statusCode != 200 && (int)_statusCode != 500 && (int)_statusCode != 400)
+            if ((int)_statusCode != 200 && (int)_statusCode != 400 && (int)_statusCode != 500)
             {
                 var ex = new HttpOperationException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
                 if (_httpResponse.Content != null) {
@@ -277,7 +277,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
                 }
             }
             // Deserialize Response
-            if ((int)_statusCode == 500)
+            if ((int)_statusCode == 400)
             {
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
@@ -295,7 +295,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
                 }
             }
             // Deserialize Response
-            if ((int)_statusCode == 400)
+            if ((int)_statusCode == 500)
             {
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
@@ -410,7 +410,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
             HttpStatusCode _statusCode = _httpResponse.StatusCode;
             cancellationToken.ThrowIfCancellationRequested();
             string _responseContent = null;
-            if ((int)_statusCode != 200 && (int)_statusCode != 204 && (int)_statusCode != 500 && (int)_statusCode != 400)
+            if ((int)_statusCode != 200 && (int)_statusCode != 204 && (int)_statusCode != 400 && (int)_statusCode != 500)
             {
                 var ex = new HttpOperationException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
                 if (_httpResponse.Content != null) {
@@ -455,7 +455,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
                 }
             }
             // Deserialize Response
-            if ((int)_statusCode == 500)
+            if ((int)_statusCode == 400)
             {
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
@@ -473,7 +473,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
                 }
             }
             // Deserialize Response
-            if ((int)_statusCode == 400)
+            if ((int)_statusCode == 500)
             {
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
@@ -588,7 +588,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
             HttpStatusCode _statusCode = _httpResponse.StatusCode;
             cancellationToken.ThrowIfCancellationRequested();
             string _responseContent = null;
-            if ((int)_statusCode != 200 && (int)_statusCode != 500 && (int)_statusCode != 400)
+            if ((int)_statusCode != 200 && (int)_statusCode != 400 && (int)_statusCode != 500)
             {
                 var ex = new HttpOperationException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
                 if (_httpResponse.Content != null) {
@@ -615,7 +615,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             // Deserialize Response
-            if ((int)_statusCode == 500)
+            if ((int)_statusCode == 400)
             {
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
@@ -633,7 +633,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
                 }
             }
             // Deserialize Response
-            if ((int)_statusCode == 400)
+            if ((int)_statusCode == 500)
             {
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
@@ -687,7 +687,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<object>> GetAllWithHttpMessagesAsync(string blockchainType, int take, string continuationToken = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<object>> GetAllWithHttpMessagesAsync(string blockchainType, int? take = default(int?), string continuationToken = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (blockchainType == null)
             {
@@ -711,7 +711,10 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
             var _url = new System.Uri(new System.Uri(_baseUrl + (_baseUrl.EndsWith("/") ? "" : "/")), "api/BlackList/{blockchainType}").ToString();
             _url = _url.Replace("{blockchainType}", System.Uri.EscapeDataString(blockchainType));
             List<string> _queryParameters = new List<string>();
-            _queryParameters.Add(string.Format("take={0}", System.Uri.EscapeDataString(SafeJsonConvert.SerializeObject(take, SerializationSettings).Trim('"'))));
+            if (take != null)
+            {
+                _queryParameters.Add(string.Format("take={0}", System.Uri.EscapeDataString(SafeJsonConvert.SerializeObject(take, SerializationSettings).Trim('"'))));
+            }
             if (continuationToken != null)
             {
                 _queryParameters.Add(string.Format("continuationToken={0}", System.Uri.EscapeDataString(continuationToken)));
@@ -756,7 +759,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
             HttpStatusCode _statusCode = _httpResponse.StatusCode;
             cancellationToken.ThrowIfCancellationRequested();
             string _responseContent = null;
-            if ((int)_statusCode != 200 && (int)_statusCode != 500 && (int)_statusCode != 400)
+            if ((int)_statusCode != 200 && (int)_statusCode != 400 && (int)_statusCode != 500)
             {
                 var ex = new HttpOperationException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
                 if (_httpResponse.Content != null) {
@@ -801,7 +804,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
                 }
             }
             // Deserialize Response
-            if ((int)_statusCode == 500)
+            if ((int)_statusCode == 400)
             {
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
@@ -819,7 +822,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
                 }
             }
             // Deserialize Response
-            if ((int)_statusCode == 400)
+            if ((int)_statusCode == 500)
             {
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
@@ -925,7 +928,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
             HttpStatusCode _statusCode = _httpResponse.StatusCode;
             cancellationToken.ThrowIfCancellationRequested();
             string _responseContent = null;
-            if ((int)_statusCode != 200 && (int)_statusCode != 500 && (int)_statusCode != 400)
+            if ((int)_statusCode != 200 && (int)_statusCode != 400 && (int)_statusCode != 500)
             {
                 var ex = new HttpOperationException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
                 if (_httpResponse.Content != null) {
@@ -952,7 +955,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             // Deserialize Response
-            if ((int)_statusCode == 500)
+            if ((int)_statusCode == 400)
             {
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
@@ -970,7 +973,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
                 }
             }
             // Deserialize Response
-            if ((int)_statusCode == 400)
+            if ((int)_statusCode == 500)
             {
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
@@ -1076,7 +1079,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
             HttpStatusCode _statusCode = _httpResponse.StatusCode;
             cancellationToken.ThrowIfCancellationRequested();
             string _responseContent = null;
-            if ((int)_statusCode != 200 && (int)_statusCode != 500 && (int)_statusCode != 400)
+            if ((int)_statusCode != 200 && (int)_statusCode != 400 && (int)_statusCode != 500)
             {
                 var ex = new HttpOperationException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
                 if (_httpResponse.Content != null) {
@@ -1103,7 +1106,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
             _result.Request = _httpRequest;
             _result.Response = _httpResponse;
             // Deserialize Response
-            if ((int)_statusCode == 500)
+            if ((int)_statusCode == 400)
             {
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
@@ -1121,7 +1124,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
                 }
             }
             // Deserialize Response
-            if ((int)_statusCode == 400)
+            if ((int)_statusCode == 500)
             {
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
@@ -1154,7 +1157,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
         /// </param>
         /// <param name='amount'>
         /// </param>
-        /// <param name='destinationAddressBase'>
+        /// <param name='clientId'>
         /// </param>
         /// <param name='customHeaders'>
         /// Headers that will be added to request.
@@ -1177,7 +1180,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<object>> CheckWithHttpMessagesAsync(string assetId, decimal amount, string destinationAddress, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<object>> CheckWithHttpMessagesAsync(string assetId, string destinationAddress, decimal? amount = default(decimal?), System.Guid? clientId = default(System.Guid?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (assetId == null)
             {
@@ -1197,6 +1200,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
                 tracingParameters.Add("assetId", assetId);
                 tracingParameters.Add("amount", amount);
                 tracingParameters.Add("destinationAddress", destinationAddress);
+                tracingParameters.Add("clientId", clientId);
                 tracingParameters.Add("cancellationToken", cancellationToken);
                 ServiceClientTracing.Enter(_invocationId, this, "Check", tracingParameters);
             }
@@ -1215,6 +1219,10 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
             if (destinationAddress != null)
             {
                 _queryParameters.Add(string.Format("DestinationAddress={0}", System.Uri.EscapeDataString(destinationAddress)));
+            }
+            if (clientId != null)
+            {
+                _queryParameters.Add(string.Format("ClientId={0}", System.Uri.EscapeDataString(SafeJsonConvert.SerializeObject(clientId, SerializationSettings).Trim('"'))));
             }
             if (_queryParameters.Count > 0)
             {
@@ -1256,7 +1264,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
             HttpStatusCode _statusCode = _httpResponse.StatusCode;
             cancellationToken.ThrowIfCancellationRequested();
             string _responseContent = null;
-            if ((int)_statusCode != 200 && (int)_statusCode != 500 && (int)_statusCode != 400)
+            if ((int)_statusCode != 200 && (int)_statusCode != 400 && (int)_statusCode != 500)
             {
                 var ex = new HttpOperationException(string.Format("Operation returned an invalid status code '{0}'", _statusCode));
                 if (_httpResponse.Content != null) {
@@ -1301,7 +1309,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
                 }
             }
             // Deserialize Response
-            if ((int)_statusCode == 500)
+            if ((int)_statusCode == 400)
             {
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
@@ -1319,7 +1327,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
                 }
             }
             // Deserialize Response
-            if ((int)_statusCode == 400)
+            if ((int)_statusCode == 500)
             {
                 _responseContent = await _httpResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
                 try
