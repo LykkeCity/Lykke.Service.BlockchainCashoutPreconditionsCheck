@@ -8,6 +8,7 @@
         LessThanMinCashout,
         HotwalletTargetProhibited,
         BlackListedAddress,
-        DepositAddressNotFound
+        DepositAddressNotFound,
+        CashoutToSelfAddress
     }
 }

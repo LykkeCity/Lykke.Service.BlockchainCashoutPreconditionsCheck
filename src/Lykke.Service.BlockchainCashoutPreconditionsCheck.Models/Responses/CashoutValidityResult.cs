@@ -27,7 +27,8 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Models.Responses
         LessThanMinCashout,
         HotwalletTargetProhibited,
         BlackListedAddress,
-        DepositAddressNotFound
+        DepositAddressNotFound,
+        CashoutToSelfAddress
     }
 
     [DataContract]

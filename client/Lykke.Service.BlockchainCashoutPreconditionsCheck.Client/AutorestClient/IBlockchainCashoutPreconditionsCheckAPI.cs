@@ -94,7 +94,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<object>> GetAllWithHttpMessagesAsync(string blockchainType, int take, string continuationToken = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<object>> GetAllWithHttpMessagesAsync(string blockchainType, int? take = default(int?), string continuationToken = default(string), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Add black listed address
@@ -127,11 +127,11 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
         /// </summary>
         /// <param name='assetId'>
         /// </param>
-        /// <param name='amount'>
-        /// </param>
         /// <param name='destinationAddress'>
         /// </param>
-        /// <param name='destinationAddressBase'>
+        /// <param name='amount'>
+        /// </param>
+        /// <param name='clientId'>
         /// </param>
         /// <param name='customHeaders'>
         /// The headers that will be added to request.
@@ -139,7 +139,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<object>> CheckWithHttpMessagesAsync(string assetId, decimal amount, string destinationAddress, Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<object>> CheckWithHttpMessagesAsync(string assetId, string destinationAddress, decimal? amount = default(decimal?), System.Guid? clientId = default(System.Guid?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Checks service is alive
