@@ -137,7 +137,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
 
             if (cashoutModel.ClientId != null)
             {
-                var clientAddress = await _blockchainWalletsClient.GetAddressAsync(asset.BlockchainIntegrationLayerId,
+                var clientAddress = await _blockchainWalletsClient.TryGetAddressAsync(asset.BlockchainIntegrationLayerId,
                     asset.BlockchainIntegrationLayerAssetId,
                     cashoutModel.ClientId.Value);
 
