@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using Common;
 using Common.Log;
@@ -10,18 +9,21 @@ using Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.Models;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.Exceptions;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.Models;
-using MoreLinq;
 
 namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client
 {
     public class BlockchainCashoutPreconditionsCheckClient : IBlockchainCashoutPreconditionsCheckClient, IDisposable
     {
-        private readonly ILog _log;
         private IBlockchainCashoutPreconditionsCheckAPI _service;
 
+        [Obsolete]
         public BlockchainCashoutPreconditionsCheckClient(string serviceUrl, ILog log)
         {
-            _log = log;
+            _service = new BlockchainCashoutPreconditionsCheckAPI(new Uri(serviceUrl), new HttpClient());
+        }
+
+        public BlockchainCashoutPreconditionsCheckClient(string serviceUrl)
+        {
             _service = new BlockchainCashoutPreconditionsCheckAPI(new Uri(serviceUrl), new HttpClient());
         }
 
