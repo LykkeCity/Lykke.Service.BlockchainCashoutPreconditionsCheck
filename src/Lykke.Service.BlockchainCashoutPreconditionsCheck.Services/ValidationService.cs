@@ -89,7 +89,6 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
                     Math.Abs(cashoutModel.Volume) < (decimal) asset.CashoutMinimalAmount)
                 {
                     var minimalAmount = asset.CashoutMinimalAmount.GetFixedAsString(asset.Accuracy).TrimEnd('0');
-
                     errors.Add(ValidationError.Create(ValidationErrorType.LessThanMinCashout, minimalAmount));
                 }
             }
