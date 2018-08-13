@@ -96,7 +96,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
             else
             {
                 errors.Add(ValidationError.Create(ValidationErrorType.LessThanMinCashout,
-                    "The minimum amount should be more than 0"));
+                    "Amount should be positive number"));
             }
 
             var blockchainSettings = _blockchainSettingsProvider.Get(asset.BlockchainIntegrationLayerId);
