@@ -21,8 +21,8 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
         None,
         [EnumMember(Value = "AddressIsNotValid")]
         AddressIsNotValid,
-        [EnumMember(Value = "FieldIsNotValid")]
-        FieldIsNotValid,
+        [EnumMember(Value = "FieldNotValid")]
+        FieldNotValid,
         [EnumMember(Value = "LessThanMinCashout")]
         LessThanMinCashout,
         [EnumMember(Value = "HotwalletTargetProhibited")]
@@ -49,8 +49,8 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
                     return "None";
                 case ValidationErrorType.AddressIsNotValid:
                     return "AddressIsNotValid";
-                case ValidationErrorType.FieldIsNotValid:
-                    return "FieldIsNotValid";
+                case ValidationErrorType.FieldNotValid:
+                    return "FieldNotValid";
                 case ValidationErrorType.LessThanMinCashout:
                     return "LessThanMinCashout";
                 case ValidationErrorType.HotwalletTargetProhibited:
@@ -73,8 +73,8 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
                     return ValidationErrorType.None;
                 case "AddressIsNotValid":
                     return ValidationErrorType.AddressIsNotValid;
-                case "FieldIsNotValid":
-                    return ValidationErrorType.FieldIsNotValid;
+                case "FieldNotValid":
+                    return ValidationErrorType.FieldNotValid;
                 case "LessThanMinCashout":
                     return ValidationErrorType.LessThanMinCashout;
                 case "HotwalletTargetProhibited":

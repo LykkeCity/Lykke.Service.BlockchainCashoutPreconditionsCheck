@@ -21,7 +21,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
         private readonly IBlockchainWalletsClient _blockchainWalletsClient;
 
         public ValidationService(IBlockchainApiClientProvider blockchainApiClientProvider,
-            IAssetsService assetsService,
+            IAssetsService assetsService, 
             IBlockchainSettingsProvider blockchainSettingsProvider,
             IBlockchainWalletsClient blockchainWalletsClient,
             IBlackListService blackListService)
@@ -104,7 +104,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
             {
                 errors.Add(ValidationError.Create(ValidationErrorType.HotwalletTargetProhibited, "Hot wallet as destitnation address prohibited"));
             }
-
+            
             var capabilities = await _blockchainWalletsClient.GetCapabilititesAsync(asset.BlockchainIntegrationLayerId);
             if (capabilities.IsPublicAddressExtensionRequired)
             {
@@ -118,7 +118,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
                 if (hotWalletParseResult.BaseAddress == destAddressParseResult.BaseAddress)
                 {
                     var existedClientIdAsDestination = await _blockchainWalletsClient.TryGetClientIdAsync(asset.BlockchainIntegrationLayerId,
-                         asset.BlockchainIntegrationLayerAssetId,
+                         asset.BlockchainIntegrationLayerAssetId, 
                          cashoutModel.DestinationAddress);
 
                     if (existedClientIdAsDestination == null)
