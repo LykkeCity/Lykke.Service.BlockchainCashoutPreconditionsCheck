@@ -21,7 +21,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
         private readonly IBlockchainWalletsClient _blockchainWalletsClient;
 
         public ValidationService(IBlockchainApiClientProvider blockchainApiClientProvider,
-            IAssetsService assetsService, 
+            IAssetsService assetsService,
             IBlockchainSettingsProvider blockchainSettingsProvider,
             IBlockchainWalletsClient blockchainWalletsClient,
             IBlackListService blackListService)
@@ -83,12 +83,20 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
                 errors.Add(ValidationError.Create(ValidationErrorType.AddressIsNotValid, "Address is not valid"));
             }
 
-            if (cashoutModel.Volume != 0 &&
-                Math.Abs(cashoutModel.Volume) < (decimal)asset.CashoutMinimalAmount)
+            if (cashoutModel.Volume > 0)
             {
-                var minimalAmount = asset.CashoutMinimalAmount.GetFixedAsString(asset.Accuracy).TrimEnd('0');
+                if (cashoutModel.Volume != 0 &&
+                    Math.Abs(cashoutModel.Volume) < (decimal) asset.CashoutMinimalAmount)
+                {
+                    var minimalAmount = asset.CashoutMinimalAmount.GetFixedAsString(asset.Accuracy).TrimEnd('0');
 
-                errors.Add(ValidationError.Create(ValidationErrorType.LessThanMinCashout, minimalAmount));
+                    errors.Add(ValidationError.Create(ValidationErrorType.LessThanMinCashout, minimalAmount));
+                }
+            }
+            else
+            {
+                errors.Add(ValidationError.Create(ValidationErrorType.LessThanMinCashout,
+                    "The minimum amount should be more than 0"));
             }
 
             var blockchainSettings = _blockchainSettingsProvider.Get(asset.BlockchainIntegrationLayerId);
@@ -97,7 +105,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
             {
                 errors.Add(ValidationError.Create(ValidationErrorType.HotwalletTargetProhibited, "Hot wallet as destitnation address prohibited"));
             }
-            
+
             var capabilities = await _blockchainWalletsClient.GetCapabilititesAsync(asset.BlockchainIntegrationLayerId);
             if (capabilities.IsPublicAddressExtensionRequired)
             {
@@ -111,7 +119,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
                 if (hotWalletParseResult.BaseAddress == destAddressParseResult.BaseAddress)
                 {
                     var existedClientIdAsDestination = await _blockchainWalletsClient.TryGetClientIdAsync(asset.BlockchainIntegrationLayerId,
-                         asset.BlockchainIntegrationLayerAssetId, 
+                         asset.BlockchainIntegrationLayerAssetId,
                          cashoutModel.DestinationAddress);
 
                     if (existedClientIdAsDestination == null)
