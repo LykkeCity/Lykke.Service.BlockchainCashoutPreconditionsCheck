@@ -235,15 +235,15 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
             /// </param>
             /// <param name='assetId'>
             /// </param>
-            /// <param name='destinationAddress'>
-            /// </param>
             /// <param name='amount'>
+            /// </param>
+            /// <param name='destinationAddress'>
             /// </param>
             /// <param name='clientId'>
             /// </param>
-            public static object Check(this IBlockchainCashoutPreconditionsCheckAPI operations, string assetId, string destinationAddress, decimal? amount = default(decimal?), System.Guid? clientId = default(System.Guid?))
+            public static object Check(this IBlockchainCashoutPreconditionsCheckAPI operations, string assetId, decimal? amount, string destinationAddress, System.Guid? clientId = default(System.Guid?))
             {
-                return operations.CheckAsync(assetId, destinationAddress, amount, clientId).GetAwaiter().GetResult();
+                return operations.CheckAsync(assetId, amount, destinationAddress, clientId).GetAwaiter().GetResult();
             }
 
             /// <summary>
@@ -254,18 +254,18 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
             /// </param>
             /// <param name='assetId'>
             /// </param>
-            /// <param name='destinationAddress'>
-            /// </param>
             /// <param name='amount'>
+            /// </param>
+            /// <param name='destinationAddress'>
             /// </param>
             /// <param name='clientId'>
             /// </param>
             /// <param name='cancellationToken'>
             /// The cancellation token.
             /// </param>
-            public static async Task<object> CheckAsync(this IBlockchainCashoutPreconditionsCheckAPI operations, string assetId, string destinationAddress, decimal? amount = default(decimal?), System.Guid? clientId = default(System.Guid?), CancellationToken cancellationToken = default(CancellationToken))
+            public static async Task<object> CheckAsync(this IBlockchainCashoutPreconditionsCheckAPI operations, string assetId, decimal? amount, string destinationAddress, System.Guid? clientId = default(System.Guid?), CancellationToken cancellationToken = default(CancellationToken))
             {
-                using (var _result = await operations.CheckWithHttpMessagesAsync(assetId, destinationAddress, amount, clientId, null, cancellationToken).ConfigureAwait(false))
+                using (var _result = await operations.CheckWithHttpMessagesAsync(assetId, amount, destinationAddress, clientId, null, cancellationToken).ConfigureAwait(false))
                 {
                     return _result.Body;
                 }

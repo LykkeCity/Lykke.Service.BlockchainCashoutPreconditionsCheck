@@ -6,6 +6,7 @@
 
 namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.Models
 {
+    using Microsoft.Rest;
     using Newtonsoft.Json;
     using System.Collections;
     using System.Collections.Generic;
@@ -24,7 +25,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
         /// <summary>
         /// Initializes a new instance of the CashoutValidityResult class.
         /// </summary>
-        public CashoutValidityResult(bool isAllowed, IList<ValidationErrorResponse> validationErrors = default(IList<ValidationErrorResponse>))
+        public CashoutValidityResult(IList<ValidationErrorResponse> validationErrors, bool isAllowed)
         {
             ValidationErrors = validationErrors;
             IsAllowed = isAllowed;
@@ -49,11 +50,15 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
         /// <summary>
         /// Validate the object.
         /// </summary>
-        /// <exception cref="Microsoft.Rest.ValidationException">
+        /// <exception cref="ValidationException">
         /// Thrown if validation fails
         /// </exception>
         public virtual void Validate()
         {
+            if (ValidationErrors == null)
+            {
+                throw new ValidationException(ValidationRules.CannotBeNull, "ValidationErrors");
+            }
             if (ValidationErrors != null)
             {
                 foreach (var element in ValidationErrors)

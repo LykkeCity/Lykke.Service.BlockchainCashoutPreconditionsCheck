@@ -15,7 +15,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Models.Requests
 
         [Required]
         [DataMember]
-        public decimal Amount { get; set; }
+        public decimal? Amount { get; set; }
 
         [Required]
         [DataMember]
