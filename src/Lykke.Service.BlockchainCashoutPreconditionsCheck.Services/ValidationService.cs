@@ -70,11 +70,6 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
 
             List<ValidationError> errors = new List<ValidationError>(1);
 
-            if (!cashoutModel.Volume.HasValue || cashoutModel.Volume.Value <= 0)
-            {
-                errors.Add(ValidationError.Create(ValidationErrorType.LessThanMinCashout, "Please enter an amount greater than zero."));
-            }
-
 
             var isBlocked = await _blackListService.IsBlockedAsync(asset.BlockchainIntegrationLayerId,
                 cashoutModel.DestinationAddress);
@@ -95,7 +90,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
             {
                 var minimalAmount = asset.CashoutMinimalAmount.GetFixedAsString(asset.Accuracy).TrimEnd('0');
 
-                errors.Add(ValidationError.Create(ValidationErrorType.LessThanMinCashout, minimalAmount));
+                errors.Add(ValidationError.Create(ValidationErrorType.LessThanMinCashout, $"Please enter an amount greater than {minimalAmount}"));
             }
 
 
