@@ -8,7 +8,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Domain.Validati
     {
         public string AssetId { get; set; }
 
-        public decimal Volume { get; set; }
+        public decimal? Volume { get; set; }
 
         public string DestinationAddress { get; set; }
 

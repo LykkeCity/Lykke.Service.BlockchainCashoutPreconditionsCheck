@@ -6,6 +6,7 @@
 
 namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.Models
 {
+    using Microsoft.Rest;
     using Newtonsoft.Json;
     using System.Collections;
     using System.Collections.Generic;
@@ -26,7 +27,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
         /// Initializes a new instance of the BlackListEnumerationResponse
         /// class.
         /// </summary>
-        public BlackListEnumerationResponse(IList<BlackListResponse> list = default(IList<BlackListResponse>), string continuationToken = default(string))
+        public BlackListEnumerationResponse(IList<BlackListResponse> list, string continuationToken)
         {
             List = list;
             ContinuationToken = continuationToken;
@@ -48,5 +49,32 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
         [JsonProperty(PropertyName = "ContinuationToken")]
         public string ContinuationToken { get; set; }
 
+        /// <summary>
+        /// Validate the object.
+        /// </summary>
+        /// <exception cref="ValidationException">
+        /// Thrown if validation fails
+        /// </exception>
+        public virtual void Validate()
+        {
+            if (List == null)
+            {
+                throw new ValidationException(ValidationRules.CannotBeNull, "List");
+            }
+            if (ContinuationToken == null)
+            {
+                throw new ValidationException(ValidationRules.CannotBeNull, "ContinuationToken");
+            }
+            if (List != null)
+            {
+                foreach (var element in List)
+                {
+                    if (element != null)
+                    {
+                        element.Validate();
+                    }
+                }
+            }
+        }
     }
 }

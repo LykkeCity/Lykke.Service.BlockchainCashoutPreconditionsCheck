@@ -27,7 +27,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Modules
         protected override void Load(ContainerBuilder builder)
         {
             Lykke.Service.Assets.Client.ServiceCollectionExtensions.RegisterAssetsClient(_services,
-                Assets.Client.AssetServiceSettings.Create(new System.Uri(_settings.CurrentValue.ServiceUrl), _settings.CurrentValue.CacheExpirationPeriod));
+                Assets.Client.AssetServiceSettings.Create(new System.Uri(_settings.CurrentValue.ServiceUrl), _settings.CurrentValue.CacheExpirationPeriod), _log);
 
             builder.Populate(_services);
         }

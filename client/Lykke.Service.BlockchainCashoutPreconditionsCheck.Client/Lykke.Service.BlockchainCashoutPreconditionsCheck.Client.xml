@@ -24,6 +24,16 @@
             Gets or sets json deserialization settings.
             </summary>
         </member>
+        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.BlockchainCashoutPreconditionsCheckAPI.#ctor(System.Net.Http.HttpClient,System.Boolean)">
+            <summary>
+            Initializes a new instance of the BlockchainCashoutPreconditionsCheckAPI class.
+            </summary>
+            <param name='httpClient'>
+            HttpClient to be used
+            </param>
+            <param name='disposeHttpClient'>
+            True: will dispose the provided httpClient on calling BlockchainCashoutPreconditionsCheckAPI.Dispose(). False: will not dispose provided httpClient</param>
+        </member>
         <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.BlockchainCashoutPreconditionsCheckAPI.#ctor(System.Net.Http.DelegatingHandler[])">
             <summary>
             Initializes a new instance of the BlockchainCashoutPreconditionsCheckAPI class.
@@ -245,15 +255,15 @@
             A response object containing the response body and response headers.
             </return>
         </member>
-        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.BlockchainCashoutPreconditionsCheckAPI.CheckWithHttpMessagesAsync(System.String,System.String,System.Nullable{System.Decimal},System.Nullable{System.Guid},System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.Threading.CancellationToken)">
+        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.BlockchainCashoutPreconditionsCheckAPI.CheckWithHttpMessagesAsync(System.String,System.Nullable{System.Decimal},System.String,System.Nullable{System.Guid},System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.Threading.CancellationToken)">
             <summary>
             Checks service is alive
             </summary>
             <param name='assetId'>
             </param>
-            <param name='destinationAddress'>
-            </param>
             <param name='amount'>
+            </param>
+            <param name='destinationAddress'>
             </param>
             <param name='clientId'>
             </param>
@@ -462,7 +472,7 @@
             The cancellation token.
             </param>
         </member>
-        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.BlockchainCashoutPreconditionsCheckAPIExtensions.Check(Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.IBlockchainCashoutPreconditionsCheckAPI,System.String,System.String,System.Nullable{System.Decimal},System.Nullable{System.Guid})">
+        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.BlockchainCashoutPreconditionsCheckAPIExtensions.Check(Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.IBlockchainCashoutPreconditionsCheckAPI,System.String,System.Nullable{System.Decimal},System.String,System.Nullable{System.Guid})">
             <summary>
             Checks service is alive
             </summary>
@@ -471,14 +481,14 @@
             </param>
             <param name='assetId'>
             </param>
-            <param name='destinationAddress'>
-            </param>
             <param name='amount'>
+            </param>
+            <param name='destinationAddress'>
             </param>
             <param name='clientId'>
             </param>
         </member>
-        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.BlockchainCashoutPreconditionsCheckAPIExtensions.CheckAsync(Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.IBlockchainCashoutPreconditionsCheckAPI,System.String,System.String,System.Nullable{System.Decimal},System.Nullable{System.Guid},System.Threading.CancellationToken)">
+        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.BlockchainCashoutPreconditionsCheckAPIExtensions.CheckAsync(Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.IBlockchainCashoutPreconditionsCheckAPI,System.String,System.Nullable{System.Decimal},System.String,System.Nullable{System.Guid},System.Threading.CancellationToken)">
             <summary>
             Checks service is alive
             </summary>
@@ -487,9 +497,9 @@
             </param>
             <param name='assetId'>
             </param>
-            <param name='destinationAddress'>
-            </param>
             <param name='amount'>
+            </param>
+            <param name='destinationAddress'>
             </param>
             <param name='clientId'>
             </param>
@@ -623,15 +633,15 @@
             The cancellation token.
             </param>
         </member>
-        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.IBlockchainCashoutPreconditionsCheckAPI.CheckWithHttpMessagesAsync(System.String,System.String,System.Nullable{System.Decimal},System.Nullable{System.Guid},System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.Threading.CancellationToken)">
+        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.IBlockchainCashoutPreconditionsCheckAPI.CheckWithHttpMessagesAsync(System.String,System.Nullable{System.Decimal},System.String,System.Nullable{System.Guid},System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.Threading.CancellationToken)">
             <summary>
             Checks service is alive
             </summary>
             <param name='assetId'>
             </param>
-            <param name='destinationAddress'>
-            </param>
             <param name='amount'>
+            </param>
+            <param name='destinationAddress'>
             </param>
             <param name='clientId'>
             </param>
@@ -658,7 +668,7 @@
             Initializes a new instance of the AddBlackListModel class.
             </summary>
         </member>
-        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.Models.AddBlackListModel.#ctor(System.Boolean,System.String,System.String)">
+        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.Models.AddBlackListModel.#ctor(System.String,System.String,System.Boolean)">
             <summary>
             Initializes a new instance of the AddBlackListModel class.
             </summary>
@@ -703,12 +713,20 @@
             <summary>
             </summary>
         </member>
+        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.Models.BlackListEnumerationResponse.Validate">
+            <summary>
+            Validate the object.
+            </summary>
+            <exception cref="T:Microsoft.Rest.ValidationException">
+            Thrown if validation fails
+            </exception>
+        </member>
         <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.Models.BlackListResponse.#ctor">
             <summary>
             Initializes a new instance of the BlackListResponse class.
             </summary>
         </member>
-        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.Models.BlackListResponse.#ctor(System.Boolean,System.String,System.String)">
+        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.Models.BlackListResponse.#ctor(System.String,System.String,System.Boolean)">
             <summary>
             Initializes a new instance of the BlackListResponse class.
             </summary>
@@ -738,7 +756,7 @@
             Initializes a new instance of the CashoutValidityResult class.
             </summary>
         </member>
-        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.Models.CashoutValidityResult.#ctor(System.Boolean,System.Collections.Generic.IList{Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.Models.ValidationErrorResponse})">
+        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.Models.CashoutValidityResult.#ctor(System.Collections.Generic.IList{Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.Models.ValidationErrorResponse},System.Boolean)">
             <summary>
             Initializes a new instance of the CashoutValidityResult class.
             </summary>
@@ -777,12 +795,20 @@
             <summary>
             </summary>
         </member>
+        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.Models.ErrorResponse.Validate">
+            <summary>
+            Validate the object.
+            </summary>
+            <exception cref="T:Microsoft.Rest.ValidationException">
+            Thrown if validation fails
+            </exception>
+        </member>
         <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.Models.IsAliveResponse.#ctor">
             <summary>
             Initializes a new instance of the IsAliveResponse class.
             </summary>
         </member>
-        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.Models.IsAliveResponse.#ctor(System.Boolean,System.String,System.String,System.String,System.Collections.Generic.IList{Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.Models.IssueIndicator})">
+        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.Models.IsAliveResponse.#ctor(System.String,System.String,System.String,System.Boolean,System.Collections.Generic.IList{Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.Models.IssueIndicator})">
             <summary>
             Initializes a new instance of the IsAliveResponse class.
             </summary>
@@ -854,6 +880,14 @@
         <member name="P:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.Models.IssueIndicator.Value">
             <summary>
             </summary>
+        </member>
+        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.Models.IssueIndicator.Validate">
+            <summary>
+            Validate the object.
+            </summary>
+            <exception cref="T:Microsoft.Rest.ValidationException">
+            Thrown if validation fails
+            </exception>
         </member>
         <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.Models.ValidationErrorResponse.#ctor">
             <summary>

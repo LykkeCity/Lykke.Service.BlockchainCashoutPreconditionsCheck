@@ -6,6 +6,7 @@
 
 namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.Models
 {
+    using Microsoft.Rest;
     using Newtonsoft.Json;
     using System.Linq;
 
@@ -22,7 +23,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
         /// <summary>
         /// Initializes a new instance of the BlackListResponse class.
         /// </summary>
-        public BlackListResponse(bool isCaseSensitive, string blockchainType = default(string), string blockedAddress = default(string))
+        public BlackListResponse(string blockchainType, string blockedAddress, bool isCaseSensitive)
         {
             BlockchainType = blockchainType;
             BlockedAddress = blockedAddress;
@@ -53,12 +54,19 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
         /// <summary>
         /// Validate the object.
         /// </summary>
-        /// <exception cref="Microsoft.Rest.ValidationException">
+        /// <exception cref="ValidationException">
         /// Thrown if validation fails
         /// </exception>
         public virtual void Validate()
         {
-            //Nothing to validate
+            if (BlockchainType == null)
+            {
+                throw new ValidationException(ValidationRules.CannotBeNull, "BlockchainType");
+            }
+            if (BlockedAddress == null)
+            {
+                throw new ValidationException(ValidationRules.CannotBeNull, "BlockedAddress");
+            }
         }
     }
 }
