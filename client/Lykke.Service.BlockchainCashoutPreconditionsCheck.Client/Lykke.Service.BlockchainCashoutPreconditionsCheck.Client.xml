@@ -255,15 +255,15 @@
             A response object containing the response body and response headers.
             </return>
         </member>
-        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.BlockchainCashoutPreconditionsCheckAPI.CheckWithHttpMessagesAsync(System.String,System.Nullable{System.Decimal},System.String,System.Nullable{System.Guid},System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.Threading.CancellationToken)">
+        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.BlockchainCashoutPreconditionsCheckAPI.CheckWithHttpMessagesAsync(System.String,System.String,System.Nullable{System.Decimal},System.Nullable{System.Guid},System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.Threading.CancellationToken)">
             <summary>
             Checks service is alive
             </summary>
             <param name='assetId'>
             </param>
-            <param name='amount'>
-            </param>
             <param name='destinationAddress'>
+            </param>
+            <param name='amount'>
             </param>
             <param name='clientId'>
             </param>
@@ -472,7 +472,7 @@
             The cancellation token.
             </param>
         </member>
-        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.BlockchainCashoutPreconditionsCheckAPIExtensions.Check(Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.IBlockchainCashoutPreconditionsCheckAPI,System.String,System.Nullable{System.Decimal},System.String,System.Nullable{System.Guid})">
+        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.BlockchainCashoutPreconditionsCheckAPIExtensions.Check(Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.IBlockchainCashoutPreconditionsCheckAPI,System.String,System.String,System.Nullable{System.Decimal},System.Nullable{System.Guid})">
             <summary>
             Checks service is alive
             </summary>
@@ -481,14 +481,14 @@
             </param>
             <param name='assetId'>
             </param>
-            <param name='amount'>
-            </param>
             <param name='destinationAddress'>
+            </param>
+            <param name='amount'>
             </param>
             <param name='clientId'>
             </param>
         </member>
-        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.BlockchainCashoutPreconditionsCheckAPIExtensions.CheckAsync(Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.IBlockchainCashoutPreconditionsCheckAPI,System.String,System.Nullable{System.Decimal},System.String,System.Nullable{System.Guid},System.Threading.CancellationToken)">
+        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.BlockchainCashoutPreconditionsCheckAPIExtensions.CheckAsync(Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.IBlockchainCashoutPreconditionsCheckAPI,System.String,System.String,System.Nullable{System.Decimal},System.Nullable{System.Guid},System.Threading.CancellationToken)">
             <summary>
             Checks service is alive
             </summary>
@@ -497,9 +497,9 @@
             </param>
             <param name='assetId'>
             </param>
-            <param name='amount'>
-            </param>
             <param name='destinationAddress'>
+            </param>
+            <param name='amount'>
             </param>
             <param name='clientId'>
             </param>
@@ -633,15 +633,15 @@
             The cancellation token.
             </param>
         </member>
-        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.IBlockchainCashoutPreconditionsCheckAPI.CheckWithHttpMessagesAsync(System.String,System.Nullable{System.Decimal},System.String,System.Nullable{System.Guid},System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.Threading.CancellationToken)">
+        <member name="M:Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.IBlockchainCashoutPreconditionsCheckAPI.CheckWithHttpMessagesAsync(System.String,System.String,System.Nullable{System.Decimal},System.Nullable{System.Guid},System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}},System.Threading.CancellationToken)">
             <summary>
             Checks service is alive
             </summary>
             <param name='assetId'>
             </param>
-            <param name='amount'>
-            </param>
             <param name='destinationAddress'>
+            </param>
+            <param name='amount'>
             </param>
             <param name='clientId'>
             </param>

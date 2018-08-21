@@ -1166,9 +1166,9 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
         /// </summary>
         /// <param name='assetId'>
         /// </param>
-        /// <param name='amount'>
-        /// </param>
         /// <param name='destinationAddress'>
+        /// </param>
+        /// <param name='amount'>
         /// </param>
         /// <param name='clientId'>
         /// </param>
@@ -1193,7 +1193,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
         /// <return>
         /// A response object containing the response body and response headers.
         /// </return>
-        public async Task<HttpOperationResponse<object>> CheckWithHttpMessagesAsync(string assetId, decimal? amount, string destinationAddress, System.Guid? clientId = default(System.Guid?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<HttpOperationResponse<object>> CheckWithHttpMessagesAsync(string assetId, string destinationAddress, decimal? amount = default(decimal?), System.Guid? clientId = default(System.Guid?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (assetId == null)
             {
@@ -1225,7 +1225,10 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
             {
                 _queryParameters.Add(string.Format("AssetId={0}", System.Uri.EscapeDataString(assetId)));
             }
-            _queryParameters.Add(string.Format("Amount={0}", System.Uri.EscapeDataString(SafeJsonConvert.SerializeObject(amount, SerializationSettings).Trim('"'))));
+            if (amount != null)
+            {
+                _queryParameters.Add(string.Format("Amount={0}", System.Uri.EscapeDataString(SafeJsonConvert.SerializeObject(amount, SerializationSettings).Trim('"'))));
+            }
             if (destinationAddress != null)
             {
                 _queryParameters.Add(string.Format("DestinationAddress={0}", System.Uri.EscapeDataString(destinationAddress)));

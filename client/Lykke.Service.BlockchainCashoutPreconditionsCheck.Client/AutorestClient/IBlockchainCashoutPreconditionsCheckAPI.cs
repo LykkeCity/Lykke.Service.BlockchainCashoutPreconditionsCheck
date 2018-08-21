@@ -127,9 +127,9 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
         /// </summary>
         /// <param name='assetId'>
         /// </param>
-        /// <param name='amount'>
-        /// </param>
         /// <param name='destinationAddress'>
+        /// </param>
+        /// <param name='amount'>
         /// </param>
         /// <param name='clientId'>
         /// </param>
@@ -139,7 +139,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClien
         /// <param name='cancellationToken'>
         /// The cancellation token.
         /// </param>
-        Task<HttpOperationResponse<object>> CheckWithHttpMessagesAsync(string assetId, decimal? amount, string destinationAddress, System.Guid? clientId = default(System.Guid?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
+        Task<HttpOperationResponse<object>> CheckWithHttpMessagesAsync(string assetId, string destinationAddress, decimal? amount = default(decimal?), System.Guid? clientId = default(System.Guid?), Dictionary<string, List<string>> customHeaders = null, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Checks service is alive
