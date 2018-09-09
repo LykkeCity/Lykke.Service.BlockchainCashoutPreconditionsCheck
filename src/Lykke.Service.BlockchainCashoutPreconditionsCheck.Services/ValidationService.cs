@@ -69,7 +69,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
             List<ValidationError> errors = new List<ValidationError>(1);
 
 
-            if (asset.Id == LykkeConstants.SolarAssetId && !SolarCoinAddress.IsValid(cashoutModel.DestinationAddress))
+            if (asset.Id == LykkeConstants.SolarAssetId && !SolarCoinValidation.ValidateAddress(cashoutModel.DestinationAddress))
             {
                 errors.Add(ValidationError.Create(ValidationErrorType.AddressIsNotValid, "Address is not valid"));
             }
