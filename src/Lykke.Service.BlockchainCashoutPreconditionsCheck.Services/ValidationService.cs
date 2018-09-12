@@ -89,19 +89,25 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
 
             if (isAddressValid)
             {
-                var isBlocked = await _blackListService.IsBlockedAsync(asset.BlockchainIntegrationLayerId,
-                cashoutModel.DestinationAddress);
-
-                if (isBlocked)
+                if (asset.Id != LykkeConstants.SolarAssetId)
                 {
-                    errors.Add(ValidationError.Create(ValidationErrorType.BlackListedAddress, "Address is in the black list"));
+                    var isBlocked = await _blackListService.IsBlockedAsync(asset.BlockchainIntegrationLayerId,
+                        cashoutModel.DestinationAddress);
+
+                    if (isBlocked)
+                    {
+                        errors.Add(ValidationError.Create(ValidationErrorType.BlackListedAddress,
+                            "Address is in the black list"));
+                    }
                 }
 
-                if (cashoutModel.Volume.HasValue && Math.Abs(cashoutModel.Volume.Value) < (decimal)asset.CashoutMinimalAmount)
+                if (cashoutModel.Volume.HasValue &&
+                    Math.Abs(cashoutModel.Volume.Value) < (decimal)asset.CashoutMinimalAmount)
                 {
                     var minimalAmount = asset.CashoutMinimalAmount.GetFixedAsString(asset.Accuracy).TrimEnd('0');
 
-                    errors.Add(ValidationError.Create(ValidationErrorType.LessThanMinCashout, $"Please enter an amount greater than {minimalAmount}"));
+                    errors.Add(ValidationError.Create(ValidationErrorType.LessThanMinCashout,
+                        $"Please enter an amount greater than {minimalAmount}"));
                 }
 
                 if (asset.Id != LykkeConstants.SolarAssetId)
