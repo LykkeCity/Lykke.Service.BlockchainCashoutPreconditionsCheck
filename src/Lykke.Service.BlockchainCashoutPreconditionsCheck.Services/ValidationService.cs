@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Common;
 using Lykke.Service.Assets.Client;
 using Lykke.Service.Assets.Client.Models;
+using Lykke.Service.BlockchainApi.Client;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Domain.Validation;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Domain.Validations;
@@ -65,37 +66,35 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
             if (asset == null)
                 throw new ArgumentValidationException($"Asset with Id-{cashoutModel.AssetId} does not exists", "assetId");
 
-
+            var isAddressValid = true;
+            IBlockchainApiClient blockchainClient = null;
             List<ValidationError> errors = new List<ValidationError>(1);
-
-
-            if (string.IsNullOrEmpty(cashoutModel.DestinationAddress) || !cashoutModel.DestinationAddress.IsValidPartitionOrRowKey() || asset.Id == LykkeConstants.SolarAssetId && !SolarCoinValidation.ValidateAddress(cashoutModel.DestinationAddress))
+            if (asset.Id != LykkeConstants.SolarAssetId)
             {
+                if (string.IsNullOrEmpty(asset.BlockchainIntegrationLayerId))
+                    throw new ArgumentValidationException($"Given asset Id-{cashoutModel.AssetId} is not a part of Blockchain Integration Layer", "assetId");
+
+                blockchainClient = _blockchainApiClientProvider.Get(asset.BlockchainIntegrationLayerId);
+            }
+
+            if (string.IsNullOrEmpty(cashoutModel.DestinationAddress)
+            || !cashoutModel.DestinationAddress.IsValidPartitionOrRowKey()
+            || asset.Id != LykkeConstants.SolarAssetId && blockchainClient != null && !await blockchainClient.IsAddressValidAsync(cashoutModel.DestinationAddress)
+            || asset.Id == LykkeConstants.SolarAssetId && !SolarCoinValidation.ValidateAddress(cashoutModel.DestinationAddress)
+                )
+            {
+                isAddressValid = false;
                 errors.Add(ValidationError.Create(ValidationErrorType.AddressIsNotValid, "Address is not valid"));
             }
-            else
+
+            if (isAddressValid)
             {
-                if (asset.Id != LykkeConstants.SolarAssetId)
+                var isBlocked = await _blackListService.IsBlockedAsync(asset.BlockchainIntegrationLayerId,
+                cashoutModel.DestinationAddress);
+
+                if (isBlocked)
                 {
-                    if (string.IsNullOrEmpty(asset.BlockchainIntegrationLayerId))
-                        throw new ArgumentValidationException($"Given asset Id-{cashoutModel.AssetId} is not a part of Blockchain Integration Layer", "assetId");
-
-                    var blockchainClient = _blockchainApiClientProvider.Get(asset.BlockchainIntegrationLayerId);
-
-
-                    var isBlocked = await _blackListService.IsBlockedAsync(asset.BlockchainIntegrationLayerId,
-                        cashoutModel.DestinationAddress);
-
-                    if (isBlocked)
-                    {
-                        errors.Add(ValidationError.Create(ValidationErrorType.BlackListedAddress, "Address is in the black list"));
-                    }
-
-                    if (!string.IsNullOrEmpty(cashoutModel.DestinationAddress) &&
-                        !await blockchainClient.IsAddressValidAsync(cashoutModel.DestinationAddress))
-                    {
-                        errors.Add(ValidationError.Create(ValidationErrorType.AddressIsNotValid, "Address is not valid"));
-                    }
+                    errors.Add(ValidationError.Create(ValidationErrorType.BlackListedAddress, "Address is in the black list"));
                 }
 
                 if (cashoutModel.Volume.HasValue && Math.Abs(cashoutModel.Volume.Value) < (decimal)asset.CashoutMinimalAmount)
@@ -163,7 +162,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
                         errors.Add(ValidationError.Create(ValidationErrorType.CashoutToSelfAddress, "Withdrawals to the deposit wallet owned by the customer himself prohibited"));
                     }
 
-                } 
+                }
             }
 
             return errors;
