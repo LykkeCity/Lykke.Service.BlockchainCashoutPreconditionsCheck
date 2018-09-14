@@ -9,6 +9,7 @@
         HotwalletTargetProhibited,
         BlackListedAddress,
         DepositAddressNotFound,
-        CashoutToSelfAddress
+        CashoutToSelfAddress,
+        Error
     }
 }

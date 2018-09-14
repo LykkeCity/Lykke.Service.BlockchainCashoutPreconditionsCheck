@@ -13,5 +13,13 @@
                 Value = value
             };
         }
+
+        public static ValidationError Create(string value)
+        {
+            return new ValidationError
+            {
+                Value = value
+            };
+        }
     }
 }
