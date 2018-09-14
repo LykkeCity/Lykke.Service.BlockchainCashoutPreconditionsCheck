@@ -197,7 +197,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
             }
             catch (Exception ex)
             {
-                errors.Add(ValidationError.Create(ValidationErrorType.Error, ex.Message));
+                errors.Add(ValidationError.CreateError(ex.Message));
             }
 
             return errors;

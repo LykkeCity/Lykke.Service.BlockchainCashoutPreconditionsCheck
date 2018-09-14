@@ -14,10 +14,11 @@
             };
         }
 
-        public static ValidationError Create(string value)
+        public static ValidationError CreateError(string value)
         {
             return new ValidationError
             {
+                Type = ValidationErrorType.Error,
                 Value = value
             };
         }
