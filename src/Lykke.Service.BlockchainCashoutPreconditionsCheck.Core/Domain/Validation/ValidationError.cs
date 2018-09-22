@@ -13,5 +13,14 @@
                 Value = value
             };
         }
+
+        public static ValidationError CreateError(string value)
+        {
+            return new ValidationError
+            {
+                Type = ValidationErrorType.Error,
+                Value = value
+            };
+        }
     }
 }
