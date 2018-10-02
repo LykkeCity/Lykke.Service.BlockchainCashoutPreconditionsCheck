@@ -1,28 +1,30 @@
-﻿using System;
+﻿using Common;
+using Common.Log;
+using Lykke.Common.Api.Contract.Responses;
+using Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.ClientGenerator;
+using Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.Exceptions;
+using Lykke.Service.BlockchainCashoutPreconditionsCheck.Models.Requests;
+using Lykke.Service.BlockchainCashoutPreconditionsCheck.Models.Responses;
+using Lykke.Service.BlockchainWallets.Client.ClientGenerator;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
-using Common;
-using Common.Log;
-using Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient;
-using Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.Models;
-using Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.Exceptions;
-using Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.Models;
-using MoreLinq;
+using Lykke.Common.Log;
 
 namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client
 {
     public class BlockchainCashoutPreconditionsCheckClient : IBlockchainCashoutPreconditionsCheckClient, IDisposable
     {
         private readonly ILog _log;
-        private IBlockchainCashoutPreconditionsCheckAPI _service;
+        private IBlockchainCashoutPreconditionsCheckApi _service;
 
-        public BlockchainCashoutPreconditionsCheckClient(string serviceUrl, ILog log)
+        public BlockchainCashoutPreconditionsCheckClient(string serviceUrl, ILogFactory logFactory, params DelegatingHandler[] handlers)
         {
-            _log = log;
-            _service = new BlockchainCashoutPreconditionsCheckAPI(new Uri(serviceUrl), new HttpClient());
+            var factory = new BlockchainCashoutPreconditionsApiFactory();
+            _log = logFactory.CreateLog(this);
+            _service = factory.CreateNew(serviceUrl, false, null, handlers);
         }
 
         /// <summary>
@@ -31,28 +33,21 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client
         /// <param name="validateCashoutModel"></param>
         /// <returns></returns>
         /// <exception cref="Exception">Is thrown on wrong usage of service.</exception>
-        public async Task<(bool isAllowed, IEnumerable<ValidationErrorResponse>)> ValidateCashoutAsync(CashoutValidateModel validateCashoutModel)
+        public async Task<(bool isAllowed, IEnumerable<ValidationErrorResponse>)> ValidateCashoutAsync(CheckCashoutValidityModel validateCashoutModel)
         {
             bool isAllowed = false;
             IEnumerable<ValidationErrorResponse> validationErrors;
-            var response = await _service.CheckWithHttpMessagesAsync(validateCashoutModel.AssetId, 
-                destinationAddress:validateCashoutModel.DestinationAddress,
-                amount:validateCashoutModel.Amount,
-                clientId:validateCashoutModel.ClientId
-                );
-            var responseObject = response.Body;
 
-            switch (responseObject)
+            try
             {
-                case CashoutValidityResult validationErrorResponse:
-                    isAllowed = validationErrorResponse.IsAllowed;
-                    validationErrors = validationErrorResponse.ValidationErrors;
-                    break;
-                case ErrorResponse errorResponse:
-                    validationErrors = new[] { new ValidationErrorResponse(ValidationErrorType.None, errorResponse.ErrorMessage) };
-                    break;
-                default:
-                    throw new Exception($"Unknown response: {responseObject.ToJson()}");
+                var response = await _service.CashoutCheckAsync(validateCashoutModel);
+
+                isAllowed = response.IsAllowed;
+                validationErrors = response.ValidationErrors;
+            }
+            catch (Exception e)
+            {
+                validationErrors = new[] { ValidationErrorResponse.Create(ValidationErrorType.None, ""/*errorResponse.ErrorMessage*/),  };
             }
 
             return (isAllowed, validationErrors);
@@ -64,27 +59,14 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client
         /// <param name="blackListModel"></param>
         /// <returns></returns>
         /// <exception cref="Exception">Is thrown on wrong usage of service.</exception>
-        public async Task AddToBlackListAsync(BlackListModel blackListModel)
+        public async Task AddToBlackListAsync(AddBlackListModel blackListModel)
         {
-            var response = await _service.AddAsync(new AddBlackListModel()
-            {
-                BlockedAddress = blackListModel.BlockedAddress,
-                IsCaseSensitive = blackListModel.IsCaseSensitive,
-                BlockchainType = blackListModel.BlockchainType,
-            });
+            await _service.CreateBlackListAsync(blackListModel);
 
-            if (response == null)
-                return;
-
-            switch (response)
-            {
-                case ErrorResponse errorResponse:
-                    if (!string.IsNullOrEmpty(errorResponse.ErrorMessage))
-                        throw CreateErrorResponseException(errorResponse);
-                    break;
-                default:
-                    throw new Exception($"Unknown response: {response.ToJson()}");
-            }
+                //case ErrorResponse errorResponse:
+                //    if (!string.IsNullOrEmpty(errorResponse.ErrorMessage))
+                //        throw CreateErrorResponseException(errorResponse);
+                    
         }
 
         /// <summary>
@@ -94,22 +76,11 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client
         /// /// <param name="address">Address</param>
         /// <returns></returns>
         /// <exception cref="Exception">Is thrown on wrong usage of service.</exception>
-        public async Task<BlackListModel> GetBlackListAsync(string blockchainType, string address)
+        public async Task<BlackListResponse> GetBlackListAsync(string blockchainType, string address)
         {
-            var response = await _service.GetAsync(blockchainType, address);
+            var response = await _service.GetBlackListAsync(blockchainType, address);
 
-            if (response == null)
-                return null;
-
-            switch (response)
-            {
-                case BlackListResponse blackListResponse:
-                    return Map(blackListResponse);
-                case ErrorResponse errorResponse:
-                    throw CreateErrorResponseException(errorResponse);
-                default:
-                    throw new Exception($"Unknown response: {response.ToJson()}");
-            }
+            return response;
         }
 
         /// <summary>
@@ -119,25 +90,11 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client
         /// /// <param name="address">Address</param>
         /// <returns></returns>
         /// <exception cref="Exception">Is thrown on wrong usage of service.</exception>
-        public async Task<BlackListEnumerationModel> GetAllBlackListsAsync(string blockchainType, int take, string continuationToken = null)
+        public async Task<BlackListEnumerationResponse> GetAllBlackListsAsync(string blockchainType, int take, string continuationToken = null)
         {
-            var response = await _service.GetAllAsync(blockchainType, take, continuationToken);
+            var response = await _service.GetBlackListsAsync(blockchainType, take, continuationToken);
 
-            switch (response)
-            {
-                case BlackListEnumerationResponse blackListResponse:
-                    var model = new BlackListEnumerationModel()
-                    {
-                        List = blackListResponse.List?.Select(x => Map(x)),
-                        ContinuationToken = blackListResponse.ContinuationToken
-                    };
-
-                    return model;
-                case ErrorResponse errorResponse:
-                    throw CreateErrorResponseException(errorResponse);
-                default:
-                    throw new Exception($"Unknown response: {response.ToJson()}");
-            }
+            return response;
         }
 
         /// <summary>
@@ -149,33 +106,11 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client
         /// <exception cref="Exception">Is thrown on wrong usage of service.</exception>
         public async Task DeleteBlackListAsync(string blockchainType, string address)
         {
-            var response = await _service.DeleteAsync(blockchainType, address);
-
-            if (response == null)
-                return;
-
-            switch (response)
-            {
-                case ErrorResponse errorResponse:
-                    if (string.IsNullOrEmpty(errorResponse.ErrorMessage))
-                        throw CreateErrorResponseException(errorResponse);
-                    break;
-                default:
-                    throw new Exception($"Unknown response: {response.ToJson()}");
-            }
+            await _service.DeleteBlackListAsync(blockchainType, address);
         }
 
         public void Dispose()
         {
-            if (_service == null)
-                return;
-            _service.Dispose();
-            _service = null;
-        }
-
-        private BlackListModel Map(BlackListResponse response)
-        {
-            return new BlackListModel(response.BlockchainType, response.BlockedAddress, response.IsCaseSensitive);
         }
 
         private ErrorResponseException CreateErrorResponseException(ErrorResponse errorResponse)

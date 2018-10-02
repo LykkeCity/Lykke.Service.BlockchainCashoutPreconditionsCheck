@@ -7,7 +7,9 @@ using Common.Log;
 using Lykke.Common.Api.Contract.Responses;
 using Lykke.Common.ApiLibrary.Middleware;
 using Lykke.Common.ApiLibrary.Swagger;
+using Lykke.Common.Log;
 using Lykke.Logs;
+using Lykke.Logs.Loggers.LykkeSlack;
 using Lykke.Logs.Slack;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Exceptions;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Services;
@@ -63,13 +65,27 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck
                 var builder = new ContainerBuilder();
                 var appSettings = Configuration.LoadSettings<AppSettings>();
 
-                Log = CreateLogWithSlack(services, appSettings);
+                services.AddLykkeLogging(
+                    appSettings.ConnectionString(x => x.BlockchainCashoutPreconditionsCheckService.Db.LogsConnString),
+                    "BlockchainCashoutPreconditionsCheckLog",
+                    appSettings.CurrentValue.SlackNotifications.AzureQueue.ConnectionString,
+                    appSettings.CurrentValue.SlackNotifications.AzureQueue.QueueName,
+                    logging =>
+                    {
+                        logging.AddAdditionalSlackChannel("CommonBlockChainIntegration");
+                        logging.AddAdditionalSlackChannel("CommonBlockChainIntegrationImportantMessages", options =>
+                        {
+                            options.MinLogLevel = Microsoft.Extensions.Logging.LogLevel.Warning;
+                        });
+                    }
+                );
 
-                builder.RegisterModule(new ServiceModule(appSettings.Nested(x => x.BlockchainCashoutPreconditionsCheckService), appSettings.Nested(x => x.BlockchainWalletsServiceClient), Log));
-                builder.RegisterModule(new AssetsModule(appSettings.Nested(x => x.Assets), Log));
-                builder.RegisterModule(new BlockchainsModule(appSettings.Nested(x => x.BlockchainsIntegration), Log));
+                builder.RegisterModule(new ServiceModule(appSettings.Nested(x => x.BlockchainCashoutPreconditionsCheckService), appSettings.Nested(x => x.BlockchainWalletsServiceClient)));
+                builder.RegisterModule(new AssetsModule(appSettings.Nested(x => x.Assets)));
+                builder.RegisterModule(new BlockchainsModule(appSettings.Nested(x => x.BlockchainsIntegration)));
                 builder.Populate(services);
                 ApplicationContainer = builder.Build();
+                Log = ApplicationContainer.Resolve<ILogFactory>().CreateLog(this);
 
                 return new AutofacServiceProvider(ApplicationContainer);
             }
@@ -89,11 +105,11 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck
                     app.UseDeveloperExceptionPage();
                 }
 
-                app.UseLykkeMiddleware("BlockchainCashoutPreconditionsCheck", ex =>
+                app.UseLykkeMiddleware(ex =>
                 {
                     ErrorResponse error;
                     if (ex is ArgumentValidationException argEx)
-                    { 
+                    {
                         error = ErrorResponse.Create("Validation Error");
                     }
                     else
@@ -102,7 +118,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck
                     }
 
                     error.AddModelError("exception", ex);
-                    Log.WriteErrorAsync("API","GlobalErrorHandler", ex).Wait();
+                    Log.WriteErrorAsync("API", "GlobalErrorHandler", ex).Wait();
 
                     return error;
                 });

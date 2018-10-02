@@ -24,10 +24,6 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Controllers
             _validationService = validationService;
         }
 
-        /// <summary>
-        /// Checks service is alive
-        /// </summary>
-        /// <returns></returns>
         [HttpGet]
         [ArgumentValidationExceptionFilter]
         [SwaggerOperation("Check")]
