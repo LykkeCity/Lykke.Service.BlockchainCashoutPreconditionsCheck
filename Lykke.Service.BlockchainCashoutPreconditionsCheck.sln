@@ -33,6 +33,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lykke.Service.BlockchainCas
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lykke.Service.BCPCheck.Tests", "tests\Lykke.Service.BCPCheck.UnitTests\Lykke.Service.BCPCheck.UnitTests\Lykke.Service.BCPCheck.Tests.csproj", "{A2763EE7-0B24-4AE3-B0D0-6CAAA95FD67F}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lykke.Service.BCPCheck.IntegrationTests", "tests\Lykke.Service.BCPCheck.IntegrationTests\Lykke.Service.BCPCheck.IntegrationTests.csproj", "{13D7D1DD-63BA-4A7F-9A5B-0A0264719C17}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,6 +73,10 @@ Global
 		{A2763EE7-0B24-4AE3-B0D0-6CAAA95FD67F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A2763EE7-0B24-4AE3-B0D0-6CAAA95FD67F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A2763EE7-0B24-4AE3-B0D0-6CAAA95FD67F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{13D7D1DD-63BA-4A7F-9A5B-0A0264719C17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{13D7D1DD-63BA-4A7F-9A5B-0A0264719C17}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{13D7D1DD-63BA-4A7F-9A5B-0A0264719C17}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{13D7D1DD-63BA-4A7F-9A5B-0A0264719C17}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -82,6 +88,7 @@ Global
 		{3C300C31-97D3-41E8-A627-C53491BDA28B} = {C9A2CFDE-EA32-4946-B679-7CE6EFA816B8}
 		{7A65ECE7-C988-4E78-9BCB-9A9B7B13F316} = {8F9036B1-5106-4C69-B2D2-B78EE52687A0}
 		{A2763EE7-0B24-4AE3-B0D0-6CAAA95FD67F} = {8F9036B1-5106-4C69-B2D2-B78EE52687A0}
+		{13D7D1DD-63BA-4A7F-9A5B-0A0264719C17} = {8F9036B1-5106-4C69-B2D2-B78EE52687A0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2619A931-4EFB-4C10-BE17-268F707FFAC4}

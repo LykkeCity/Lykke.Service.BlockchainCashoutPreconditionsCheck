@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Common.Log;
+using Lykke.Common.Log;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Services;
 
 namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
@@ -13,9 +14,9 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
     {
         private readonly ILog _log;
 
-        public ShutdownManager(ILog log)
+        public ShutdownManager(ILogFactory logFactory)
         {
-            _log = log;
+            _log = logFactory.CreateLog(this);
         }
 
         public async Task StopAsync()

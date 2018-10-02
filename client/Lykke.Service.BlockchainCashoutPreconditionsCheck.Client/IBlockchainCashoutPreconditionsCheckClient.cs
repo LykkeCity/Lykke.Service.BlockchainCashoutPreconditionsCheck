@@ -1,8 +1,8 @@
 ﻿using System;
-using Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.AutorestClient.Models;
-using Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Lykke.Service.BlockchainCashoutPreconditionsCheck.Models.Requests;
+using Lykke.Service.BlockchainCashoutPreconditionsCheck.Models.Responses;
 
 namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client
 {
@@ -14,7 +14,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client
         /// <param name="validateCashoutModel"></param>
         /// <returns></returns>
         /// <exception cref="Exception">Is thrown on wrong usage of service.</exception>
-        Task<(bool isAllowed, IEnumerable<ValidationErrorResponse>)> ValidateCashoutAsync(CashoutValidateModel validateCashoutModel);
+        Task<(bool isAllowed, IEnumerable<ValidationErrorResponse>)> ValidateCashoutAsync(CheckCashoutValidityModel validateCashoutModel);
 
         /// <summary>
         /// Add new address to the specific blockchain type black list
@@ -22,7 +22,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client
         /// <param name="blackListModel"></param>
         /// <returns></returns>
         /// <exception cref="Exception">Is thrown on wrong usage of service.</exception>
-        Task AddToBlackListAsync(BlackListModel blackListModel);
+        Task AddToBlackListAsync(AddBlackListModel blackListModel);
 
         /// <summary>
         /// Get address from specific blockchain type black list
@@ -31,7 +31,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client
         /// /// <param name="address">Address</param>
         /// <returns></returns>
         /// <exception cref="Exception">Is thrown on wrong usage of service.</exception>
-        Task<BlackListModel> GetBlackListAsync(string blockchainType, string address);
+        Task<BlackListResponse> GetBlackListAsync(string blockchainType, string address);
 
         /// <summary>
         /// Get address from specific blockchain type black list
@@ -40,7 +40,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client
         /// /// <param name="address">Address</param>
         /// <returns></returns>
         /// <exception cref="Exception">Is thrown on wrong usage of service.</exception>
-        Task<BlackListEnumerationModel> GetAllBlackListsAsync(string blockchainType, int take, string continuationToken = null);
+        Task<BlackListEnumerationResponse> GetAllBlackListsAsync(string blockchainType, int take, string continuationToken = null);
 
         /// <summary>
         /// Delete address from specific blockchain type black list

@@ -17,6 +17,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
 {
     public class ValidationService : IValidationService
     {
+        private const int _batchSize = 50;
         private readonly IBlockchainApiClientProvider _blockchainApiClientProvider;
         private readonly IAssetsService _assetsService;
         private readonly IBlockchainSettingsProvider _blockchainSettingsProvider;
@@ -55,8 +56,6 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
 
                 if (string.IsNullOrEmpty(cashoutModel.AssetId))
                     return FieldNotValidResult("cashoutModel.AssetId can't be null or empty");
-
-
 
                 Asset asset = null;
 
@@ -149,7 +148,6 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
                             {
                                 var existedClientIdAsDestination = await _blockchainWalletsClient.TryGetClientIdAsync(
                                     asset.BlockchainIntegrationLayerId,
-                                    asset.BlockchainIntegrationLayerAssetId,
                                     cashoutModel.DestinationAddress);
 
                                 if (existedClientIdAsDestination == null)
@@ -181,17 +179,38 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
 
                     if (cashoutModel.ClientId != null)
                     {
-                        var clientAddress = await _blockchainWalletsClient.TryGetAddressAsync(
-                            asset.BlockchainIntegrationLayerId,
-                            asset.BlockchainIntegrationLayerAssetId,
-                            cashoutModel.ClientId.Value);
-
-                        if (string.Equals(clientAddress?.Address, cashoutModel.DestinationAddress,
-                            StringComparison.InvariantCultureIgnoreCase))
+                        bool keepRolling = true;
+                        string cToken = null;
+                        do
                         {
-                            errors.Add(ValidationError.Create(ValidationErrorType.CashoutToSelfAddress,
-                                "Withdrawals to the deposit wallet owned by the customer himself prohibited"));
-                        }
+                            var clientWallets = await _blockchainWalletsClient.GetWalletsAsync(
+                                asset.BlockchainIntegrationLayerId,
+                                cashoutModel.ClientId.Value,
+                                _batchSize,
+                                cToken
+                            );
+
+                            if (clientWallets == null ||
+                                clientWallets.Wallets == null)
+                            {
+                                break;
+                            }
+
+                            cToken = clientWallets.ContinuationToken;
+
+                            foreach (var blockchainWalletResponse in clientWallets.Wallets)
+                            {
+                                if (string.Equals(blockchainWalletResponse?.Address, cashoutModel.DestinationAddress,
+                                    StringComparison.InvariantCultureIgnoreCase))
+                                {
+                                    errors.Add(ValidationError.Create(ValidationErrorType.CashoutToSelfAddress,
+                                        "Withdrawals to the deposit wallet owned by the customer himself prohibited"));
+                                    keepRolling = false;
+                                    break;
+                                }
+                            }
+
+                        } while (!string.IsNullOrEmpty(cToken) && keepRolling);
                     }
                 }
             }
