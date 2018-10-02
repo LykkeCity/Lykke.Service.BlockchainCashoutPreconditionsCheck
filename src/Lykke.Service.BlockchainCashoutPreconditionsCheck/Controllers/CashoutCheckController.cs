@@ -38,8 +38,8 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Controllers
         {
             CashoutModel cashoutModel = model != null ? new CashoutModel()
             {
-                AssetId = model.AssetId,
-                DestinationAddress = model.DestinationAddress,
+                AssetId = System.Web.HttpUtility.UrlDecode(model.AssetId),
+                DestinationAddress = System.Web.HttpUtility.UrlDecode(model.DestinationAddress),
                 Volume = model.Amount,
                 ClientId = model.ClientId
             } : null;
