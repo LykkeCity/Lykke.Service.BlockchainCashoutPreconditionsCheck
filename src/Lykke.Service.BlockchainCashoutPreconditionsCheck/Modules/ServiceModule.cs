@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Common.Log;
+using Lykke.Common.Log;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.AzureRepositories.Repositories;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Repositories;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Services;
@@ -17,15 +18,12 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Modules
         private readonly IReloadingManager<BlockchainCashoutPreconditionsCheckSettings> _settings;
 
         private readonly IReloadingManager<BlockchainWalletsServiceClientSettings> _walletClientSettings;
-        private readonly ILog _log;
-        // NOTE: you can remove it if you don't need to use IServiceCollection extensions to register service specific dependencies
         private readonly IServiceCollection _services;
 
-        public ServiceModule(IReloadingManager<BlockchainCashoutPreconditionsCheckSettings> settings, IReloadingManager<BlockchainWalletsServiceClientSettings> walletClientSettings, ILog log)
+        public ServiceModule(IReloadingManager<BlockchainCashoutPreconditionsCheckSettings> settings, IReloadingManager<BlockchainWalletsServiceClientSettings> walletClientSettings)
         {
             _settings = settings;
             _walletClientSettings = walletClientSettings;
-            _log = log;
 
             _services = new ServiceCollection();
         }
@@ -39,15 +37,12 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Modules
             //      .WithParameter(TypedParameter.From(_settings.CurrentValue.QuotesPublication))
             #region Repo
 
-            builder.RegisterInstance(BlackListRepository.Create(_settings.ConnectionString(x =>x.Db.DataConnString), _log))
+            builder.Register(c => BlackListRepository.Create(_settings.ConnectionString(x =>x.Db.DataConnString)
+                    , c.Resolve<ILogFactory>()))
                 .As<IBlackListRepository>()
                 .SingleInstance();
 
             #endregion 
-
-            builder.RegisterInstance(_log)
-                .As<ILog>()
-                .SingleInstance();
 
             builder.RegisterType<BlackListService>()
                 .As<IBlackListService>()
@@ -63,8 +58,9 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Modules
             builder.RegisterType<ShutdownManager>()
                 .As<IShutdownManager>();
 
-            builder.RegisterInstance(CreateBlockchainWalletsClient())
-                .As<IBlockchainWalletsClient>();
+            builder.Register(c => CreateBlockchainWalletsClient(c.Resolve<ILogFactory>()))
+                .As<IBlockchainWalletsClient>()
+                .SingleInstance();
 
             builder.RegisterType<ValidationService>()
                 .As<IValidationService>().SingleInstance();
@@ -72,12 +68,12 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Modules
             builder.Populate(_services);
         }
 
-        private IBlockchainWalletsClient CreateBlockchainWalletsClient()
+        private IBlockchainWalletsClient CreateBlockchainWalletsClient(ILogFactory logFactory)
         {
             return new BlockchainWalletsClient
             (
                 hostUrl: _walletClientSettings.CurrentValue.ServiceUrl,
-                log: _log
+                logFactory: logFactory
             );
         }
     }

@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="2.1.3" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.7.0" />
+    <PackageReference Include="Moq" Version="4.10.0" />
+    <PackageReference Include="xunit" Version="2.3.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
+    <DotNetCliToolReference Include="dotnet-xunit" Version="2.3.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Properties\launchSettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\client\Lykke.Service.BlockchainCashoutPreconditionsCheck.Client\Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.csproj" />
+    <ProjectReference Include="..\..\contract\Lykke.Service.BlockchainCashoutPreconditionsCheck.Contract\Lykke.Service.BlockchainCashoutPreconditionsCheck.Contract.csproj" />
+    <ProjectReference Include="..\..\src\Lykke.Service.BlockchainCashoutPreconditionsCheck.Core\Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.csproj" />
+    <ProjectReference Include="..\..\src\Lykke.Service.BlockchainCashoutPreconditionsCheck.Services\Lykke.Service.BlockchainCashoutPreconditionsCheck.Services.csproj" />
+    <ProjectReference Include="..\..\src\Lykke.Service.BlockchainCashoutPreconditionsCheck\Lykke.Service.BlockchainCashoutPreconditionsCheck.csproj" />
+  </ItemGroup>
+
+</Project>

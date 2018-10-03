@@ -24,13 +24,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Lykke.Common" Version="7.0.3" />
+    <PackageReference Include="Lykke.Common" Version="7.1.0" />
+    <PackageReference Include="Lykke.HttpClientGenerator" Version="2.3.0" />
     <PackageReference Include="MessagePack" Version="1.7.3.4" />
     <PackageReference Include="Microsoft.Rest.ClientRuntime" Version="2.3.11" />
+    <PackageReference Include="Refit" Version="4.6.30" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="AutorestClient\" />
+    <ProjectReference Include="..\..\contract\Lykke.Service.BlockchainCashoutPreconditionsCheck.Contract\Lykke.Service.BlockchainCashoutPreconditionsCheck.Contract.csproj" />
   </ItemGroup>
 
 </Project>

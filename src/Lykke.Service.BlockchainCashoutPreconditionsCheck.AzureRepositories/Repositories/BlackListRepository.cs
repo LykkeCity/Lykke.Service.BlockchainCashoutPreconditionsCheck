@@ -8,6 +8,7 @@ using AzureStorage.Tables;
 using Common;
 using Common.Log;
 using JetBrains.Annotations;
+using Lykke.Common.Log;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.AzureRepositories.Entities;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Domain.Validation;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Exceptions;
@@ -23,12 +24,12 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.AzureRepositories.Re
     {
         private readonly INoSQLTableStorage<BlackListEntity> _storage;
 
-        public static IBlackListRepository Create(IReloadingManager<string> connectionString, ILog log)
+        public static IBlackListRepository Create(IReloadingManager<string> connectionString, ILogFactory logFactory)
         {
             var storage = AzureTableStorage<BlackListEntity>.Create(
                 connectionString,
                 "BlackList",
-                log);
+                logFactory);
 
             return new BlackListRepository(storage);
         }

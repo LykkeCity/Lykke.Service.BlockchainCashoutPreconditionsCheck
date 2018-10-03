@@ -4,11 +4,11 @@ using System.Net;
 using System.Threading.Tasks;
 using Lykke.Common.Api.Contract.Responses;
 using Lykke.Common.ApiLibrary.Contract;
+using Lykke.Service.BlockchainCashoutPreconditionsCheck.Contract.Requests;
+using Lykke.Service.BlockchainCashoutPreconditionsCheck.Contract.Responses;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Domain.Validation;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Services;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Filter;
-using Lykke.Service.BlockchainCashoutPreconditionsCheck.Models.Requests;
-using Lykke.Service.BlockchainCashoutPreconditionsCheck.Models.Responses;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -24,10 +24,6 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Controllers
             _validationService = validationService;
         }
 
-        /// <summary>
-        /// Checks service is alive
-        /// </summary>
-        /// <returns></returns>
         [HttpGet]
         [ArgumentValidationExceptionFilter]
         [SwaggerOperation("Check")]

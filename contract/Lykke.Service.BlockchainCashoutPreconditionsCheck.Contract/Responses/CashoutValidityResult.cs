@@ -1,12 +1,9 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
-using System.Text;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
-namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Models.Responses
+namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Contract.Responses
 {
     [DataContract]
     public class CashoutValidityResult
