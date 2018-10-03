@@ -51,9 +51,9 @@
   </ItemGroup>
   
   <ItemGroup>
+    <ProjectReference Include="..\..\contract\Lykke.Service.BlockchainCashoutPreconditionsCheck.Contract\Lykke.Service.BlockchainCashoutPreconditionsCheck.Contract.csproj" />
     <ProjectReference Include="..\Lykke.Service.BlockchainCashoutPreconditionsCheck.AzureRepositories\Lykke.Service.BlockchainCashoutPreconditionsCheck.AzureRepositories.csproj" />
     <ProjectReference Include="..\Lykke.Service.BlockchainCashoutPreconditionsCheck.Core\Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.csproj" />
-    <ProjectReference Include="..\Lykke.Service.BlockchainCashoutPreconditionsCheck.Models\Lykke.Service.BlockchainCashoutPreconditionsCheck.Contract.csproj" />
     <ProjectReference Include="..\Lykke.Service.BlockchainCashoutPreconditionsCheck.Services\Lykke.Service.BlockchainCashoutPreconditionsCheck.Services.csproj" />
   </ItemGroup>
 
