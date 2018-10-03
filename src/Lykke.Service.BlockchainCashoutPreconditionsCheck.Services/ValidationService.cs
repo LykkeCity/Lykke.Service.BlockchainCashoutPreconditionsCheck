@@ -135,7 +135,6 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
                             await _blockchainWalletsClient.GetCapabilititesAsync(asset.BlockchainIntegrationLayerId);
                         if (capabilities.IsPublicAddressExtensionRequired)
                         {
-
                             var hotWalletParseResult = await _blockchainWalletsClient.ParseAddressAsync(
                                 asset.BlockchainIntegrationLayerId,
                                 blockchainSettings.HotWalletAddress);

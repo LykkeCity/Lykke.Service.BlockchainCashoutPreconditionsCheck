@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Lykke.Service.BlockchainCashoutPreconditionsCheck.Models.Requests;
-using Lykke.Service.BlockchainCashoutPreconditionsCheck.Models.Responses;
+using Lykke.Service.BlockchainCashoutPreconditionsCheck.Contract.Requests;
+using Lykke.Service.BlockchainCashoutPreconditionsCheck.Contract.Responses;
 
 namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client
 {
