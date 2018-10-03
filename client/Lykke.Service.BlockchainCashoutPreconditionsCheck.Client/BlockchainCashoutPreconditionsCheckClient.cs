@@ -1,17 +1,16 @@
-﻿using Common;
-using Common.Log;
+﻿using Common.Log;
 using Lykke.Common.Api.Contract.Responses;
+using Lykke.Common.Log;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.ClientGenerator;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.Exceptions;
-using Lykke.Service.BlockchainCashoutPreconditionsCheck.Models.Requests;
-using Lykke.Service.BlockchainCashoutPreconditionsCheck.Models.Responses;
 using Lykke.Service.BlockchainWallets.Client.ClientGenerator;
+using Refit;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Lykke.Common.Log;
+using Lykke.Service.BlockchainCashoutPreconditionsCheck.Contract.Requests;
+using Lykke.Service.BlockchainCashoutPreconditionsCheck.Contract.Responses;
 
 namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client
 {
@@ -47,7 +46,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client
             }
             catch (Exception e)
             {
-                validationErrors = new[] { ValidationErrorResponse.Create(ValidationErrorType.None, ""/*errorResponse.ErrorMessage*/),  };
+                validationErrors = new[] { ValidationErrorResponse.Create(ValidationErrorType.None, ""/*errorResponse.ErrorMessage*/), };
             }
 
             return (isAllowed, validationErrors);
@@ -61,12 +60,10 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client
         /// <exception cref="Exception">Is thrown on wrong usage of service.</exception>
         public async Task AddToBlackListAsync(AddBlackListModel blackListModel)
         {
-            await _service.CreateBlackListAsync(blackListModel);
-
-                //case ErrorResponse errorResponse:
-                //    if (!string.IsNullOrEmpty(errorResponse.ErrorMessage))
-                //        throw CreateErrorResponseException(errorResponse);
-                    
+            await ExecuteActionAsync(async () =>
+            {
+                await _service.CreateBlackListAsync(blackListModel);
+            });
         }
 
         /// <summary>
@@ -78,9 +75,13 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client
         /// <exception cref="Exception">Is thrown on wrong usage of service.</exception>
         public async Task<BlackListResponse> GetBlackListAsync(string blockchainType, string address)
         {
-            var response = await _service.GetBlackListAsync(blockchainType, address);
+            return await ExecuteFuncAsync(async () =>
+            {
+                var response = await _service.GetBlackListAsync(blockchainType, address);
 
-            return response;
+                return response;
+            });
+
         }
 
         /// <summary>
@@ -92,9 +93,12 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client
         /// <exception cref="Exception">Is thrown on wrong usage of service.</exception>
         public async Task<BlackListEnumerationResponse> GetAllBlackListsAsync(string blockchainType, int take, string continuationToken = null)
         {
-            var response = await _service.GetBlackListsAsync(blockchainType, take, continuationToken);
+            return await ExecuteFuncAsync(async () =>
+            {
+                var response = await _service.GetBlackListsAsync(blockchainType, take, continuationToken);
 
-            return response;
+                return response;
+            });
         }
 
         /// <summary>
@@ -106,18 +110,71 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client
         /// <exception cref="Exception">Is thrown on wrong usage of service.</exception>
         public async Task DeleteBlackListAsync(string blockchainType, string address)
         {
-            await _service.DeleteBlackListAsync(blockchainType, address);
+            await ExecuteActionAsync(async () =>
+            {
+                await _service.DeleteBlackListAsync(blockchainType, address);
+            });
         }
 
         public void Dispose()
         {
         }
 
-        private ErrorResponseException CreateErrorResponseException(ErrorResponse errorResponse)
+        private static ErrorResponseException CreateErrorResponseException(ErrorResponse errorResponse)
         {
             var exception = new ErrorResponseException(errorResponse.ModelErrors);
 
             return exception;
+        }
+
+        private async Task ExecuteActionAsync(Func<Task> action)
+        {
+            try
+            {
+                await action();
+            }
+            catch (Refit.ApiException e)
+            {
+                var exception = GetErrorResponse(e);
+                throw exception;
+            }
+        }
+
+        private async Task<T> ExecuteFuncAsync<T>(Func<Task<T>> func)
+        {
+            try
+            {
+                var result = await func();
+
+                return result;
+            }
+            catch (Refit.ApiException e)
+            {
+                var exception = GetErrorResponse(e);
+                throw exception;
+            }
+        }
+
+        private static ErrorResponseException GetErrorResponse(ApiException ex)
+        {
+            ErrorResponse errorResponse = null;
+
+            try
+            {
+                errorResponse = ex.GetContentAs<ErrorResponse>();
+            }
+            catch (Exception e)
+            {
+                errorResponse = ErrorResponse.Create(e.Message);
+            }
+
+            if (errorResponse != null)
+                return CreateErrorResponseException(errorResponse);
+            else
+                return new ErrorResponseException(new Dictionary<string, List<string>>()
+                {
+                    { "Unknown Error", new List<string>()}
+                });
         }
     }
 }

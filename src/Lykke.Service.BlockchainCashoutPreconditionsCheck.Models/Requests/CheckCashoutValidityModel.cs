@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
-using System.Text;
 
-namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Models.Requests
+namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Contract.Requests
 {
     [DataContract]
     public class CheckCashoutValidityModel

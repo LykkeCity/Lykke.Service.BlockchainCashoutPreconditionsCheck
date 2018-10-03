@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
-using Lykke.Service.BlockchainCashoutPreconditionsCheck.Models.Requests;
-using Lykke.Service.BlockchainCashoutPreconditionsCheck.Models.Responses;
+using Lykke.Service.BlockchainCashoutPreconditionsCheck.Contract.Requests;
+using Lykke.Service.BlockchainCashoutPreconditionsCheck.Contract.Responses;
 using Microsoft.AspNetCore.Mvc;
 using Refit;
-using AddBlackListModel = Lykke.Service.BlockchainCashoutPreconditionsCheck.Models.Requests.AddBlackListModel;
+using AddBlackListModel = Lykke.Service.BlockchainCashoutPreconditionsCheck.Contract.Requests.AddBlackListModel;
 using IsAliveResponse = Lykke.Common.Api.Contract.Responses.IsAliveResponse;
 
 namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.ClientGenerator
