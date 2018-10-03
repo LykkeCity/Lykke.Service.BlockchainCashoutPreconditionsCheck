@@ -32,7 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Lykke.Service.BlockchainCashoutPreconditionsCheck.Models\Lykke.Service.BlockchainCashoutPreconditionsCheck.Contract.csproj" />
+    <ProjectReference Include="..\..\contract\Lykke.Service.BlockchainCashoutPreconditionsCheck.Contract\Lykke.Service.BlockchainCashoutPreconditionsCheck.Contract.csproj" />
   </ItemGroup>
 
 </Project>

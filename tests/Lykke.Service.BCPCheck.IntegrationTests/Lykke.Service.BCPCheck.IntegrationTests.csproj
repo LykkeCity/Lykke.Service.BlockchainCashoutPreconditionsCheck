@@ -23,8 +23,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\client\Lykke.Service.BlockchainCashoutPreconditionsCheck.Client\Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.csproj" />
+    <ProjectReference Include="..\..\contract\Lykke.Service.BlockchainCashoutPreconditionsCheck.Contract\Lykke.Service.BlockchainCashoutPreconditionsCheck.Contract.csproj" />
     <ProjectReference Include="..\..\src\Lykke.Service.BlockchainCashoutPreconditionsCheck.Core\Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.csproj" />
-    <ProjectReference Include="..\..\src\Lykke.Service.BlockchainCashoutPreconditionsCheck.Models\Lykke.Service.BlockchainCashoutPreconditionsCheck.Contract.csproj" />
     <ProjectReference Include="..\..\src\Lykke.Service.BlockchainCashoutPreconditionsCheck.Services\Lykke.Service.BlockchainCashoutPreconditionsCheck.Services.csproj" />
     <ProjectReference Include="..\..\src\Lykke.Service.BlockchainCashoutPreconditionsCheck\Lykke.Service.BlockchainCashoutPreconditionsCheck.csproj" />
   </ItemGroup>
