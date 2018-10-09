@@ -24,10 +24,8 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client
             _service = factory.CreateNew(serviceUrl, false, null, handlers);
         }
 
-        public BlockchainCashoutPreconditionsCheckClient(string serviceUrl)
+        public BlockchainCashoutPreconditionsCheckClient(string serviceUrl) : this(serviceUrl, null)
         {
-            var factory = new BlockchainCashoutPreconditionsApiFactory();
-            _service = factory.CreateNew(serviceUrl, false);
         }
 
         /// <summary>
