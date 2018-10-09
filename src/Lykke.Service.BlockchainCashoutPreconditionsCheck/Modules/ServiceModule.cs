@@ -9,7 +9,10 @@ using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Settings.ServiceSet
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Services;
 using Lykke.Service.BlockchainWallets.Client;
 using Lykke.SettingsReader;
+using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Modules
 {
@@ -35,6 +38,14 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Modules
             //  builder.RegisterType<QuotesPublisher>()
             //      .As<IQuotesPublisher>()
             //      .WithParameter(TypedParameter.From(_settings.CurrentValue.QuotesPublication))
+
+            var inMemoryCacheOptions = Options.Create(new MemoryDistributedCacheOptions());
+            IDistributedCache cache = new MemoryDistributedCache(inMemoryCacheOptions);
+
+            builder.RegisterInstance(cache)
+                .As<IDistributedCache>()
+                .SingleInstance();
+
             #region Repo
 
             builder.Register(c => BlackListRepository.Create(_settings.ConnectionString(x =>x.Db.DataConnString)
