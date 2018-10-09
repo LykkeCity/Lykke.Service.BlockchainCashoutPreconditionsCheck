@@ -26,17 +26,12 @@ namespace Lykke.Service.BCPCheck.IntegrationTests.IntegrationTests
 
         protected BlockchainCashoutPreconditionsCheckClient GenerateBlockchainWalletsClient()
         {
-            var log = new Mock<ILog>();
-            var logFactory = new Mock<ILogFactory>();
-            logFactory.Setup(x => x.CreateLog(It.IsAny<object>())).Returns(log.Object);
-
             //var factory = new WebApplicationFactory<Startup>();
             var testClient = _factory.CreateClient();
             //interceptor redirects request to the TEST Server.
             var interceptor = new RequestInterceptorHandler(testClient);
             var blockchainWalletClient =
                 new BlockchainCashoutPreconditionsCheckClient("http://localhost:5009",
-                    logFactory.Object,
                     interceptor);
 
             return blockchainWalletClient;
