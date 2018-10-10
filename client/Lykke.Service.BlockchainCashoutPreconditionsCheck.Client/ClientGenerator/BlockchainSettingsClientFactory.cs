@@ -16,12 +16,22 @@ namespace Lykke.Service.BlockchainWallets.Client.ClientGenerator
             IClientCacheManager clientCacheManager = null,
             params DelegatingHandler[] handlers)
         {
-            return CreateNew(settings?.ServiceUrl, withCaching, clientCacheManager, handlers);
+            if (settings == null)
+            {
+                throw new ArgumentNullException(nameof(settings));
+            }
+
+            return CreateNew(settings.ServiceUrl, withCaching, clientCacheManager, handlers);
         }
 
         public IBlockchainCashoutPreconditionsCheckApi CreateNew(string url, bool withCaching = true,
             IClientCacheManager clientCacheManager = null, params DelegatingHandler[] handlers)
         {
+            if (string.IsNullOrEmpty(url))
+            {
+                throw new ArgumentNullException(nameof(url));
+            }
+
             var builder = new HttpClientGeneratorBuilder(url);
 
             if (withCaching)
