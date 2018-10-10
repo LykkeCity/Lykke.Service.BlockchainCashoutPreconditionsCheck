@@ -41,6 +41,8 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client
 
             try
             {
+                validateCashoutModel.DestinationAddress = 
+                    System.Web.HttpUtility.UrlEncode(validateCashoutModel.DestinationAddress);
                 var response = await _service.CashoutCheckAsync(validateCashoutModel);
 
                 isAllowed = response.IsAllowed;
