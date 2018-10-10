@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Common;
 using Lykke.Service.Assets.Client;
@@ -162,6 +163,16 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
                                 }
                             }
 
+                            var forbiddenCharacterErrors = await ValidateForForbiddenCharsAsync(
+                                destAddressParseResult.BaseAddress,
+                                destAddressParseResult.AddressExtension,
+                                asset.BlockchainIntegrationLayerId);
+
+                            if (forbiddenCharacterErrors != null)
+                            {
+                                errors.AddRange(forbiddenCharacterErrors);
+                            }
+
                             if (!string.IsNullOrEmpty(destAddressParseResult.BaseAddress))
                             {
                                 if (!(cashoutModel?.DestinationAddress.Contains(destAddressParseResult.BaseAddress) ??
@@ -232,95 +243,46 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
             return new[] { ValidationError.Create(ValidationErrorType.FieldIsNotValid, message) };
         }
 
-        private async Task<IEnumerable<ValidationError>> MergeAddressAndValidateAsync
-            (string baseAddress, string addressExtension, Asset asset)
+        private async Task<IEnumerable<ValidationError>> ValidateForForbiddenCharsAsync
+            (string baseAddress, string addressExtension, string blockchainType)
         {
+            List<ValidationError> errors = new List<ValidationError>(1);
             var (isAddressExtensionSupported,
                 prohibitedCharsBase,
-                prohibitedCharsExtension) = await IsAddressExtensionSupported(asset);
+                prohibitedCharsExtension) = await IsAddressExtensionSupported(blockchainType);
 
-            if (!isAddressExtensionSupported)
+            var baseAddressContainsProhibitedChars = baseAddress.IndexOfAny(prohibitedCharsBase?.ToArray()) != -1;
+            if (baseAddressContainsProhibitedChars)
             {
-                return null;
+                errors.Add(ValidationError.Create(ValidationErrorType.AddressIsNotValid,
+                    $"Base address should not contain a separator symbol [{string.Join(',', prohibitedCharsBase)}]"));
             }
 
-            if (!await IsValidAddressExtension(asset, addressExtension))
+            if (!string.IsNullOrEmpty(addressExtension))
             {
-                
-            }
-            try
-            {
-                //throws exception on not valid extension
-                await MergeAddressIfNecessary(asset, baseAddress,
-                    addressExtension);
-
-                return null;
-            }
-            catch (BlockchainWallets.Client.ErrorResponseException e)
-            {
-                List<ValidationError> errors = new List<ValidationError>(1);
-
-                switch (e.Error.ErrorCode)
+                var addressExtensionContainsProhibitedChars =
+                    addressExtension.IndexOfAny(prohibitedCharsExtension?.ToArray()) != -1;
+                if (addressExtensionContainsProhibitedChars)
                 {
-                    case ErrorType.BaseAddressIsEmpty:
-                        errors.Add(ValidationError.Create(ValidationErrorType.AddressIsNotValid,
-                            $"Base address is empty"));
-                        break;
-                    case ErrorType.BaseAddressShouldNotContainSeparator:
-                        errors.Add(ValidationError.Create(ValidationErrorType.AddressIsNotValid,
-                            $"Base address should not contain a separator symbol [{string.Join(',', prohibitedCharsBase)}]"));
-                        break;
-                    case ErrorType.ExtensionAddressShouldNotContainSeparator:
-                        errors.Add(ValidationError.Create(ValidationErrorType.ExtensionIsNotValid,
-                            $"Extension address should not contain a separator [{string.Join(',', prohibitedCharsBase)}]"));
-                        break;
-                    default:
-                        {
-                            errors.Add(ValidationError.Create(ValidationErrorType.Error,
-                                $"Runtime issues"));
-                            break;
-                        }
+                    errors.Add(ValidationError.Create(ValidationErrorType.AddressIsNotValid,
+                        $"Extension address should not contain a separator [{string.Join(',', prohibitedCharsBase)}]"));
                 }
-
-                return errors;
             }
+
+            return errors.Count != 0 ? errors : null ;
         }
 
-        private async Task<bool> IsValidAddressExtension(Asset asset, string addressExtension)
+        private async Task<(bool, IEnumerable<char>, IEnumerable<char>)> IsAddressExtensionSupported(string blockchainType)
         {
-            var blockchainType = asset.BlockchainIntegrationLayerId;
-
             if (!string.IsNullOrEmpty(blockchainType))
             {
                 var constants = await _addressExtensionService.TryGetAddressExtensionConstantsAsync(blockchainType);
 
                 if (constants == null)
-                    throw new InvalidOperationException($"{nameof(IsValidAddressExtension)}: Unable to obtain constants of address extension {addressExtension} for asset Id = {asset.Id} of type {blockchainType}.");
-
-                switch (constants.TypeForWithdrawal)
-                {
-                    case AddressExtensionTypeForWithdrawal.NotSupported:
-                        return string.IsNullOrEmpty(addressExtension);
-                    case AddressExtensionTypeForWithdrawal.Optional:
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException(constants.TypeForWithdrawal.ToString());
-                }
-            }
-
-            return true;
-        }
-
-        private async Task<(bool, IEnumerable<char>, IEnumerable<char>)> IsAddressExtensionSupported(Asset asset)
-        {
-            var blockchainType = asset.BlockchainIntegrationLayerId;
-
-            if (!string.IsNullOrEmpty(blockchainType))
-            {
-                var constants = await _addressExtensionService.TryGetAddressExtensionConstantsAsync(blockchainType);
-
-                if (constants == null)
-                    throw new InvalidOperationException($"{nameof(IsAddressExtensionSupported)}: Unable to obtain constants of address extension for asset Id = {asset.Id} of type {blockchainType}.");
+                    throw new InvalidOperationException($"{nameof(IsAddressExtensionSupported)}: " +
+                                                        $"Unable to obtain constants of address extension " +
+                                                        $"for blockchain type = " +
+                                                        $"{blockchainType}.");
 
                 return (constants.TypeForWithdrawal == AddressExtensionTypeForWithdrawal.Optional,
                     constants.ProhibitedSymbolsForBaseAddress,
@@ -328,16 +290,6 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
             }
 
             return (false, null, null);
-        }
-
-        private async Task<string> MergeAddressIfNecessary(Asset asset, string baseAddess, string addressExtension)
-        {
-            return await _blockchainWalletsClient.MergeAddressAsync
-            (
-                blockchainType: asset.BlockchainIntegrationLayerId,
-                baseAddress: baseAddess,
-                addressExtension: addressExtension
-            );
         }
     }
 }

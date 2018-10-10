@@ -1,4 +1,5 @@
-﻿using Autofac;
+﻿using System;
+using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Common.Log;
 using Lykke.Common.Log;
@@ -54,6 +55,11 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Modules
                 .SingleInstance();
 
             #endregion 
+
+            builder.RegisterType<AddressExtensionService>()
+                .As<AddressExtensionService>()
+                .WithParameter("cacheTime", TimeSpan.FromHours(12))
+                .SingleInstance();
 
             builder.RegisterType<BlackListService>()
                 .As<IBlackListService>()

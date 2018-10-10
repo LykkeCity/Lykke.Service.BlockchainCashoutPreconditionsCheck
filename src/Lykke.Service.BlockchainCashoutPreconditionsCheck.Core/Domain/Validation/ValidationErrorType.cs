@@ -10,7 +10,6 @@
         BlackListedAddress,
         DepositAddressNotFound,
         CashoutToSelfAddress,
-        Error,
-        ExtensionIsNotValid
+        Error
     }
 }
