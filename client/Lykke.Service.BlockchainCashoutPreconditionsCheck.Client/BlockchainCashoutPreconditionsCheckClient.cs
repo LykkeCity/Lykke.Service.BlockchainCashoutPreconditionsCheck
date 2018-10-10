@@ -48,7 +48,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client
             }
             catch (Exception e)
             {
-                validationErrors = new[] { ValidationErrorResponse.Create(ValidationErrorType.None, ""/*errorResponse.ErrorMessage*/), };
+                validationErrors = new[] { ValidationErrorResponse.Create(ValidationErrorType.None, ""), };
             }
 
             return (isAllowed, validationErrors);
