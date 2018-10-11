@@ -37,6 +37,7 @@ namespace Lykke.Service.BCPCheck.IntegrationTests.IntegrationTests
         [InlineData("d1a7ffea-2ca1-48b6-a41f-a7058ddb0dfa", "lykkedev$0sdfsdf$", false)]
         [InlineData("d1a7ffea-2ca1-48b6-a41f-a7058ddb0dfa", "lykkedev$$$WHY$$$", false)]
         [InlineData("2c2c94f9-8fff-4307-89c6-8f5f5f586724", "lykkedev2018:123::::", false)]
+        [InlineData("1b542b1e-ffe0-4785-b05b-c43d775cc2d0", "rwN1jdjVQdpMPa8TYqqCHHKhbXcmtTae83+123", true)]
         public async Task ValidateCashoutAsync_ExecuteOnDataSet(string assetId, string destinationAddress, bool isValidExpected)
         {
             var blockchainCashoutPreconditionsCheckClient = GenerateBlockchainWalletsClient();
