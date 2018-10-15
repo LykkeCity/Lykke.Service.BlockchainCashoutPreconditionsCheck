@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Common;
 using Lykke.Service.Assets.Client;
@@ -12,6 +13,8 @@ using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Exceptions;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.LegacyBlockChains;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Services;
 using Lykke.Service.BlockchainWallets.Client;
+using Lykke.Service.BlockchainWallets.Contract;
+using Lykke.Service.BlockchainWallets.Contract.Models;
 
 namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
 {
@@ -23,18 +26,21 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
         private readonly IBlockchainSettingsProvider _blockchainSettingsProvider;
         private readonly IBlackListService _blackListService;
         private readonly IBlockchainWalletsClient _blockchainWalletsClient;
+        private readonly AddressExtensionService _addressExtensionService;
 
         public ValidationService(IBlockchainApiClientProvider blockchainApiClientProvider,
             IAssetsService assetsService,
             IBlockchainSettingsProvider blockchainSettingsProvider,
             IBlockchainWalletsClient blockchainWalletsClient,
-            IBlackListService blackListService)
+            IBlackListService blackListService,
+            AddressExtensionService addressExtensionService)
         {
             _blockchainApiClientProvider = blockchainApiClientProvider;
             _assetsService = assetsService;
             _blockchainSettingsProvider = blockchainSettingsProvider;
             _blackListService = blackListService;
             _blockchainWalletsClient = blockchainWalletsClient;
+            _addressExtensionService = addressExtensionService;
         }
 
         /// <summary>
@@ -86,6 +92,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
                     blockchainClient = _blockchainApiClientProvider.Get(asset.BlockchainIntegrationLayerId);
                 }
 
+                //var tryValidate = await blockchainClient.IsAddressValidAsync(cashoutModel.DestinationAddress);
                 if (string.IsNullOrEmpty(cashoutModel.DestinationAddress)
                     || !cashoutModel.DestinationAddress.IsValidPartitionOrRowKey()
                     || asset.Id != LykkeConstants.SolarAssetId && blockchainClient != null &&
@@ -156,6 +163,16 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
                                 }
                             }
 
+                            var forbiddenCharacterErrors = await ValidateForForbiddenCharsAsync(
+                                destAddressParseResult.BaseAddress,
+                                destAddressParseResult.AddressExtension,
+                                asset.BlockchainIntegrationLayerId);
+
+                            if (forbiddenCharacterErrors != null)
+                            {
+                                errors.AddRange(forbiddenCharacterErrors);
+                            }
+
                             if (!string.IsNullOrEmpty(destAddressParseResult.BaseAddress))
                             {
                                 if (!(cashoutModel?.DestinationAddress.Contains(destAddressParseResult.BaseAddress) ??
@@ -224,6 +241,55 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
         private IEnumerable<ValidationError> FieldNotValidResult(string message)
         {
             return new[] { ValidationError.Create(ValidationErrorType.FieldIsNotValid, message) };
+        }
+
+        private async Task<IEnumerable<ValidationError>> ValidateForForbiddenCharsAsync
+            (string baseAddress, string addressExtension, string blockchainType)
+        {
+            List<ValidationError> errors = new List<ValidationError>(1);
+            var (isAddressExtensionSupported,
+                prohibitedCharsBase,
+                prohibitedCharsExtension) = await IsAddressExtensionSupported(blockchainType);
+
+            var baseAddressContainsProhibitedChars = baseAddress.IndexOfAny(prohibitedCharsBase?.ToArray()) != -1;
+            if (baseAddressContainsProhibitedChars)
+            {
+                errors.Add(ValidationError.Create(ValidationErrorType.AddressIsNotValid,
+                    $"Base address should not contain a separator symbol [{string.Join(',', prohibitedCharsBase)}]"));
+            }
+
+            if (!string.IsNullOrEmpty(addressExtension))
+            {
+                var addressExtensionContainsProhibitedChars =
+                    addressExtension.IndexOfAny(prohibitedCharsExtension?.ToArray()) != -1;
+                if (addressExtensionContainsProhibitedChars)
+                {
+                    errors.Add(ValidationError.Create(ValidationErrorType.AddressIsNotValid,
+                        $"Extension address should not contain a separator [{string.Join(',', prohibitedCharsBase)}]"));
+                }
+            }
+
+            return errors.Count != 0 ? errors : null ;
+        }
+
+        private async Task<(bool, IEnumerable<char>, IEnumerable<char>)> IsAddressExtensionSupported(string blockchainType)
+        {
+            if (!string.IsNullOrEmpty(blockchainType))
+            {
+                var constants = await _addressExtensionService.TryGetAddressExtensionConstantsAsync(blockchainType);
+
+                if (constants == null)
+                    throw new InvalidOperationException($"{nameof(IsAddressExtensionSupported)}: " +
+                                                        $"Unable to obtain constants of address extension " +
+                                                        $"for blockchain type = " +
+                                                        $"{blockchainType}.");
+
+                return (constants.TypeForWithdrawal == AddressExtensionTypeForWithdrawal.Optional,
+                    constants.ProhibitedSymbolsForBaseAddress,
+                    constants.ProhibitedSymbolsForAddressExtension);
+            }
+
+            return (false, null, null);
         }
     }
 }
