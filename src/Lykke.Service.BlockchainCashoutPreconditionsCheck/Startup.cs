@@ -22,11 +22,6 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck
         [UsedImplicitly]
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc(options =>
-            {
-                options.Filters.Add(typeof(CheckModelStateAttribute), 0);
-            });
-            
             return services.BuildServiceProvider<AppSettings>(options =>
             {
                 options.SwaggerOptions = _swaggerOptions;
