@@ -1,12 +1,13 @@
-﻿using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Settings.ServiceSettings;
-using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Settings.SlackNotifications;
+﻿using JetBrains.Annotations;
+using Lykke.Sdk.Settings;
+using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Settings.ServiceSettings;
 
 namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Settings
 {
-    public class AppSettings
+    [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
+    public class AppSettings : BaseAppSettings
     {
         public BlockchainCashoutPreconditionsCheckSettings BlockchainCashoutPreconditionsCheckService { get; set; }
-        public SlackNotificationsSettings SlackNotifications { get; set; }
         public BlockchainsIntegrationSettings BlockchainsIntegration { get; set; }
         public AssetSettings Assets { get; set; }
         public BlockchainWalletsServiceClientSettings BlockchainWalletsServiceClient { get; set; }

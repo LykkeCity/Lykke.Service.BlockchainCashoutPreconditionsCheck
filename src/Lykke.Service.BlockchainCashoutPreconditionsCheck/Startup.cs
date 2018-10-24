@@ -1,272 +1,75 @@
 ﻿using System;
-using System.Threading.Tasks;
-using Autofac;
-using Autofac.Extensions.DependencyInjection;
-using AzureStorage.Tables;
-using Common.Log;
+using JetBrains.Annotations;
 using Lykke.Common.Api.Contract.Responses;
-using Lykke.Common.ApiLibrary.Middleware;
-using Lykke.Common.ApiLibrary.Swagger;
-using Lykke.Common.Log;
-using Lykke.Logs;
 using Lykke.Logs.Loggers.LykkeSlack;
-using Lykke.Logs.Slack;
+using Lykke.Sdk;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Exceptions;
-using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Services;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Settings;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Filter;
-using Lykke.Service.BlockchainCashoutPreconditionsCheck.Modules;
-using Lykke.SettingsReader;
-using Lykke.SlackNotification.AzureQueue;
-using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Lykke.Service.BlockchainCashoutPreconditionsCheck
 {
     public class Startup
     {
-        public IHostingEnvironment Environment { get; }
-        public IContainer ApplicationContainer { get; private set; }
-        public IConfigurationRoot Configuration { get; }
-        public ILog Log { get; private set; }
-
-        public Startup(IHostingEnvironment env)
+        private readonly LykkeSwaggerOptions _swaggerOptions = new LykkeSwaggerOptions
         {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(env.ContentRootPath)
-                .AddEnvironmentVariables();
-            Configuration = builder.Build();
+            ApiTitle = "BlockchainCashoutPreconditionsCheck API",
+            ApiVersion = "v1"
+        };
 
-            Environment = env;
-        }
-
+        [UsedImplicitly]
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            try
+            return services.BuildServiceProvider<AppSettings>(options =>
             {
-                services.AddMvc(options =>
-                    {
-                        options.Filters.Add(typeof(CheckModelStateAttribute), 0);
-                    })
-                    .AddJsonOptions(options =>
-                    {
-                        options.SerializerSettings.ContractResolver =
-                            new Newtonsoft.Json.Serialization.DefaultContractResolver();
-                    });
+                options.SwaggerOptions = _swaggerOptions;
 
-                services.AddSwaggerGen(options =>
+                options.ConfigureMvcOptions = mvcOptions =>
                 {
-                    options.DefaultLykkeConfiguration("v1", "BlockchainCashoutPreconditionsCheck API");
-                });
+                    mvcOptions.Filters.Add(typeof(CheckModelStateAttribute), 0);
+                };
 
-                var builder = new ContainerBuilder();
-                var appSettings = Configuration.LoadSettings<AppSettings>();
-
-                services.AddLykkeLogging(
-                    appSettings.ConnectionString(x => x.BlockchainCashoutPreconditionsCheckService.Db.LogsConnString),
-                    "BlockchainCashoutPreconditionsCheckLog",
-                    appSettings.CurrentValue.SlackNotifications.AzureQueue.ConnectionString,
-                    appSettings.CurrentValue.SlackNotifications.AzureQueue.QueueName,
-                    logging =>
+                options.Logs = logs =>
+                {
+                    logs.AzureTableName = "BlockchainCashoutPreconditionsCheckLog";
+                    logs.AzureTableConnectionStringResolver = settings => settings.BlockchainCashoutPreconditionsCheckService.Db.LogsConnString;
+                    
+                    logs.Extended = extendedLogs =>
                     {
-                        logging.AddAdditionalSlackChannel("CommonBlockChainIntegration");
-                        logging.AddAdditionalSlackChannel("CommonBlockChainIntegrationImportantMessages", options =>
+                        extendedLogs.AddAdditionalSlackChannel("CommonBlockChainIntegration", channelOptions =>
                         {
-                            options.MinLogLevel = Microsoft.Extensions.Logging.LogLevel.Warning;
+                            channelOptions.MinLogLevel = Microsoft.Extensions.Logging.LogLevel.Information;
                         });
-                    }
-                );
-
-                builder.RegisterModule(new ServiceModule(appSettings.Nested(x => x.BlockchainCashoutPreconditionsCheckService), appSettings.Nested(x => x.BlockchainWalletsServiceClient)));
-                builder.RegisterModule(new AssetsModule(appSettings.Nested(x => x.Assets)));
-                builder.RegisterModule(new BlockchainsModule(appSettings.Nested(x => x.BlockchainsIntegration)));
-                builder.Populate(services);
-                ApplicationContainer = builder.Build();
-                Log = ApplicationContainer.Resolve<ILogFactory>().CreateLog(this);
-
-                return new AutofacServiceProvider(ApplicationContainer);
-            }
-            catch (Exception ex)
-            {
-                Log?.WriteFatalErrorAsync(nameof(Startup), nameof(ConfigureServices), "", ex).GetAwaiter().GetResult();
-                throw;
-            }
+                        
+                        extendedLogs.AddAdditionalSlackChannel("CommonBlockChainIntegrationImportantMessages", channelOptions =>
+                        {
+                            channelOptions.MinLogLevel = Microsoft.Extensions.Logging.LogLevel.Warning;
+                        });
+                    };
+                };
+            });
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IApplicationLifetime appLifetime)
+        [UsedImplicitly]
+        public void Configure(IApplicationBuilder app)
         {
-            try
+            app.UseLykkeConfiguration(options =>
             {
-                if (env.IsDevelopment())
-                {
-                    app.UseDeveloperExceptionPage();
-                }
+                options.SwaggerOptions = _swaggerOptions;
 
-                app.UseLykkeMiddleware(ex =>
+                options.DefaultErrorHandler = ex =>
                 {
-                    ErrorResponse error;
-                    if (ex is ArgumentValidationException argEx)
-                    {
-                        error = ErrorResponse.Create("Validation Error");
-                    }
-                    else
-                    {
-                        error = ErrorResponse.Create("Technical problem");
-                    }
+                    var error = ErrorResponse.Create(ex is ArgumentValidationException 
+                        ? "Validation Error" 
+                        : "Technical problem");
 
                     error.AddModelError("exception", ex);
-                    Log.WriteErrorAsync("API", "GlobalErrorHandler", ex).Wait();
 
                     return error;
-                });
-
-                app.UseMvc();
-                app.UseSwagger(c =>
-                {
-                    c.PreSerializeFilters.Add((swagger, httpReq) => swagger.Host = httpReq.Host.Value);
-                });
-                app.UseSwaggerUI(x =>
-                {
-                    x.RoutePrefix = "swagger/ui";
-                    x.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
-                });
-                app.UseStaticFiles();
-
-                appLifetime.ApplicationStarted.Register(() => StartApplication().GetAwaiter().GetResult());
-                appLifetime.ApplicationStopping.Register(() => StopApplication().GetAwaiter().GetResult());
-                appLifetime.ApplicationStopped.Register(() => CleanUp().GetAwaiter().GetResult());
-            }
-            catch (Exception ex)
-            {
-                Log?.WriteFatalErrorAsync(nameof(Startup), nameof(Configure), "", ex).GetAwaiter().GetResult();
-                throw;
-            }
-        }
-
-        private async Task StartApplication()
-        {
-            try
-            {
-                // NOTE: Service not yet recieve and process requests here
-
-                await ApplicationContainer.Resolve<IStartupManager>().StartAsync();
-
-                await Log.WriteMonitorAsync("", $"Env: {Program.EnvInfo}", "Started");
-            }
-            catch (Exception ex)
-            {
-                await Log.WriteFatalErrorAsync(nameof(Startup), nameof(StartApplication), "", ex);
-                throw;
-            }
-        }
-
-        private async Task StopApplication()
-        {
-            try
-            {
-                // NOTE: Service still can recieve and process requests here, so take care about it if you add logic here.
-
-                await ApplicationContainer.Resolve<IShutdownManager>().StopAsync();
-            }
-            catch (Exception ex)
-            {
-                if (Log != null)
-                {
-                    await Log.WriteFatalErrorAsync(nameof(Startup), nameof(StopApplication), "", ex);
-                }
-                throw;
-            }
-        }
-
-        private async Task CleanUp()
-        {
-            try
-            {
-                // NOTE: Service can't recieve and process requests here, so you can destroy all resources
-
-                if (Log != null)
-                {
-                    await Log.WriteMonitorAsync("", $"Env: {Program.EnvInfo}", "Terminating");
-                }
-
-                ApplicationContainer.Dispose();
-            }
-            catch (Exception ex)
-            {
-                if (Log != null)
-                {
-                    await Log.WriteFatalErrorAsync(nameof(Startup), nameof(CleanUp), "", ex);
-                    (Log as IDisposable)?.Dispose();
-                }
-                throw;
-            }
-        }
-
-        private static ILog CreateLogWithSlack(IServiceCollection services, IReloadingManager<AppSettings> settings)
-        {
-            var consoleLogger = new LogToConsole();
-            var aggregateLogger = new AggregateLogger();
-
-            aggregateLogger.AddLog(consoleLogger);
-
-            var dbLogConnectionStringManager = settings.Nested(x => x.BlockchainCashoutPreconditionsCheckService.Db.LogsConnString);
-            var dbLogConnectionString = dbLogConnectionStringManager.CurrentValue;
-
-            if (string.IsNullOrEmpty(dbLogConnectionString))
-            {
-                consoleLogger.WriteWarningAsync(nameof(Startup), nameof(CreateLogWithSlack), "Table loggger is not inited").Wait();
-                return aggregateLogger;
-            }
-
-            if (dbLogConnectionString.StartsWith("${") && dbLogConnectionString.EndsWith("}"))
-                throw new InvalidOperationException($"LogsConnString {dbLogConnectionString} is not filled in settings");
-
-            var persistenceManager = new LykkeLogToAzureStoragePersistenceManager(
-                AzureTableStorage<LogEntity>.Create(dbLogConnectionStringManager, "BlockchainCashoutPreconditionsCheckLog", consoleLogger),
-                consoleLogger);
-
-            // Creating slack notification service, which logs own azure queue processing messages to aggregate log
-            var slackService = services.UseSlackNotificationsSenderViaAzureQueue(new AzureQueueIntegration.AzureQueueSettings
-            {
-                ConnectionString = settings.CurrentValue.SlackNotifications.AzureQueue.ConnectionString,
-                QueueName = settings.CurrentValue.SlackNotifications.AzureQueue.QueueName
-            }, aggregateLogger);
-
-            var slackNotificationsManager = new LykkeLogToAzureSlackNotificationsManager(slackService, consoleLogger);
-
-            // Creating azure storage logger, which logs own messages to concole log
-            var azureStorageLogger = new LykkeLogToAzureStorage(
-                persistenceManager,
-                slackNotificationsManager,
-                consoleLogger);
-
-            azureStorageLogger.Start();
-
-            aggregateLogger.AddLog(azureStorageLogger);
-
-            var allMessagesSlackLogger = LykkeLogToSlack.Create
-            (
-                slackService,
-                "CommonBlockChainIntegration",
-                // ReSharper disable once RedundantArgumentDefaultValue
-                LogLevel.All
-            );
-
-            aggregateLogger.AddLog(allMessagesSlackLogger);
-
-            var importantMessagesSlackLogger = LykkeLogToSlack.Create
-            (
-                slackService,
-                "CommonBlockChainIntegrationImportantMessages",
-                LogLevel.All ^ LogLevel.Info
-            );
-
-            aggregateLogger.AddLog(importantMessagesSlackLogger);
-
-            return aggregateLogger;
+                };
+            });
         }
     }
 }
