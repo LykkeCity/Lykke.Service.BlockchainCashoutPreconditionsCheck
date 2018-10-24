@@ -1,45 +1,35 @@
 ﻿using System;
 using Autofac;
-using Autofac.Extensions.DependencyInjection;
-using Common.Log;
+using JetBrains.Annotations;
 using Lykke.Common.Log;
+using Lykke.Sdk;
+using Lykke.Sdk.Health;
+using Lykke.Service.Assets.Client;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.AzureRepositories.Repositories;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Repositories;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Services;
-using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Settings.ServiceSettings;
+using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Settings;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Services;
 using Lykke.Service.BlockchainWallets.Client;
 using Lykke.SettingsReader;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
 namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Modules
 {
+    [UsedImplicitly]
     public class ServiceModule : Module
     {
-        private readonly IReloadingManager<BlockchainCashoutPreconditionsCheckSettings> _settings;
+        private readonly IReloadingManager<AppSettings> _settings;
 
-        private readonly IReloadingManager<BlockchainWalletsServiceClientSettings> _walletClientSettings;
-        private readonly IServiceCollection _services;
-
-        public ServiceModule(IReloadingManager<BlockchainCashoutPreconditionsCheckSettings> settings, IReloadingManager<BlockchainWalletsServiceClientSettings> walletClientSettings)
+        public ServiceModule(IReloadingManager<AppSettings> settings)
         {
             _settings = settings;
-            _walletClientSettings = walletClientSettings;
-
-            _services = new ServiceCollection();
         }
 
         protected override void Load(ContainerBuilder builder)
         {
-            // TODO: Do not register entire settings in container, pass necessary settings to services which requires them
-            // ex:
-            //  builder.RegisterType<QuotesPublisher>()
-            //      .As<IQuotesPublisher>()
-            //      .WithParameter(TypedParameter.From(_settings.CurrentValue.QuotesPublication))
-
             var inMemoryCacheOptions = Options.Create(new MemoryDistributedCacheOptions());
             IDistributedCache cache = new MemoryDistributedCache(inMemoryCacheOptions);
 
@@ -49,7 +39,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Modules
 
             #region Repo
 
-            builder.Register(c => BlackListRepository.Create(_settings.ConnectionString(x =>x.Db.DataConnString)
+            builder.Register(c => BlackListRepository.Create(_settings.ConnectionString(x =>x.BlockchainCashoutPreconditionsCheckService.Db.DataConnString)
                     , c.Resolve<ILogFactory>()))
                 .As<IBlackListRepository>()
                 .SingleInstance();
@@ -75,22 +65,17 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Modules
             builder.RegisterType<ShutdownManager>()
                 .As<IShutdownManager>();
 
-            builder.Register(c => CreateBlockchainWalletsClient(c.Resolve<ILogFactory>()))
-                .As<IBlockchainWalletsClient>()
-                .SingleInstance();
+            builder.Register(c => 
+                new BlockchainWalletsClient(_settings.CurrentValue.BlockchainWalletsServiceClient.ServiceUrl, c.Resolve<ILogFactory>()))
+            .As<IBlockchainWalletsClient>()
+            .SingleInstance();
 
             builder.RegisterType<ValidationService>()
                 .As<IValidationService>().SingleInstance();
 
-            builder.Populate(_services);
-        }
-
-        private IBlockchainWalletsClient CreateBlockchainWalletsClient(ILogFactory logFactory)
-        {
-            return new BlockchainWalletsClient
-            (
-                hostUrl: _walletClientSettings.CurrentValue.ServiceUrl,
-                logFactory: logFactory
+            builder.RegisterAssetsClient(
+                AssetServiceSettings.Create(new Uri(_settings.CurrentValue.Assets.ServiceUrl), 
+                    _settings.CurrentValue.Assets.CacheExpirationPeriod)
             );
         }
     }
