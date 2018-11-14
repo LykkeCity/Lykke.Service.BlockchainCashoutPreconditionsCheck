@@ -31,10 +31,8 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
                 return false;
             }
 
-            bool isBlocked = false;
-
-            isBlocked = (blackList.IsCaseSensitive && blockedAddress == blackList.BlockedAddress) ||
-                        (!blackList.IsCaseSensitive && blockedAddress.ToLower() == blackList.BlockedAddressLowCase);
+            var isBlocked = blackList.IsCaseSensitive && blockedAddress == blackList.BlockedAddress ||
+                            !blackList.IsCaseSensitive && blockedAddress.ToLower() == blackList.BlockedAddressLowCase;
 
             return isBlocked;
         }
@@ -72,7 +70,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
         }
 
         /// <exception cref="ArgumentValidationException"></exception>
-        private async Task<IBlockchainApiClient> ThrowOnNotSupportedBlockchainType(string blockchainType)
+        private Task<IBlockchainApiClient> ThrowOnNotSupportedBlockchainType(string blockchainType)
         {
             IBlockchainApiClient blockchainClient;
 
@@ -80,13 +78,13 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
             {
                 blockchainClient = _blockchainApiClientProvider.Get(blockchainType); //throws
             }
-            catch (ArgumentValidationException e)
+            catch (ArgumentValidationException)
             {
                 throw new ArgumentValidationException($"{blockchainType} is not a valid type", "blockchainType");
             }
             
 
-            return blockchainClient;
+            return Task.FromResult(blockchainClient);
         }
 
         private async Task ThrowOnNotSupportedBlockchainType(string blockchainType, string blockedAddress)

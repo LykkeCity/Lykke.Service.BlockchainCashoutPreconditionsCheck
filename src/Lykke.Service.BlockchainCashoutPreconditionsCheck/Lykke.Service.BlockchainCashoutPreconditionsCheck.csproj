@@ -12,12 +12,16 @@
     <DocumentationFile>bin\Release\netcoreapp2.1\Lykke.Service.BlockchainCashoutPreconditionsCheck.xml</DocumentationFile>
     <NoWarn>1701;1702;1705;1591</NoWarn>
     <LangVersion>latest</LangVersion>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsAsErrors />
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile>bin\Debug\netcoreapp2.1\Lykke.Service.BlockchainCashoutPreconditionsCheck.xml</DocumentationFile>
     <NoWarn>1701;1702;1705;1591</NoWarn>
     <LangVersion>latest</LangVersion>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsAsErrors />
   </PropertyGroup>
   
   <ItemGroup>
@@ -30,11 +34,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Lykke.Common" Version="7.1.0" />
+    <PackageReference Include="Lykke.Common" Version="7.3.0" />
     <PackageReference Include="Lykke.Common.ApiLibrary" Version="1.10.1" />
-    <PackageReference Include="Lykke.Logs" Version="7.2.0" />
+    <PackageReference Include="Lykke.Logs" Version="7.2.1" />
     <PackageReference Include="Lykke.Sdk" Version="5.4.0" />
-    <PackageReference Include="Lykke.Service.BlockchainWallets.Client" Version="5.2.5" />
+    <PackageReference Include="Lykke.Service.BlockchainWallets.Client" Version="5.6.4" />
     <PackageReference Include="Lykke.Service.Session" Version="1.0.33" />
     <PackageReference Include="Lykke.SettingsReader" Version="4.1.1" />
     <PackageReference Include="Lykke.SlackNotification.AzureQueue" Version="2.0.5" />

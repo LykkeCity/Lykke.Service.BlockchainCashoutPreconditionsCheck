@@ -1,15 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Common.Log;
-using Lykke.Common.Log;
+﻿using Lykke.Service.BCPCheck.IntegrationTests.DelegatingHandlers;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Client;
-using Lykke.Service.BlockchainWallets.Client;
-using Lykke.Service.BlockchainWallets.Client.ClientGenerator;
-using Lykke.Service.BlockchainWallets.Client.DelegatingMessageHandlers;
 using Lykke.Service.BlockchainWallets.CTests.Common;
-using Moq;
 using Xunit;
 
 namespace Lykke.Service.BCPCheck.IntegrationTests.IntegrationTests

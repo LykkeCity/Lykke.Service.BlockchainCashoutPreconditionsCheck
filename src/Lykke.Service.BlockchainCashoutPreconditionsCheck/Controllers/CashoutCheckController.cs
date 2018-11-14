@@ -1,9 +1,7 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Lykke.Common.Api.Contract.Responses;
-using Lykke.Common.ApiLibrary.Contract;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Contract.Requests;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Contract.Responses;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Domain.Validation;
@@ -32,7 +30,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Controllers
         [ProducesResponseType(typeof(ErrorResponse), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> ValidateAsync(CheckCashoutValidityModel model)
         {
-            CashoutModel cashoutModel = model != null ? new CashoutModel()
+            var cashoutModel = model != null ? new CashoutModel
             {
                 AssetId = model.AssetId,
                 DestinationAddress = model.DestinationAddress,
@@ -42,10 +40,10 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Controllers
 
             var validationErrors = await _validationService.ValidateAsync(cashoutModel);
 
-            var response = new CashoutValidityResult()
+            var response = new CashoutValidityResult
             {
-                IsAllowed = (validationErrors?.Count() ?? 0) == 0,
-                ValidationErrors = validationErrors.Select(x => ValidationErrorResponse.Create((ValidationErrorType)x.Type, x.Value)),
+                IsAllowed = (validationErrors?.Count ?? 0) == 0,
+                ValidationErrors = validationErrors?.Select(x => ValidationErrorResponse.Create((ValidationErrorType)x.Type, x.Value)),
             };
 
             return Ok(response);
