@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Common;
+using JetBrains.Annotations;
 using Lykke.Service.Assets.Client;
 using Lykke.Service.Assets.Client.Models;
 using Lykke.Service.BlockchainApi.Client;
@@ -14,13 +15,12 @@ using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.LegacyBlockChains;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Services;
 using Lykke.Service.BlockchainWallets.Client;
 using Lykke.Service.BlockchainWallets.Contract;
-using Lykke.Service.BlockchainWallets.Contract.Models;
 
 namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
 {
+    [UsedImplicitly]
     public class ValidationService : IValidationService
     {
-        private const int _batchSize = 50;
         private readonly IBlockchainApiClientProvider _blockchainApiClientProvider;
         private readonly IAssetsService _assetsService;
         private readonly IBlockchainSettingsProvider _blockchainSettingsProvider;
@@ -51,9 +51,9 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
         /// ValidationError - client error
         /// ArgumentValidationException - developer error
         /// </returns>
-        public async Task<IEnumerable<ValidationError>> ValidateAsync(CashoutModel cashoutModel)
+        public async Task<IReadOnlyCollection<ValidationError>> ValidateAsync(CashoutModel cashoutModel)
         {
-            List<ValidationError> errors = new List<ValidationError>(1);
+            var errors = new List<ValidationError>(1);
 
             try
             {
@@ -63,13 +63,13 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
                 if (string.IsNullOrEmpty(cashoutModel.AssetId))
                     return FieldNotValidResult("cashoutModel.AssetId can't be null or empty");
 
-                Asset asset = null;
+                Asset asset;
 
                 try
                 {
                     asset = await _assetsService.AssetGetAsync(cashoutModel.AssetId);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     throw new ArgumentValidationException($"Asset with Id-{cashoutModel.AssetId} does not exists",
                         "assetId");
@@ -109,18 +109,19 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
                 {
                     if (asset.Id != LykkeConstants.SolarAssetId)
                     {
-                        var isBlocked = await _blackListService.IsBlockedAsync(asset.BlockchainIntegrationLayerId,
-                            cashoutModel.DestinationAddress);
+                        var isBlocked = await _blackListService.IsBlockedAsync
+                        (
+                            asset.BlockchainIntegrationLayerId,
+                            cashoutModel.DestinationAddress
+                        );
 
                         if (isBlocked)
                         {
-                            errors.Add(ValidationError.Create(ValidationErrorType.BlackListedAddress,
-                                "Address is in the black list"));
+                            errors.Add(ValidationError.Create(ValidationErrorType.BlackListedAddress, "Address is in the black list"));
                         }
                     }
 
-                    if (cashoutModel.Volume.HasValue &&
-                        Math.Abs(cashoutModel.Volume.Value) < (decimal)asset.CashoutMinimalAmount)
+                    if (cashoutModel.Volume.HasValue && Math.Abs(cashoutModel.Volume.Value) < (decimal)asset.CashoutMinimalAmount)
                     {
                         var minimalAmount = asset.CashoutMinimalAmount.GetFixedAsString(asset.Accuracy).TrimEnd('0');
 
@@ -138,8 +139,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
                                 "Hot wallet as destitnation address prohibited"));
                         }
 
-                        var capabilities =
-                            await _blockchainWalletsClient.GetCapabilititesAsync(asset.BlockchainIntegrationLayerId);
+                        var capabilities = await _blockchainWalletsClient.GetCapabilititesAsync(asset.BlockchainIntegrationLayerId);
                         if (capabilities.IsPublicAddressExtensionRequired)
                         {
                             var hotWalletParseResult = await _blockchainWalletsClient.ParseAddressAsync(
@@ -175,8 +175,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
 
                             if (!string.IsNullOrEmpty(destAddressParseResult.BaseAddress))
                             {
-                                if (!(cashoutModel?.DestinationAddress.Contains(destAddressParseResult.BaseAddress) ??
-                                      false))
+                                if (!cashoutModel.DestinationAddress.Contains(destAddressParseResult.BaseAddress))
                                 {
                                     errors.Add(ValidationError.Create(ValidationErrorType.FieldIsNotValid,
                                         "Base Address should be part of destination address"));
@@ -193,40 +192,24 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
                         }
                     }
 
-                    if (cashoutModel.ClientId != null)
+                    if (cashoutModel.ClientId.HasValue)
                     {
-                        bool keepRolling = true;
-                        string cToken = null;
-                        do
+                        var destinationClientId = await _blockchainWalletsClient.TryGetClientIdAsync
+                        (
+                            asset.BlockchainIntegrationLayerId,
+                            cashoutModel.DestinationAddress
+                        );
+
+                        if (destinationClientId.HasValue && destinationClientId == cashoutModel.ClientId.Value)
                         {
-                            var clientWallets = await _blockchainWalletsClient.GetWalletsAsync(
-                                asset.BlockchainIntegrationLayerId,
-                                cashoutModel.ClientId.Value,
-                                _batchSize,
-                                cToken
+                            var error = ValidationError.Create
+                            (
+                                ValidationErrorType.CashoutToSelfAddress,
+                                "Withdrawals to the deposit wallet owned by the customer himself prohibited"
                             );
 
-                            if (clientWallets == null ||
-                                clientWallets.Wallets == null)
-                            {
-                                break;
-                            }
-
-                            cToken = clientWallets.ContinuationToken;
-
-                            foreach (var blockchainWalletResponse in clientWallets.Wallets)
-                            {
-                                if (string.Equals(blockchainWalletResponse?.Address, cashoutModel.DestinationAddress,
-                                    StringComparison.InvariantCultureIgnoreCase))
-                                {
-                                    errors.Add(ValidationError.Create(ValidationErrorType.CashoutToSelfAddress,
-                                        "Withdrawals to the deposit wallet owned by the customer himself prohibited"));
-                                    keepRolling = false;
-                                    break;
-                                }
-                            }
-
-                        } while (!string.IsNullOrEmpty(cToken) && keepRolling);
+                            errors.Add(error);
+                        }
                     }
                 }
             }
@@ -238,7 +221,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
             return errors;
         }
 
-        private IEnumerable<ValidationError> FieldNotValidResult(string message)
+        private static IReadOnlyCollection<ValidationError> FieldNotValidResult(string message)
         {
             return new[] { ValidationError.Create(ValidationErrorType.FieldIsNotValid, message) };
         }
@@ -246,7 +229,8 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
         private async Task<IEnumerable<ValidationError>> ValidateForForbiddenCharsAsync
             (string baseAddress, string addressExtension, string blockchainType)
         {
-            List<ValidationError> errors = new List<ValidationError>(1);
+            var errors = new List<ValidationError>(1);
+
             var (isAddressExtensionSupported,
                 prohibitedCharsBase,
                 prohibitedCharsExtension) = await IsAddressExtensionSupported(blockchainType);
@@ -269,10 +253,10 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
                 }
             }
 
-            return errors.Count != 0 ? errors : null ;
+            return errors.Any() ? errors : null;
         }
 
-        private async Task<(bool, IEnumerable<char>, IEnumerable<char>)> IsAddressExtensionSupported(string blockchainType)
+        private async Task<(bool, IReadOnlyCollection<char>, IEnumerable<char>)> IsAddressExtensionSupported(string blockchainType)
         {
             if (!string.IsNullOrEmpty(blockchainType))
             {
@@ -280,12 +264,12 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
 
                 if (constants == null)
                     throw new InvalidOperationException($"{nameof(IsAddressExtensionSupported)}: " +
-                                                        $"Unable to obtain constants of address extension " +
-                                                        $"for blockchain type = " +
+                                                        "Unable to obtain constants of address extension " +
+                                                        "for blockchain type = " +
                                                         $"{blockchainType}.");
 
                 return (constants.TypeForWithdrawal == AddressExtensionTypeForWithdrawal.Optional,
-                    constants.ProhibitedSymbolsForBaseAddress,
+                    constants.ProhibitedSymbolsForBaseAddress.ToArray(),
                     constants.ProhibitedSymbolsForAddressExtension);
             }
 
