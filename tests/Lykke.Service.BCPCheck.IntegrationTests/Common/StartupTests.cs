@@ -1,17 +1,17 @@
-﻿using System;
+using System;
 using JetBrains.Annotations;
 using Lykke.Common.Api.Contract.Responses;
-using Lykke.Logs.Loggers.LykkeSlack;
 using Lykke.Sdk;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Exceptions;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Settings;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Filter;
+using Lykke.Service.BlockchainCashoutPreconditionsCheck.Modules;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Lykke.Service.BlockchainCashoutPreconditionsCheck
+namespace Lykke.Service.BCPCheck.IntegrationTests.Common
 {
-    public class Startup
+    public class StartupTests
     {
         private readonly LykkeSwaggerOptions _swaggerOptions = new LykkeSwaggerOptions
         {
@@ -33,25 +33,13 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck
 
                 options.Logs = logs =>
                 {
-                    logs.AzureTableName = "BlockchainCashoutPreconditionsCheckLog";
-                    logs.AzureTableConnectionStringResolver = settings => settings.BlockchainCashoutPreconditionsCheckService.Db.LogsConnString;
-                    
-                    logs.Extended = extendedLogs =>
-                    {
-                        extendedLogs.AddAdditionalSlackChannel("CommonBlockChainIntegration", channelOptions =>
-                        {
-                            channelOptions.MinLogLevel = Microsoft.Extensions.Logging.LogLevel.Information;
-                            channelOptions.SpamGuard.DisableGuarding();
-                            channelOptions.IncludeHealthNotifications();
-                        });
-                        
-                        extendedLogs.AddAdditionalSlackChannel("CommonBlockChainIntegrationImportantMessages", channelOptions =>
-                        {
-                            channelOptions.MinLogLevel = Microsoft.Extensions.Logging.LogLevel.Warning;
-                            channelOptions.SpamGuard.DisableGuarding();
-                            channelOptions.IncludeHealthNotifications();
-                        });
-                    };
+                    logs.UseEmptyLogging();
+                };
+                
+                options.RegisterAdditionalModules = x =>
+                {
+                    x.RegisterModule<BlockchainsModule>();
+                    x.RegisterModule<ServiceModule>();
                 };
             });
         }

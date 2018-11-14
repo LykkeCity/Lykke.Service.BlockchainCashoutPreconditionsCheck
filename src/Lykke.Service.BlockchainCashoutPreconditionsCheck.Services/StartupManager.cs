@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Common.Log;
 using Lykke.Common.Log;
-using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Services;
+using Lykke.Sdk;
 
 namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
 {

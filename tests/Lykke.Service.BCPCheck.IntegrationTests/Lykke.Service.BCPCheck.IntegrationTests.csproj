@@ -20,6 +20,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+  
+  <ItemGroup>
+    <Content Update="appsettings.tests.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\client\Lykke.Service.BlockchainCashoutPreconditionsCheck.Client\Lykke.Service.BlockchainCashoutPreconditionsCheck.Client.csproj" />
