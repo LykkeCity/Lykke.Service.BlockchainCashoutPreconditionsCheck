@@ -37,7 +37,8 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client
         /// Get address from specific blockchain type black list
         /// </summary>
         /// <param name="blockchainType">Blockchain Type from Integration Layer</param>
-        /// /// <param name="address">Address</param>
+        /// <param name="take">Amount of addresses to take</param>
+        /// <param name="continuationToken">Continuation token</param>
         /// <returns></returns>
         /// <exception cref="Exception">Is thrown on wrong usage of service.</exception>
         Task<BlackListEnumerationResponse> GetAllBlackListsAsync(string blockchainType, int take, string continuationToken = null);

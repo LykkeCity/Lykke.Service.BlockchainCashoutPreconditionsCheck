@@ -16,7 +16,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client
 {
     public class BlockchainCashoutPreconditionsCheckClient : IBlockchainCashoutPreconditionsCheckClient, IDisposable
     {
-        private IBlockchainCashoutPreconditionsCheckApi _service;
+        private readonly IBlockchainCashoutPreconditionsCheckApi _service;
 
         public BlockchainCashoutPreconditionsCheckClient(string serviceUrl, params DelegatingHandler[] handlers)
         {
@@ -36,7 +36,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client
         /// <exception cref="Exception">Is thrown on wrong usage of service.</exception>
         public async Task<(bool isAllowed, IEnumerable<ValidationErrorResponse>)> ValidateCashoutAsync(CheckCashoutValidityModel validateCashoutModel)
         {
-            bool isAllowed = false;
+            var isAllowed = false;
             IEnumerable<ValidationErrorResponse> validationErrors;
 
             try
@@ -91,7 +91,8 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Client
         /// Get address from specific blockchain type black list
         /// </summary>
         /// <param name="blockchainType">Blockchain Type from Integration Layer</param>
-        /// /// <param name="address">Address</param>
+        /// <param name="take">Amount of addresses to take</param>
+        /// <param name="continuationToken">Continuation token</param>
         /// <returns></returns>
         /// <exception cref="Exception">Is thrown on wrong usage of service.</exception>
         public async Task<BlackListEnumerationResponse> GetAllBlackListsAsync(string blockchainType, int take, string continuationToken = null)
