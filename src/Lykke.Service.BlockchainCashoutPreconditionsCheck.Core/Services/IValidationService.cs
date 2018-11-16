@@ -7,6 +7,6 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Services
 {
     public interface IValidationService
     {
-        Task<IEnumerable<ValidationError>> ValidateAsync(CashoutModel CashoutModel);
+        Task<IReadOnlyCollection<ValidationError>> ValidateAsync(CashoutModel cashoutModel);
     }
 }
