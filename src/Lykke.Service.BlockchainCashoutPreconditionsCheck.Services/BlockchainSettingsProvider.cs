@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
 using Autofac.Features.Indexed;
@@ -14,11 +15,11 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
 {
     public class BlockchainSettingsProvider : IBlockchainSettingsProvider
     {
-        private readonly IIndex<string, BlockchainSettings> _settings;
+        private readonly IImmutableDictionary<string, BlockchainSettings> _settings;
 
-        public BlockchainSettingsProvider(IIndex<string, BlockchainSettings> settings)
+        public BlockchainSettingsProvider(BlockchainsIntegrationSettings settings)
         {
-            _settings = settings;
+            _settings = settings?.Blockchains.ToImmutableDictionary(x => x.Type, x=> x);
         }
 
         public BlockchainSettings Get(string blockchainType)

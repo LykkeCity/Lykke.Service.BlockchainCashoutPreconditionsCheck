@@ -2,6 +2,7 @@
 using Common.Log;
 using Lykke.Common.Log;
 using Lykke.Sdk;
+using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Services;
 
 namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
 {
@@ -14,16 +15,18 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
 
     public class StartupManager : IStartupManager
     {
+        private readonly IInitBlockchainWalletsCacheService _blockchainWalletsCacheService;
         private readonly ILog _log;
 
-        public StartupManager(ILogFactory log)
+        public StartupManager(ILogFactory log, IInitBlockchainWalletsCacheService blockchainWalletsCacheService)
         {
+            _blockchainWalletsCacheService = blockchainWalletsCacheService;
             _log = log.CreateLog(this);
         }
 
         public async Task StartAsync()
         {
-            // TODO: Implement your startup logic here. Good idea is to log every step
+            _blockchainWalletsCacheService.FireInitializationAndForget();
 
             await Task.CompletedTask;
         }
