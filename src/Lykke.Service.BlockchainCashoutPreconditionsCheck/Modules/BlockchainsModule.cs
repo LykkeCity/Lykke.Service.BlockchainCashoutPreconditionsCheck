@@ -22,24 +22,29 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Modules
 
         protected override void Load(ContainerBuilder builder)
         {
-            foreach (var blockchain in _settings.CurrentValue.BlockchainsIntegration.Blockchains)
-            {
-                builder.Register(c =>
-                    {
-                        var log = c.Resolve<ILogFactory>().CreateLog(this);
-                        log.Info("Blockchains registration", 
-                            $"Registering blockchain: {blockchain.Type} -> \r\nAPI: {blockchain.ApiUrl}\r\n");
+            builder
+                .RegisterInstance(_settings.CurrentValue.BlockchainsIntegration)
+                .AsSelf()
+                .SingleInstance();
 
-                        return blockchain;
-                    })
-                    .Named<BlockchainSettings>(blockchain.Type)
-                    .SingleInstance();
+            //foreach (var blockchain in _settings.CurrentValue.BlockchainsIntegration.Blockchains)
+            //{
+            //    builder.Register(c =>
+            //        {
+            //            var log = c.Resolve<ILogFactory>().CreateLog(this);
+            //            log.Info("Blockchains registration", 
+            //                $"Registering blockchain: {blockchain.Type} -> \r\nAPI: {blockchain.ApiUrl}\r\n");
 
-                builder.RegisterType<BlockchainApiClient>()
-                    .Named<IBlockchainApiClient>(blockchain.Type)
-                    .WithParameter(TypedParameter.From(blockchain.ApiUrl))
-                    .SingleInstance();
-            }
+            //            return blockchain;
+            //        })
+            //        .Named<BlockchainSettings>(blockchain.Type)
+            //        .SingleInstance();
+
+            //    //builder.RegisterType<BlockchainApiClient>()
+            //    //    .Named<IBlockchainApiClient>(blockchain.Type)
+            //    //    .WithParameter(TypedParameter.From(blockchain.ApiUrl))
+            //    //    .SingleInstance();
+            //}
 
             builder.RegisterType<BlockchainApiClientProvider>()
                 .As<IBlockchainApiClientProvider>()
@@ -47,6 +52,11 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Modules
 
             builder.RegisterType<BlockchainSettingsProvider>()
                 .As<IBlockchainSettingsProvider>()
+                .SingleInstance();
+
+            builder.RegisterType<BlockchainWalletsCacheService>()
+                .As<IBlockchainWalletsCacheService>()
+                .As<IInitBlockchainWalletsCacheService>()
                 .SingleInstance();
         }
     }
