@@ -22,14 +22,14 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
     public class ValidationService : IValidationService
     {
         private readonly IBlockchainApiClientProvider _blockchainApiClientProvider;
-        private readonly IAssetsService _assetsService;
+        private readonly IAssetsServiceWithCache _assetsService;
         private readonly IBlockchainSettingsProvider _blockchainSettingsProvider;
         private readonly IBlackListService _blackListService;
         private readonly IBlockchainWalletsClient _blockchainWalletsClient;
         private readonly AddressExtensionService _addressExtensionService;
 
         public ValidationService(IBlockchainApiClientProvider blockchainApiClientProvider,
-            IAssetsService assetsService,
+            IAssetsServiceWithCache assetsService,
             IBlockchainSettingsProvider blockchainSettingsProvider,
             IBlockchainWalletsClient blockchainWalletsClient,
             IBlackListService blackListService,
@@ -67,7 +67,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
 
                 try
                 {
-                    asset = await _assetsService.AssetGetAsync(cashoutModel.AssetId);
+                    asset = await _assetsService.TryGetAssetAsync(cashoutModel.AssetId);
                 }
                 catch (Exception)
                 {
@@ -92,7 +92,6 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
                     blockchainClient = _blockchainApiClientProvider.Get(asset.BlockchainIntegrationLayerId);
                 }
 
-                //var tryValidate = await blockchainClient.IsAddressValidAsync(cashoutModel.DestinationAddress);
                 if (string.IsNullOrEmpty(cashoutModel.DestinationAddress)
                     || !cashoutModel.DestinationAddress.IsValidPartitionOrRowKey()
                     || asset.Id != LykkeConstants.SolarAssetId && blockchainClient != null &&
@@ -109,7 +108,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
                 {
                     if (asset.Id != LykkeConstants.SolarAssetId)
                     {
-                        var isBlocked = await _blackListService.IsBlockedAsync
+                        var isBlocked = await _blackListService.IsBlockedWithoutAddressValidationAsync
                         (
                             asset.BlockchainIntegrationLayerId,
                             cashoutModel.DestinationAddress
@@ -256,7 +255,9 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
             return errors.Any() ? errors : null;
         }
 
-        private async Task<(bool, IReadOnlyCollection<char>, IEnumerable<char>)> IsAddressExtensionSupported(string blockchainType)
+        private async Task<(bool isAddressExtensionSupported, 
+                            IReadOnlyCollection<char> prohibitedCharsBase, 
+                            IEnumerable<char> prohibitedCharsExtension)> IsAddressExtensionSupported(string blockchainType)
         {
             if (!string.IsNullOrEmpty(blockchainType))
             {

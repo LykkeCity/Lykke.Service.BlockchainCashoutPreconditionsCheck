@@ -20,6 +20,23 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
             _blockchainApiClientProvider = blockchainApiClientProvider;
         }
 
+        public async Task<bool> IsBlockedWithoutAddressValidationAsync(string blockchainType, string blockedAddress)
+        {
+            await ThrowOnNotSupportedBlockchainType(blockchainType);
+
+            var blackList = await _blackListRepository.TryGetAsync(blockchainType, blockedAddress);
+
+            if (blackList == null)
+            {
+                return false;
+            }
+
+            var isBlocked = blackList.IsCaseSensitive && blockedAddress == blackList.BlockedAddress ||
+                            !blackList.IsCaseSensitive && blockedAddress.ToLower() == blackList.BlockedAddressLowCase;
+
+            return isBlocked;
+        }
+
         public async Task<bool> IsBlockedAsync(string blockchainType, string blockedAddress)
         {
             await ThrowOnNotSupportedBlockchainType(blockchainType, blockedAddress);

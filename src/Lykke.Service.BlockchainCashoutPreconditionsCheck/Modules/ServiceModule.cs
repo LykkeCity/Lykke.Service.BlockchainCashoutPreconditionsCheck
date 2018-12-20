@@ -75,7 +75,8 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Modules
 
             builder.RegisterAssetsClient(
                 AssetServiceSettings.Create(new Uri(_settings.CurrentValue.Assets.ServiceUrl), 
-                    _settings.CurrentValue.Assets.CacheExpirationPeriod)
+                    _settings.CurrentValue.Assets.CacheExpirationPeriod),
+                true
             );
         }
     }

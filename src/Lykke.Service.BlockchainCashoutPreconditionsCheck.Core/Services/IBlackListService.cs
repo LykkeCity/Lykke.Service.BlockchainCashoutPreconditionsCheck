@@ -11,6 +11,8 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Services
     {
         Task<bool> IsBlockedAsync(string blockchainType, string blockedAddress);
 
+        Task<bool> IsBlockedWithoutAddressValidationAsync(string blockchainType, string blockedAddress);
+
         Task<BlackListModel> TryGetAsync(string blockchainType, string blockedAddress);
 
         Task<(IEnumerable<BlackListModel>, string continuationToken)> TryGetAllAsync(string blockchainType, int take,
