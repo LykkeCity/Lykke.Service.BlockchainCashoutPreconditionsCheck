@@ -47,6 +47,8 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Modules
             //}
 
             builder.RegisterType<BlockchainApiClientProvider>()
+                .WithParameter("blockchainApiTimeoutSeconds", 
+                    _settings.CurrentValue.BlockchainCashoutPreconditionsCheckService.BlockchainApiTimeoutSeconds)
                 .As<IBlockchainApiClientProvider>()
                 .SingleInstance();
 
