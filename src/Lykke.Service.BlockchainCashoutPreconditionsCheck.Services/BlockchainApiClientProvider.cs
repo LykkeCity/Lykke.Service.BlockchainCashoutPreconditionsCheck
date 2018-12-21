@@ -1,4 +1,5 @@
-﻿using Lykke.Service.BlockchainApi.Client;
+﻿using System;
+using Lykke.Service.BlockchainApi.Client;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Exceptions;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Services;
 using System.Collections.Generic;
@@ -12,10 +13,11 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
     {
         private readonly IImmutableDictionary<string, IBlockchainApiClient> _clients;
 
-        public BlockchainApiClientProvider(BlockchainsIntegrationSettings settings, ILogFactory logFactory)
+        public BlockchainApiClientProvider(BlockchainsIntegrationSettings settings, ILogFactory logFactory, int blockchainApiTimeoutSeconds)
         {
+            var timeout = TimeSpan.FromSeconds(blockchainApiTimeoutSeconds);
             _clients = settings?.Blockchains.ToImmutableDictionary(x => x.Type, 
-                x => (IBlockchainApiClient)new BlockchainApiClient(logFactory, x.ApiUrl));
+                x => (IBlockchainApiClient)new BlockchainApiClient(logFactory, x.ApiUrl, 3, timeout));
         }
 
         public IBlockchainApiClient Get(string blockchainType)
