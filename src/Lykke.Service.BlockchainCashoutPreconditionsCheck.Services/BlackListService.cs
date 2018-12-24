@@ -31,8 +31,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
                 return false;
             }
 
-            var isBlocked = blackList.IsCaseSensitive && blockedAddress == blackList.BlockedAddress ||
-                            !blackList.IsCaseSensitive && blockedAddress.ToLower() == blackList.BlockedAddressLowCase;
+            var isBlocked = IsBlocked(blockedAddress, blackList);
 
             return isBlocked;
         }
@@ -48,8 +47,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
                 return false;
             }
 
-            var isBlocked = blackList.IsCaseSensitive && blockedAddress == blackList.BlockedAddress ||
-                            !blackList.IsCaseSensitive && blockedAddress.ToLower() == blackList.BlockedAddressLowCase;
+            var isBlocked = IsBlocked(blockedAddress, blackList);
 
             return isBlocked;
         }
@@ -112,6 +110,13 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
             {
                 throw new ArgumentValidationException($"{blockedAddress} is not a valid address for {blockchainType}", "blockedAddress");
             }
+        }
+
+        private static bool IsBlocked(string blockedAddress, BlackListModel blackList)
+        {
+            var isBlocked = blackList.IsCaseSensitive && blockedAddress == blackList.BlockedAddress ||
+                            !blackList.IsCaseSensitive && blockedAddress.ToLower() == blackList.BlockedAddressLowCase;
+            return isBlocked;
         }
     }
 }
