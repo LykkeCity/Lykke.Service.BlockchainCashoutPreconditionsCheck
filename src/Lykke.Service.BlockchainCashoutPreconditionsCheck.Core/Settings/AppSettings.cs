@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using System;
+using JetBrains.Annotations;
 using Lykke.Sdk.Settings;
 using Lykke.Service.BlockchainCashoutPreconditionsCheck.Core.Settings.ServiceSettings;
 

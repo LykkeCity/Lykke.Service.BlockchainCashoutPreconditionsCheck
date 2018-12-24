@@ -3,5 +3,6 @@
     public class BlockchainCashoutPreconditionsCheckSettings
     {
         public DbSettings Db { get; set; }
+        public int BlockchainApiTimeoutSeconds { get; set; }
     }
 }
