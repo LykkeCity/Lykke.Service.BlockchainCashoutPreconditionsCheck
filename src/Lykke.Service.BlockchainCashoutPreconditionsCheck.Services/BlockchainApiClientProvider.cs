@@ -17,7 +17,7 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
         {
             var timeout = TimeSpan.FromSeconds(blockchainApiTimeoutSeconds);
             _clients = settings?.Blockchains.ToImmutableDictionary(x => x.Type, 
-                x => (IBlockchainApiClient)new BlockchainApiClient(logFactory, x.ApiUrl, 3, timeout));
+                x => (IBlockchainApiClient)new BlockchainApiClient(logFactory, x.ApiUrl, timeout, 3));
         }
 
         public IBlockchainApiClient Get(string blockchainType)
