@@ -182,7 +182,10 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
                                     "Base Address should be part of destination address"));
                             }
 
-                            var isBlockedBase = await _blackListService.IsBlockedAsync(
+                            // full address is already checked by integration,
+                            // we don't need to validate it again, 
+                            // just ensure that base address is not black-listed
+                            var isBlockedBase = await _blackListService.IsBlockedWithoutAddressValidationAsync(
                                 asset.BlockchainIntegrationLayerId,
                                 destAddressParseResult.BaseAddress);
 
