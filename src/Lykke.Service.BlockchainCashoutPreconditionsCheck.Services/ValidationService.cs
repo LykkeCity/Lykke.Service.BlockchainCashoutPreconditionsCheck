@@ -76,6 +76,12 @@ namespace Lykke.Service.BlockchainCashoutPreconditionsCheck.Services
                     "assetId");
             }
 
+            if (asset.IsDisabled)
+            {
+                throw new ArgumentValidationException($"Asset with Id-{cashoutModel.AssetId} is disabled",
+                    "assetId");
+            }
+
             if (asset == null)
                 throw new ArgumentValidationException($"Asset with Id-{cashoutModel.AssetId} does not exists",
                     "assetId");
